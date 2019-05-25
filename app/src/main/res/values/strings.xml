@@ -1,0 +1,31 @@
+<resources>
+    <string name="app_name">صانع الاختبارات</string>
+    <string name="login_email">البريد الإلكتروني</string>
+    <string name="login_password">كلمة المرور</string>
+    <string name="signUp_password">كلمة المرور الجديدة</string>
+    <string name="signUp_displayName">اسمك في التطبيق</string>
+    <string name="create_account">إنشاء حساب</string>
+    <string name="login_label">تسجيل الدخول</string>
+    <string name="not_email">أدخل بريدًا صالحًا!</string>
+    <string name="mainPage">الرئيسيّة</string>
+    <string name="settingsLabel">الإعدادات</string>
+    <string name="createNewQuiz">اختبار جديد</string>
+
+    <string name="categoryAcademic">أكاديمي</string>
+    <string name="categoryFun">للترفيه فقط!</string>
+    <string name="isOneTimeQuiz">اختبار بفرصة واحدة</string>
+    <string name="isQuizPasswordProtected">يتطلب كلمة مرور</string>
+    <string name="quizPassword">رمز الدخول للاختبار</string>
+    <string name="quizQuestionsCount">عدد أسئلة الاختبار</string>
+    <string name="writeQuestionsButton">بدأ كتابة الأسئلة</string>
+    <string name="cannotBeEmpty">لا يجب أن يكون فارغًا</string>
+    <string name="cannotBeGreaterThan20">أكثر عدد هو 30!</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string-array name="quizQuestionsTypes">
+        <item>متعدد الاختيار</item>
+        <item>صح، خطأ</item>
+    </string-array>
+</resources>

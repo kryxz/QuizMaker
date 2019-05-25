@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+            android:title="@string/mainPage"
+            android:icon="@drawable/ic_home"
+            android:id="@+id/mainFragment" />
+    <item
+            android:title="@string/settingsLabel"
+            android:icon="@drawable/ic_settings"
+            android:id="@+id/settingsFragment" />
+    <item
+            android:title="@string/createNewQuiz"
+            android:icon="@drawable/ic_note_add"
+            android:id="@+id/createQuiz" />
+</menu>

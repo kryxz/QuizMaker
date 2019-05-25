@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            xmlns:tools="http://schemas.android.com/tools" android:id="@+id/navigation"
+            app:startDestination="@id/mainFragment">
+
+    <fragment android:id="@+id/loginFragment" android:name="com.lemonlab.quizmaker.LoginFragment"
+              android:label="@string/login_label" tools:layout="@layout/fragment_login">
+        <action android:id="@+id/loginToMain" app:destination="@id/mainFragment"
+                app:launchSingleTop="true" app:popUpToInclusive="false"/>
+    </fragment>
+    <fragment android:id="@+id/createAccount" android:name="com.lemonlab.quizmaker.CreateAccount"
+              android:label="@string/create_account" tools:layout="@layout/fragment_create_account"/>
+    <fragment android:id="@+id/mainFragment" android:name="com.lemonlab.quizmaker.MainFragment"
+              android:label="@string/mainPage" tools:layout="@layout/fragment_main">
+        <action android:id="@+id/MainToLogin" app:destination="@id/loginFragment"/>
+    </fragment>
+    <fragment android:id="@+id/settingsFragment" android:name="com.lemonlab.quizmaker.SettingsFragment"
+              android:label="@string/settingsLabel" tools:layout="@layout/fragment_settings"/>
+    <fragment android:id="@+id/createQuiz" android:name="com.lemonlab.quizmaker.CreateQuiz"
+              android:label="@string/createNewQuiz" tools:layout="@layout/fragment_create_quiz"/>
+</navigation>

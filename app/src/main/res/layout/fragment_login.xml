@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                                                   xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:tools="http://schemas.android.com/tools"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent" android:background="@color/colorPrimary"
+             tools:context=".LoginFragment">
+
+    <androidx.appcompat.widget.AppCompatTextView
+            android:text="@string/app_name"
+            android:layout_width="wrap_content"
+            android:textSize="42sp"
+            android:textColor="@color/textColorPrimary"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginEnd="8dp" android:layout_marginTop="8dp"
+            app:layout_constraintTop_toTopOf="parent" android:id="@+id/appCompatTextView"
+            android:layout_marginBottom="8dp" app:layout_constraintBottom_toTopOf="@+id/linearLayoutCompat"/>
+
+    <androidx.appcompat.widget.LinearLayoutCompat android:layout_width="match_parent"
+                                                  android:orientation="vertical"
+                                                  android:layout_height="wrap_content" android:layout_marginBottom="8dp"
+                                                  app:layout_constraintBottom_toBottomOf="parent"
+                                                  app:layout_constraintEnd_toEndOf="parent"
+                                                  android:layout_marginEnd="8dp"
+                                                  app:layout_constraintStart_toStartOf="parent"
+                                                  android:layout_marginStart="8dp"
+                                                  android:layout_marginTop="8dp"
+                                                  app:layout_constraintTop_toTopOf="parent"
+                                                  android:id="@+id/linearLayoutCompat">
+
+        <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+            <com.google.android.material.textfield.TextInputEditText
+                    android:drawableEnd="@drawable/ic_email_white"
+                    android:id="@+id/loginEmailEditText"
+                    android:hint="@string/login_email" style="@style/loginEditTextStyle"/>
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+            <com.google.android.material.textfield.TextInputEditText
+                    android:drawableEnd="@drawable/ic_lock_white"
+                    android:id="@+id/loginPasswordEditText"
+                    android:hint="@string/login_password" style="@style/loginEditTextStyle"/>
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+    <androidx.appcompat.widget.AppCompatTextView
+            android:text="@string/create_account"
+            android:textSize="28sp"
+            android:textColor="@color/textColorPrimary"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp" app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginStart="8dp"
+            app:layout_constraintStart_toStartOf="parent" android:layout_marginTop="8dp"
+            app:layout_constraintTop_toBottomOf="@+id/linearLayoutCompat" android:id="@+id/newAcctButton"/>
+    <androidx.appcompat.widget.AppCompatButton
+            android:text="@string/login_label"
+            android:textColor="@color/textColorPrimary"
+            android:background="@color/colorPrimaryDark"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="8dp"
+            app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
+            android:textSize="24sp"
+            android:id="@+id/loginButton"
+            app:layout_constraintBottom_toBottomOf="parent" android:layout_marginTop="8dp"
+            app:layout_constraintTop_toBottomOf="@+id/newAcctButton"/>
+</androidx.constraintlayout.widget.ConstraintLayout>
