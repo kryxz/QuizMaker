@@ -19,4 +19,7 @@
               android:label="@string/settingsLabel" tools:layout="@layout/fragment_settings"/>
     <fragment android:id="@+id/createQuiz" android:name="com.lemonlab.quizmaker.CreateQuiz"
               android:label="@string/createNewQuiz" tools:layout="@layout/fragment_create_quiz"/>
+    <fragment android:name="com.lemonlab.quizmaker.ViewEditQuestions"
+              android:label="@string/createNewQuiz" tools:layout="@layout/questions_fill_form"
+              android:id="@+id/viewEditQuestions"/>
 </navigation>

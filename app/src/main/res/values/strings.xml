@@ -19,7 +19,41 @@
     <string name="quizQuestionsCount">عدد أسئلة الاختبار</string>
     <string name="writeQuestionsButton">بدأ كتابة الأسئلة</string>
     <string name="cannotBeEmpty">لا يجب أن يكون فارغًا</string>
-    <string name="cannotBeGreaterThan20">أكثر عدد هو 30!</string>
+    <string name="cannotBeGreaterThan30">أكثر عدد هو 30!</string>
+    <string name="quizTitleText">عنوان الاختبار</string>
+    <string name="questionsText">نص السؤال</string>
+    <string name="questionsTextLabel">نص السؤال \n %1$s</string>
+
+    <string name="trueStatement">عبارة صحيحة</string>
+    <string name="aChoice">اكتب خيارًا </string>
+    <string name="edit">تحرير</string>
+    <string name="publishQuizText">نشر الاختبار</string>
+
+    <string name="backToEditingButton">العودة والتحرير</string>
+    <string name="publishQuizWithTitle">نشر الاختبار بعنوان %1$s؟</string>
+
+    <string name="cancel">إلغاء</string>
+    <string name="confirm">تأكيد</string>
+
+    <string name="previousQuestion">السؤال السابق</string>
+    <string name="nextQuestion">السؤال التالي</string>
+    <string name="reviewThenPost">مراجعة ونشر</string>
+    <string name="reviewTemplate"> هذا مجرد مثال لنص يمكنه الإستبدال لاحقا بالنص الأصلي</string>
+    <string name="reviewQuestions">مراجعة الأسئلة</string>
+
+    <string name="startQuiz">بدأ الاختبار</string>
+    <string name="DeleteCurrentQuestion">حذف السؤال الحالي</string>d
+    <string name="thisWillDeleteCurrentQuestion">سيتم حذف السؤال الحالي مع الاجابة.</string>d
+    <string name="questionsCountText">عدد الأسئلة: %1$d</string>
+    <string name="quizAuthorText">المؤلف: %1$s</string>
+    <string name="resizeQuiz">تغيير عدد الأسئلة</string>
+    <string name="thisWillDeleteRemainingQuestions">سيتم حذف الأسئلة الإضافية</string>
+
+    <string name="editQuiz">تعديل الاختبار</string>
+    <string name="existingQuestions">سيتم حذف الأسئلة الموجودة</string>
+    <string name="existingQuestionsMessage">اختر تأكيد للحذف، الغاء لاستعادة الأسئلة</string>
+    <string name="completeAllQuestions">يجب عليك كتابة جميع الأسئلة.</string>
+
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
@@ -27,5 +61,12 @@
     <string-array name="quizQuestionsTypes">
         <item>متعدد الاختيار</item>
         <item>صح، خطأ</item>
+    </string-array>
+
+    <string-array name="multipleChoices">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
     </string-array>
 </resources>

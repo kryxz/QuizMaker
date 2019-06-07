@@ -10,6 +10,7 @@ import androidx.navigation.Navigation
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.android.synthetic.main.fragment_create_account.*
+import com.google.firebase.auth.UserProfileChangeRequest
 
 
 class CreateAccount : Fragment() {
@@ -26,9 +27,10 @@ class CreateAccount : Fragment() {
         setUpUI()
         super.onViewCreated(view, savedInstanceState)
     }
+
     private fun setUpUI() {
         val fireStoreDatabase = FirebaseFirestore.getInstance()
-        val fireBaseAuth =  FirebaseAuth.getInstance()
+        val fireBaseAuth = FirebaseAuth.getInstance()
         signUpButton.setOnClickListener { view ->
             val username = signUpDisplayName.text.toString()
             val userEmail = signUpEmailEditText.text.toString()
@@ -40,13 +42,18 @@ class CreateAccount : Fragment() {
                 fireBaseAuth.createUserWithEmailAndPassword(userEmail, userPassword).addOnSuccessListener {
                     fireBaseAuth.signInWithEmailAndPassword(userEmail, userPassword)
                     newUser["id"] = fireBaseAuth.currentUser!!.uid
-                    fireStoreDatabase.collection("users").add(newUser)
+
+                    fireBaseAuth.currentUser!!.updateProfile(
+                        UserProfileChangeRequest.Builder()
+                            .setDisplayName(username).build()
+                    )
+                    fireStoreDatabase.collection("users").document(username).set(newUser)
                     Navigation.findNavController(view).navigate(R.id.loginFragment)
 
                 }
-            }else
-                ;
-                //TODO Notify user if they should fill the fields again... wrong email formatting, password too short, username empty, etc.
+            } else
+            ;
+            //TODO Notify user if they should fill the fields again... wrong email formatting, password too short, username empty, etc.
         }
     }
 }

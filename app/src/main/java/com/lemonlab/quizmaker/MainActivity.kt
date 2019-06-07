@@ -4,24 +4,37 @@ import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.Navigation
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
 import com.google.firebase.FirebaseApp
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.FirebaseFirestoreSettings
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
-    private lateinit var drawerLayout: DrawerLayout
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         window.decorView.layoutDirection = View.LAYOUT_DIRECTION_RTL
-        setTheme(R.style.TextAppearance)
         setContentView(R.layout.activity_main)
         setUpNavigation()
+        FirebaseFirestore.getInstance().firestoreSettings = with(FirebaseFirestoreSettings.Builder()) {
+            setPersistenceEnabled(true)
+            setCacheSizeBytes(FirebaseFirestoreSettings.CACHE_SIZE_UNLIMITED)
+            build()
+        }
         FirebaseApp.initializeApp(this)
 
+    }
+
+    override fun onBackPressed() {
+        if (drawer_layout.isDrawerOpen(GravityCompat.START))
+            drawer_layout.closeDrawer(GravityCompat.START)
+        else
+            super.onBackPressed()
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -30,9 +43,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setUpNavigation() {
-        drawerLayout = drawer_layout
         val navController = Navigation.findNavController(this, R.id.navigationHost)
-        NavigationUI.setupActionBarWithNavController(this, navController, drawerLayout)
+        NavigationUI.setupActionBarWithNavController(this, navController, drawer_layout)
         NavigationUI.setupWithNavController(navView, navController)
         NavigationUI.setupActionBarWithNavController(
             this,
@@ -43,14 +55,19 @@ class MainActivity : AppCompatActivity() {
 
         navController.addOnDestinationChangedListener { controller, destination, _ ->
             if (destination.id == controller.graph.startDestination) //Users only use the drawer in main fragment.
-                drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED)
+                drawer_layout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED)
             else
-                drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
+                drawer_layout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
 
         }
     }
 
+    override fun onPause() {
+        TempData.currentQuizzes = null
+        super.onPause()
+    }
+
     override fun onSupportNavigateUp() =
-        NavigationUI.navigateUp(Navigation.findNavController(this, R.id.navigationHost), drawerLayout)
+        NavigationUI.navigateUp(Navigation.findNavController(this, R.id.navigationHost), drawer_layout)
 
 }

@@ -54,7 +54,7 @@
                 android:layout_height="wrap_content">
 
             <com.google.android.material.textfield.TextInputEditText
-                    android:drawableEnd="@drawable/ic_lock_white"
+                    android:drawableEnd="@drawable/ic_lock"
                     android:id="@+id/signUpPasswordEditText"
                     android:hint="@string/signUp_password" style="@style/loginEditTextStyle"/>
 
