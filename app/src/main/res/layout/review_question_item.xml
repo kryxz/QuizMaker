@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+                                              android:orientation="vertical"
+                                              android:layout_width="match_parent"
+                                              android:background="@color/colorPrimary"
+                                              android:layout_height="match_parent">
+
+    <androidx.appcompat.widget.AppCompatTextView android:layout_width="wrap_content"
+                                                 android:id="@+id/reviewQuestionText"
+                                                 android:text="@string/reviewTemplate"
+                                                 android:layout_gravity="center_horizontal"
+                                                 android:textSize="28sp"
+                                                 android:gravity="center_horizontal"
+                                                 android:layout_marginBottom="16dp"
+                                                 android:padding="8dp"
+                                                 android:layout_height="wrap_content"/>
+    <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@android:color/black"/>
+    <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/reviewFirstChoice"
+            android:text="@string/reviewTemplate"
+            style="@style/reviewQuestionAnswerStyle"/>
+
+    <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/reviewSecondChoice"
+            android:text="@string/reviewTemplate"
+            style="@style/reviewQuestionAnswerStyle"/>
+
+    <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/reviewThirdChoice"
+            android:text="@string/reviewTemplate"
+            style="@style/reviewQuestionAnswerStyle"/>
+    <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/reviewFourthChoice"
+            android:text="@string/reviewTemplate"
+            style="@style/reviewQuestionAnswerStyle"/>
+</androidx.appcompat.widget.LinearLayoutCompat>
