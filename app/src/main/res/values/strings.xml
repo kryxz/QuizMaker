@@ -23,9 +23,11 @@
     <string name="quizTitleText">عنوان الاختبار</string>
     <string name="questionsText">نص السؤال</string>
     <string name="questionsTextLabel">نص السؤال \n %1$s</string>
+    <string name="quizProtected">يتطلب هذا الاختبار كلمة مرور</string>
+    <string name="wrongPassword">كلمة المرور غير صحيحة!</string>
 
     <string name="trueStatement">عبارة صحيحة</string>
-    <string name="aChoice">اكتب خيارًا </string>
+    <string name="aChoice">اكتب خيارًا</string>
     <string name="edit">تحرير</string>
     <string name="publishQuizText">نشر الاختبار</string>
 
@@ -38,8 +40,10 @@
     <string name="previousQuestion">السؤال السابق</string>
     <string name="nextQuestion">السؤال التالي</string>
     <string name="reviewThenPost">مراجعة ونشر</string>
-    <string name="reviewTemplate"> هذا مجرد مثال لنص يمكنه الإستبدال لاحقا بالنص الأصلي</string>
+    <string name="reviewTemplate">هذا مجرد مثال لنص يمكنه الإستبدال لاحقا بالنص الأصلي</string>
     <string name="reviewQuestions">مراجعة الأسئلة</string>
+    <string name="finishQuiz">انهاء وعرض النتيجة</string>
+    <string name="swipeLeftRight">المس يمينًا أو يسارًا للتنقل بين الأسئلة</string>
 
     <string name="startQuiz">بدأ الاختبار</string>
     <string name="DeleteCurrentQuestion">حذف السؤال الحالي</string>d

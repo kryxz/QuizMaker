@@ -2,11 +2,9 @@ package com.lemonlab.quizmaker
 
 import android.content.Context
 import android.graphics.Color
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.widget.AppCompatButton
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.recyclerview.widget.RecyclerView
 
@@ -59,53 +57,3 @@ class QuestionsAdapter(
 }
 
 
-class QuizzesVH(itemView: View) : RecyclerView.ViewHolder(itemView) {
-
-    val startQuizButton = itemView.findViewById(R.id.startQuizButton) as AppCompatButton
-    val quizAuthorText = itemView.findViewById(R.id.quizAuthorText) as AppCompatTextView
-    val quizTitle = itemView.findViewById(R.id.quizTitleText) as AppCompatTextView
-    val quizQuestionCount = itemView.findViewById(R.id.questionsCountText) as AppCompatTextView
-
-}
-
-class QuizAdapter(
-    private val context: Context,
-    private val userQuiz: List<Quiz>
-) : RecyclerView.Adapter<QuizzesVH>() {
-
-    override fun getItemCount() = userQuiz.size
-
-    override fun onBindViewHolder(holder: QuizzesVH, position: Int) {
-        setUp(
-            holder.startQuizButton,
-            holder.quizAuthorText,
-            holder.quizTitle,
-            holder.quizQuestionCount,
-            position
-        )
-    }
-
-    private fun setUp(
-        startQuizButton: AppCompatButton,
-        quizAuthorText: AppCompatTextView,
-        quizTitle: AppCompatTextView,
-        quizQuestionCount: AppCompatTextView,
-        position: Int
-    ) {
-
-        quizTitle.text = userQuiz[position].quizTitle
-        quizAuthorText.text = context.getString(R.string.quizAuthorText, userQuiz[position].quizAuthor)
-        quizQuestionCount.text = context.getString(R.string.questionsCountText, userQuiz[position].questionsCount)
-
-        Log.i("Data", userQuiz[position].passwordProtected.toString() + " " + position)
-        startQuizButton.setOnClickListener {
-
-        }
-
-    }
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): QuizzesVH {
-        return QuizzesVH(LayoutInflater.from(context).inflate(R.layout.quiz_item, parent, false))
-    }
-
-}

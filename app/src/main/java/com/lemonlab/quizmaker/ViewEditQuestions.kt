@@ -199,8 +199,12 @@ class ViewEditQuestions : Fragment() {
             quiz["quiz"] = MultipleChoiceQuiz(
                 Quiz(
                     TempData.quizTitle, TempData.isPasswordProtected,
+
                     TempData.isOneTimeQuiz, TempData.questionsCount,
-                    TempData.quizPin, TempData.quizType, userName
+
+                    TempData.quizPin, TempData.quizType, userName,
+
+                    userUID
                 ),
                 quizQuestions
             )

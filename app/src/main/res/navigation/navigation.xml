@@ -14,6 +14,7 @@
     <fragment android:id="@+id/mainFragment" android:name="com.lemonlab.quizmaker.MainFragment"
               android:label="@string/mainPage" tools:layout="@layout/fragment_main">
         <action android:id="@+id/MainToLogin" app:destination="@id/loginFragment"/>
+        <action android:id="@+id/goToQuizNow" app:destination="@+id/takeQuizFragment"/>
     </fragment>
     <fragment android:id="@+id/settingsFragment" android:name="com.lemonlab.quizmaker.SettingsFragment"
               android:label="@string/settingsLabel" tools:layout="@layout/fragment_settings"/>
@@ -22,4 +23,8 @@
     <fragment android:name="com.lemonlab.quizmaker.ViewEditQuestions"
               android:label="@string/createNewQuiz" tools:layout="@layout/questions_fill_form"
               android:id="@+id/viewEditQuestions"/>
+    <fragment android:id="@+id/takeQuizFragment" android:name="com.lemonlab.quizmaker.TakeQuizFragment"
+              android:label="fragment_take_quiz" tools:layout="@layout/fragment_take_quiz">
+        <argument android:name="quizID" app:argType="string"/>
+    </fragment>
 </navigation>

@@ -73,8 +73,10 @@ class MainFragment : Fragment() {
         FirebaseFirestore.getInstance().collection("Quizzes").get().addOnSuccessListener { documents ->
 
             //listOfQuizzes.add(documents.documents[0].get("quiz", MultipleChoiceQuiz::class.java)!!.quiz!!)
+
             for (item in documents) {
                 listOfQuizzes.add(item.get("quiz", MultipleChoiceQuiz::class.java)!!.quiz!!)
+
                 val source = if (item.metadata.isFromCache)
                     "local cache"
                 else

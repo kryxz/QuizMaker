@@ -1,4 +1,10 @@
+@file:Suppress("unused")
+
 package com.lemonlab.quizmaker
+
+import android.os.Parcel
+import android.os.Parcelable
+import kotlinx.android.parcel.Parcelize
 
 
 enum class QuizType {
@@ -16,8 +22,13 @@ class TempData {
         var quizType: QuizType? = null
 
         //temporary data to make fragments smoother
+        //This is used in the main fragment
         var currentQuizzes: List<Quiz>? = null
+
+        //This is used in ViewEditQuestions
         var cachedQuestions: LinkedHashMap<String, MultipleChoiceQuestion>? = null
+
+
         //reassigns all variables to their defaults.
         fun resetData() {
             quizTitle = ""
@@ -57,17 +68,16 @@ data class Quiz(
     val questionsCount: Int,
     val quizPin: String,
     val quizType: QuizType?,
-    val quizAuthor: String
+    val quizAuthor: String,
+    val userUID:String
 ) {
 
-    constructor() : this("", false, false, 0, "", null, "")
+    constructor() : this("", false, false, 0, "", null, "", "")
 }
-
 data class MultipleChoiceQuiz(
     val quiz: Quiz?,
     val questions: HashMap<String, MultipleChoiceQuestion>?
 ) {
-
     constructor() : this(null, null)
 }
 
