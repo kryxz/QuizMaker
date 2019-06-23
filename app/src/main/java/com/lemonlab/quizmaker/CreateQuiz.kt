@@ -77,7 +77,6 @@ class CreateQuiz : Fragment() {
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
         })
-
         ArrayAdapter.createFromResource(
             context!!,
             R.array.quizQuestionsTypes,
@@ -135,7 +134,9 @@ class CreateQuiz : Fragment() {
             else
                 QuizType.TrueFalse
 
-            if (TempData.cachedQuestions != null && TempData.quizType == QuizType.MultipleChoice) {
+            if (TempData.multiChoiceCachedQuestions != null && TempData.quizType == QuizType.MultipleChoice ||
+                TempData.trueFalseCachedQuestions != null && TempData.quizType == QuizType.TrueFalse
+            ) {
                 showYesNoDialog(
                     ::deleteCached,
                     ::navigateToEditingQuestions,
@@ -193,4 +194,49 @@ fun Fragment.showYesNoDialog(
         show()
     }
 
+}
+
+fun Fragment.showInfoDialog(
+    functionToPerform: () -> Unit,
+    dialogTitle: String,
+    dialogMessage: String
+) {
+    val dialogBuilder = AlertDialog.Builder(context!!).create()
+    val dialogView = with(layoutInflater) {
+        inflate(
+            R.layout.info_dialog,
+            null
+        )
+    }
+    dialogView.findViewById<AppCompatTextView>(R.id.infoDialogTitle).text = dialogTitle
+    dialogView.findViewById<AppCompatTextView>(R.id.infoDialogMessageText).text = dialogMessage
+
+    dialogView.findViewById<AppCompatButton>(R.id.infoDialogConfirmButton).setOnClickListener {
+        functionToPerform()
+        dialogBuilder.dismiss()
+    }
+
+    with(dialogBuilder) {
+        setView(dialogView)
+        show()
+    }
+
+}
+
+fun LinkedHashMap<String, MultipleChoiceQuestion>.allQuestionsOK(): Boolean {
+    var isOK = false
+    this.forEach {
+        isOK = it.value.first.length > 1 && it.value.second.length > 1 &&
+                it.value.third.length > 1 && it.value.fourth.length > 1 &&
+                it.value.question.length > 1
+    }
+    return isOK
+}
+
+fun LinkedHashMap<String, TrueFalseQuestion>.areQuestionsOK(): Boolean {
+    var isOK = false
+    this.forEach {
+        isOK = it.value.question.length > 1
+    }
+    return isOK
 }

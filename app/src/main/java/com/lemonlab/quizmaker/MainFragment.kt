@@ -11,7 +11,7 @@ import androidx.navigation.NavOptions
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.*
+import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.android.synthetic.main.fragment_main.*
 
 
@@ -64,6 +64,7 @@ class MainFragment : Fragment() {
             with(QuizzesRecyclerView) {
                 layoutManager = LinearLayoutManager(context!!)
                 adapter = QuizAdapter(context!!, TempData.currentQuizzes!!)
+                MainFragmentProgressBar.visibility = View.GONE
             }
     }
 
@@ -72,7 +73,6 @@ class MainFragment : Fragment() {
         //This is how we retrieve data from the database
         FirebaseFirestore.getInstance().collection("Quizzes").get().addOnSuccessListener { documents ->
 
-            //listOfQuizzes.add(documents.documents[0].get("quiz", MultipleChoiceQuiz::class.java)!!.quiz!!)
 
             for (item in documents) {
                 listOfQuizzes.add(item.get("quiz", MultipleChoiceQuiz::class.java)!!.quiz!!)
@@ -91,6 +91,7 @@ class MainFragment : Fragment() {
                 with(QuizzesRecyclerView) {
                     layoutManager = LinearLayoutManager(context!!)
                     adapter = QuizAdapter(context!!, listOfQuizzes)
+                    MainFragmentProgressBar.visibility = View.GONE
                 }
         }
 

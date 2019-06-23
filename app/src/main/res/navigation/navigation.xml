@@ -24,7 +24,9 @@
               android:label="@string/createNewQuiz" tools:layout="@layout/questions_fill_form"
               android:id="@+id/viewEditQuestions"/>
     <fragment android:id="@+id/takeQuizFragment" android:name="com.lemonlab.quizmaker.TakeQuizFragment"
-              android:label="fragment_take_quiz" tools:layout="@layout/fragment_take_quiz">
+              android:label="@string/app_name" tools:layout="@layout/fragment_take_quiz">
         <argument android:name="quizID" app:argType="string"/>
     </fragment>
+    <fragment android:id="@+id/messagesFragment" android:name="com.lemonlab.quizmaker.MessagesFragment"
+              android:label="fragment_messages" tools:layout="@layout/fragment_messages"/>
 </navigation>

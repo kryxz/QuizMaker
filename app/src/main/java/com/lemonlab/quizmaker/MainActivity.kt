@@ -21,6 +21,7 @@ class MainActivity : AppCompatActivity() {
         window.decorView.layoutDirection = View.LAYOUT_DIRECTION_RTL
         setContentView(R.layout.activity_main)
         setUpNavigation()
+
         FirebaseFirestore.getInstance().firestoreSettings = with(FirebaseFirestoreSettings.Builder()) {
             setPersistenceEnabled(true)
             setCacheSizeBytes(FirebaseFirestoreSettings.CACHE_SIZE_UNLIMITED)
@@ -44,7 +45,6 @@ class MainActivity : AppCompatActivity() {
 
     private fun setUpNavigation() {
         val navController = Navigation.findNavController(this, R.id.navigationHost)
-        NavigationUI.setupActionBarWithNavController(this, navController, drawer_layout)
         NavigationUI.setupWithNavController(navView, navController)
         NavigationUI.setupActionBarWithNavController(
             this,
@@ -52,7 +52,7 @@ class MainActivity : AppCompatActivity() {
             //main fragment, login fragment will have no back/up button.
             AppBarConfiguration.Builder(setOf(R.id.mainFragment, R.id.loginFragment)).build()
         )
-
+        NavigationUI.setupActionBarWithNavController(this, navController, drawer_layout)
         navController.addOnDestinationChangedListener { controller, destination, _ ->
             if (destination.id == controller.graph.startDestination) //Users only use the drawer in main fragment.
                 drawer_layout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED)

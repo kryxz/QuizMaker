@@ -58,6 +58,7 @@
                 android:text="@string/trueStatement"
                 android:layout_gravity="center_horizontal"
                 android:layout_width="wrap_content"
+                android:textColor="@color/textColorPrimary"
                 android:id="@+id/isStatementTrueCheckBox"
                 android:layout_height="wrap_content"/>
 

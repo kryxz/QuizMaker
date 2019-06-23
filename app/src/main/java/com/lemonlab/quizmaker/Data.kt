@@ -2,9 +2,6 @@
 
 package com.lemonlab.quizmaker
 
-import android.os.Parcel
-import android.os.Parcelable
-import kotlinx.android.parcel.Parcelize
 
 
 enum class QuizType {
@@ -26,8 +23,8 @@ class TempData {
         var currentQuizzes: List<Quiz>? = null
 
         //This is used in ViewEditQuestions
-        var cachedQuestions: LinkedHashMap<String, MultipleChoiceQuestion>? = null
-
+        var multiChoiceCachedQuestions: LinkedHashMap<String, MultipleChoiceQuestion>? = null
+        var trueFalseCachedQuestions: LinkedHashMap<String, TrueFalseQuestion>? = null
 
         //reassigns all variables to their defaults.
         fun resetData() {
@@ -40,11 +37,13 @@ class TempData {
             quizType = null
 
             currentQuizzes = null
-            cachedQuestions = null
+            multiChoiceCachedQuestions = null
+            trueFalseCachedQuestions = null
         }
 
         fun deleteCached() {
-            cachedQuestions = null
+            multiChoiceCachedQuestions = null
+            trueFalseCachedQuestions = null
         }
     }
 }
@@ -55,10 +54,40 @@ data class MultipleChoiceQuestion(
     val third: String, val fourth: String,
     val correctAnswer: Int
 ) {
-
     constructor() : this("", "", "", "", "", 0)
 
+}
 
+data class TrueFalseQuestion(
+    val question: String,
+    val answer:Boolean)
+{
+    constructor() : this("", false)
+}
+
+
+data class MultipleChoiceQuiz(
+    val quiz: Quiz?,
+    val questions: HashMap<String, MultipleChoiceQuestion>?
+) {
+    constructor() : this(null, null)
+}
+
+data class TrueFalseQuiz(
+    val quiz: Quiz?,
+    val questions: HashMap<String, TrueFalseQuestion>?
+) {
+    constructor() : this(null, null)
+}
+
+data class QuizLog(
+    val userLog:MutableList<String>
+){
+    fun addQuiz(quizUUID:String){
+        if(!userLog.contains(quizUUID))
+            userLog.add(quizUUID)
+    }
+    constructor(): this(mutableListOf())
 }
 
 data class Quiz(
@@ -69,15 +98,17 @@ data class Quiz(
     val quizPin: String,
     val quizType: QuizType?,
     val quizAuthor: String,
-    val userUID:String
+    val quizUUID:String,
+    var rating:Float,
+    var totalRatingsCount:Int
 ) {
 
-    constructor() : this("", false, false, 0, "", null, "", "")
-}
-data class MultipleChoiceQuiz(
-    val quiz: Quiz?,
-    val questions: HashMap<String, MultipleChoiceQuestion>?
-) {
-    constructor() : this(null, null)
-}
+    fun setNewRating(aNewRating:Float){
+        totalRatingsCount += 1
+        rating += (aNewRating - rating) / totalRatingsCount
 
+    }
+
+    constructor() : this("", false, false, 0,
+        "", null, "", "", 0f, 0)
+}

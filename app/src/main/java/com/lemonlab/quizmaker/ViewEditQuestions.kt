@@ -5,7 +5,6 @@ import android.app.AlertDialog
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.SparseBooleanArray
 import android.view.*
 import android.widget.ArrayAdapter
 import android.widget.Toast
@@ -14,6 +13,7 @@ import androidx.appcompat.widget.AppCompatButton
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.fragment.app.Fragment
 import androidx.navigation.Navigation
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.dingmouren.layoutmanagergroup.viewpager.ViewPagerLayoutManager
 import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.auth.FirebaseAuth
@@ -26,8 +26,8 @@ import kotlin.collections.LinkedHashMap
 
 class ViewEditQuestions : Fragment() {
     private var position = 1
-    private lateinit var quizQuestions: LinkedHashMap<String, MultipleChoiceQuestion>
-
+    private lateinit var multipleChoiceQuestions: LinkedHashMap<String, MultipleChoiceQuestion>
+    private lateinit var trueFalseQuestions: LinkedHashMap<String, TrueFalseQuestion>
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -38,10 +38,6 @@ class ViewEditQuestions : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        quizQuestions = if (TempData.cachedQuestions != null)
-            TempData.cachedQuestions!!
-        else
-            LinkedHashMap()
 
         decideQuizType()
         super.onViewCreated(view, savedInstanceState)
@@ -53,12 +49,27 @@ class ViewEditQuestions : Fragment() {
     }
 
     private fun setTextsMultipleChoice() {
-        questionsTextEditText.setText(quizQuestions[position.toString()]!!.question)
-        firstChoice.setText(quizQuestions[position.toString()]!!.first)
-        secondChoice.setText(quizQuestions[position.toString()]!!.second)
-        thirdChoice.setText(quizQuestions[position.toString()]!!.third)
-        fourthChoice.setText(quizQuestions[position.toString()]!!.fourth)
-        correctAnswerSpinner.setSelection(quizQuestions[position.toString()]!!.correctAnswer)
+        if (TempData.quizType != QuizType.MultipleChoice)
+            return
+        if (multipleChoiceQuestions[position.toString()] != null) {
+            questionsTextEditText.setText(multipleChoiceQuestions[position.toString()]!!.question)
+            firstChoice.setText(multipleChoiceQuestions[position.toString()]!!.first)
+            secondChoice.setText(multipleChoiceQuestions[position.toString()]!!.second)
+            thirdChoice.setText(multipleChoiceQuestions[position.toString()]!!.third)
+            fourthChoice.setText(multipleChoiceQuestions[position.toString()]!!.fourth)
+            correctAnswerSpinner.setSelection(multipleChoiceQuestions[position.toString()]!!.correctAnswer)
+        }
+
+    }
+
+    private fun setTextTrueFalse() {
+        if (TempData.quizType != QuizType.TrueFalse)
+            return
+        if (trueFalseQuestions[position.toString()] != null) {
+            questionsTextEditText.setText(trueFalseQuestions[position.toString()]!!.question)
+            isStatementTrueCheckBox.isChecked = trueFalseQuestions[position.toString()]!!.answer
+        }
+
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
@@ -80,10 +91,17 @@ class ViewEditQuestions : Fragment() {
         }
 
         fun deleteCurrentQuestion() {
-            quizQuestions[position.toString()] = MultipleChoiceQuestion()
+            if (TempData.quizType == QuizType.MultipleChoice) {
+                multipleChoiceQuestions[position.toString()] = MultipleChoiceQuestion()
+                if (multipleChoiceQuestions[position.toString()] != null)
+                    setTextsMultipleChoice()
+            } else if (TempData.quizType == QuizType.TrueFalse) {
+                trueFalseQuestions[position.toString()] = TrueFalseQuestion()
+                if (trueFalseQuestions[position.toString()] != null)
+                    setTextTrueFalse()
+            }
             TempData.questionsCount = TempData.questionsCount.dec()
             position = TempData.questionsCount
-            setTextsMultipleChoice()
             updateTitle()
             dialogBuilder.dismiss()
         }
@@ -97,8 +115,8 @@ class ViewEditQuestions : Fragment() {
             position = 1
             updateTitle()
             dialogBuilder.dismiss()
-            if (quizQuestions[position.toString()] != null)
-                setTextsMultipleChoice()
+            setTextsMultipleChoice()
+            setTextTrueFalse()
         }
 
 
@@ -138,7 +156,7 @@ class ViewEditQuestions : Fragment() {
                 quizQuestionsCount <= 30
             )
                 showYesNoDialog(
-                    ::resizeQuiz, fun() {},
+                    ::resizeQuiz, {},
                     getString(R.string.resizeQuiz),
                     getString(R.string.thisWillDeleteRemainingQuestions)
                 )
@@ -164,16 +182,28 @@ class ViewEditQuestions : Fragment() {
         editQuestionsLayout.visibility = View.GONE
 
         bottomLayoutViewEdit.visibility = View.VISIBLE
-
+        if(TempData.quizType==QuizType.MultipleChoice)
         with(questionsRecyclerView) {
+            TempData.multiChoiceCachedQuestions = multipleChoiceQuestions
             layoutManager = null
             adapter = null
             onFlingListener = null
 
             visibility = View.VISIBLE
             layoutManager = ViewPagerLayoutManager(context!!, 0)
-            adapter = QuestionsAdapter(context!!, quizQuestions)
+            adapter = QuestionsAdapter(context!!, multipleChoiceQuestions, null)
         }
+        else
+            with(questionsRecyclerView) {
+                TempData.trueFalseCachedQuestions = trueFalseQuestions
+                layoutManager = null
+                adapter = null
+                onFlingListener = null
+
+                visibility = View.VISIBLE
+                layoutManager = LinearLayoutManager(context!!)
+                adapter = QuestionsAdapter(context!!, null, trueFalseQuestions)
+            }
 
         publishQuizButton.setOnClickListener {
             publishQuiz()
@@ -190,30 +220,41 @@ class ViewEditQuestions : Fragment() {
     private fun publishQuiz() {
         fun publishNow() {
             val userName: String = FirebaseAuth.getInstance().currentUser!!.displayName.toString()
-            val userUID =
-                FirebaseAuth.getInstance().currentUser!!.displayName.toString() + UUID.randomUUID().toString().substring(
-                    0,
-                    10
-                )
-            val quiz: HashMap<String, MultipleChoiceQuiz> = HashMap()
-            quiz["quiz"] = MultipleChoiceQuiz(
-                Quiz(
-                    TempData.quizTitle, TempData.isPasswordProtected,
+            val quizID =
+                FirebaseAuth.getInstance().currentUser!!.displayName.toString() +
+                        UUID.randomUUID().toString().substring(0, 10)
+            val quizData =                     Quiz(
+                TempData.quizTitle, TempData.isPasswordProtected,
 
-                    TempData.isOneTimeQuiz, TempData.questionsCount,
+                TempData.isOneTimeQuiz, TempData.questionsCount,
 
-                    TempData.quizPin, TempData.quizType, userName,
+                TempData.quizPin, TempData.quizType, userName,
 
-                    userUID
-                ),
-                quizQuestions
+                quizID, 0f, 0
             )
+            when {
+                TempData.quizType==QuizType.MultipleChoice -> {
+                    val quiz: HashMap<String, MultipleChoiceQuiz> = HashMap()
+                    quiz["quiz"] = MultipleChoiceQuiz(quizData, multipleChoiceQuestions)
 
-            FirebaseFirestore.getInstance().collection("Quizzes").document(userUID).set(quiz).addOnSuccessListener {
-                //resets all temp data to their default values.
-                TempData.resetData()
+                    FirebaseFirestore.getInstance().collection("Quizzes").document(quizID).set(quiz).addOnSuccessListener {
+                        //resets all temp data to their default values.
+                        TempData.resetData()
 
-                Navigation.findNavController(view!!).navigate(R.id.mainFragment)
+                        Navigation.findNavController(view!!).navigate(R.id.mainFragment)
+                    }
+                }
+                else -> {
+                    val quiz: HashMap<String, TrueFalseQuiz> = HashMap()
+                    quiz["quiz"] = TrueFalseQuiz(quizData, trueFalseQuestions)
+
+                    FirebaseFirestore.getInstance().collection("Quizzes").document(quizID).set(quiz).addOnSuccessListener {
+                        //resets all temp data to their default values.
+                        TempData.resetData()
+
+                        Navigation.findNavController(view!!).navigate(R.id.mainFragment)
+                    }
+                }
             }
 
         }
@@ -226,9 +267,13 @@ class ViewEditQuestions : Fragment() {
     }
 
     private fun multipleChoice() {
+        multipleChoiceQuestions = if (TempData.multiChoiceCachedQuestions != null)
+            TempData.multiChoiceCachedQuestions!!
+        else
+            LinkedHashMap()
 
         fun addQuestion(key: String) {
-            quizQuestions[key] = MultipleChoiceQuestion(
+            multipleChoiceQuestions[key] = MultipleChoiceQuestion(
                 questionsTextEditText.text.toString(),
                 firstChoice.text.toString(), secondChoice.text.toString(),
                 thirdChoice.text.toString(), fourthChoice.text.toString(),
@@ -243,7 +288,7 @@ class ViewEditQuestions : Fragment() {
                     && thirdChoice.text!!.isNotEmpty() && fourthChoice.text!!.isNotEmpty())
         }
 
-        if (quizQuestions.isNotEmpty())
+        if (multipleChoiceQuestions.isNotEmpty())
             setTextsMultipleChoice()
 
         fun canReviewQuiz() {
@@ -252,11 +297,10 @@ class ViewEditQuestions : Fragment() {
                     if (position == TempData.questionsCount && allFieldsOK()) {
                         addQuestion(position.toString())
                     }
-                    if (quizQuestions.size >= TempData.questionsCount)
+                    if (multipleChoiceQuestions.size >= TempData.questionsCount && multipleChoiceQuestions.allQuestionsOK())
                         reviewQuiz()
                     else
                         Toast.makeText(context!!, getString(R.string.completeAllQuestions), Toast.LENGTH_SHORT).show()
-                    TempData.cachedQuestions = quizQuestions
                 }
             }
         }
@@ -281,7 +325,7 @@ class ViewEditQuestions : Fragment() {
             }
             correctAnswerSpinner.setSelection(0)
             position = position.dec()
-            if (quizQuestions.isNotEmpty() && quizQuestions[position.toString()] != null)
+            if (multipleChoiceQuestions.isNotEmpty() && multipleChoiceQuestions[position.toString()] != null)
                 setTextsMultipleChoice()
 
             updateTitle()
@@ -300,7 +344,7 @@ class ViewEditQuestions : Fragment() {
                 it.text!!.clear()
             }
             correctAnswerSpinner.setSelection(0)
-            if (quizQuestions.isNotEmpty() && quizQuestions[position.toString()] != null) {
+            if (multipleChoiceQuestions.isNotEmpty() && multipleChoiceQuestions[position.toString()] != null) {
                 setTextsMultipleChoice()
             }
 
@@ -314,17 +358,65 @@ class ViewEditQuestions : Fragment() {
     }
 
     private fun trueFalse() {
+        trueFalseQuestions = if (TempData.trueFalseCachedQuestions != null)
+            TempData.trueFalseCachedQuestions!!
+        else
+            LinkedHashMap()
+
+
         multipleChoiceLayout.visibility = View.GONE
-        val sparseBooleanArrayTrueFalse = SparseBooleanArray(TempData.questionsCount)
+        fun addQuestion(key: String) {
+            if (questionsTextEditText.text!!.isNotBlank()) {
+                trueFalseQuestions[key] = TrueFalseQuestion(
+                    questionsTextEditText.text.toString(),
+                    isStatementTrueCheckBox.isChecked
+                )
+                TempData.trueFalseCachedQuestions = trueFalseQuestions
+            }
+        }
+
+        fun clearFields() {
+            questionsTextEditText.text!!.clear()
+            isStatementTrueCheckBox.isChecked = false
+        }
+
         fun update() {
-            sparseBooleanArrayTrueFalse.append(position, true)
+            if (position == TempData.questionsCount)
+                return
+            addQuestion(position.toString())
+            position = position.inc()
             updateTitle()
+            clearFields()
+            setTextTrueFalse()
         }
 
         fun previous() {
+            if (position == 1)
+                return
+            addQuestion(position.toString())
+            position = position.dec()
             updateTitle()
+            clearFields()
+            setTextTrueFalse()
+        }
+        fun canReviewQuiz() {
+            with(reviewQuizButton) {
+                this.setOnClickListener {
+                    if (position == TempData.questionsCount && questionsTextEditText.text!!.isNotBlank()) {
+                        addQuestion(position.toString())
+                    }
+                    if (trueFalseQuestions.size >= TempData.questionsCount && trueFalseQuestions.areQuestionsOK())
+                        reviewQuiz()
+                    else
+                        Toast.makeText(context!!, getString(R.string.completeAllQuestions), Toast.LENGTH_SHORT).show()
+                }
+            }
         }
 
+        isStatementTrueCheckBox.setOnCheckedChangeListener { _, _ ->
+            addQuestion(position.toString())
+        }
+        canReviewQuiz()
         buttonsClickHandle(::update, ::previous)
 
     }

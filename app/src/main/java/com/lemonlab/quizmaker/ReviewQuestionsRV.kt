@@ -5,6 +5,9 @@ import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
+import android.widget.Toast
+import androidx.appcompat.widget.AppCompatCheckBox
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.recyclerview.widget.RecyclerView
 
@@ -14,40 +17,73 @@ class ReviewQuestionsRV(itemView: View) : RecyclerView.ViewHolder(itemView) {
     val secondChoice = itemView.findViewById(R.id.reviewSecondChoice) as AppCompatTextView
     val thirdChoice = itemView.findViewById(R.id.reviewThirdChoice) as AppCompatTextView
     val fourthChoice = itemView.findViewById(R.id.reviewFourthChoice) as AppCompatTextView
+    val reviewMultipleChoiceLayout = itemView.findViewById(R.id.reviewMultipleChoiceLayout) as LinearLayout
+    val reviewIsTrueCheckBox = itemView.findViewById(R.id.reviewIsTrueCheckBox) as AppCompatCheckBox
 
 
 }
 
 class QuestionsAdapter(
     private val context: Context,
-    private val quizQuestions: LinkedHashMap<String, MultipleChoiceQuestion>
+    private val multipleChoiceQuestions: LinkedHashMap<String, MultipleChoiceQuestion>?,
+    private val trueFalseQuestions: LinkedHashMap<String, TrueFalseQuestion>?
 ) : RecyclerView.Adapter<ReviewQuestionsRV>() {
     override fun getItemCount() = TempData.questionsCount
 
     override fun onBindViewHolder(holder: ReviewQuestionsRV, position: Int) {
-        setUp(
-            holder.questionText,
-            holder.firstChoice,
-            holder.secondChoice,
-            holder.thirdChoice,
-            holder.fourthChoice,
-            position
-        )
+        if (TempData.quizType == QuizType.MultipleChoice)
+            setUpMultipleChoice(
+                holder.questionText,
+                holder.firstChoice,
+                holder.secondChoice,
+                holder.thirdChoice,
+                holder.fourthChoice,
+                position,
+                holder.reviewIsTrueCheckBox
+            )
+        else
+            setUpTrueFalse(
+                holder.questionText,
+                holder.reviewMultipleChoiceLayout,
+                holder.reviewIsTrueCheckBox,
+                position
+            )
     }
 
-    private fun setUp(
-        questionsText: AppCompatTextView, firstChoice: AppCompatTextView,
-        secondChoice: AppCompatTextView, thirdChoice: AppCompatTextView, fourthChoice: AppCompatTextView, position: Int
+    private fun setUpTrueFalse(
+        questionsText: AppCompatTextView,
+        reviewMultipleChoiceLayout: LinearLayout,
+        reviewIsTrueCheckBox: AppCompatCheckBox,
+        position: Int
     ) {
+        reviewIsTrueCheckBox.visibility = View.VISIBLE
+        reviewMultipleChoiceLayout.visibility = View.GONE
+        questionsText.text = context.getString(
+            R.string.questionsTextLabel,
+            trueFalseQuestions!![(position + 1).toString()]!!.question
+        )
+        reviewIsTrueCheckBox.isChecked = trueFalseQuestions[(position + 1).toString()]!!.answer
 
+    }
+
+    private fun setUpMultipleChoice(
+        questionsText: AppCompatTextView, firstChoice: AppCompatTextView,
+        secondChoice: AppCompatTextView, thirdChoice: AppCompatTextView, fourthChoice: AppCompatTextView,
+        position: Int, reviewIsTrueCheckBox: AppCompatCheckBox
+    ) {
+        Toast.makeText(context, context.getString(R.string.swipeLeftRight), Toast.LENGTH_SHORT).show()
+        reviewIsTrueCheckBox.visibility = View.GONE
         questionsText.text =
-            context.getString(R.string.questionsTextLabel, quizQuestions[(position + 1).toString()]!!.question)
+            context.getString(
+                R.string.questionsTextLabel,
+                multipleChoiceQuestions!![(position + 1).toString()]!!.question
+            )
         val listOfTextAnswers = mutableListOf(firstChoice, secondChoice, thirdChoice, fourthChoice)
-        firstChoice.text = quizQuestions[(position + 1).toString()]!!.first
-        secondChoice.text = quizQuestions[(position + 1).toString()]!!.second
-        thirdChoice.text = quizQuestions[(position + 1).toString()]!!.third
-        fourthChoice.text = quizQuestions[(position + 1).toString()]!!.fourth
-        listOfTextAnswers[quizQuestions[(position + 1).toString()]!!.correctAnswer].setTextColor(Color.GREEN)
+        firstChoice.text = multipleChoiceQuestions[(position + 1).toString()]!!.first
+        secondChoice.text = multipleChoiceQuestions[(position + 1).toString()]!!.second
+        thirdChoice.text = multipleChoiceQuestions[(position + 1).toString()]!!.third
+        fourthChoice.text = multipleChoiceQuestions[(position + 1).toString()]!!.fourth
+        listOfTextAnswers[multipleChoiceQuestions[(position + 1).toString()]!!.correctAnswer].setTextColor(Color.GREEN)
 
     }
 

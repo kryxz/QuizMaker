@@ -6,6 +6,10 @@
              android:background="@color/colorPrimary"
              tools:context=".MainFragment">
 
+    <ProgressBar android:layout_width="match_parent" android:layout_height="match_parent"
+                 android:id="@+id/MainFragmentProgressBar"
+    />
+
     <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/createQuizButton"
             android:src="@drawable/ic_note_add"

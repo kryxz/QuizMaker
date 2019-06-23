@@ -3,7 +3,7 @@
                                               android:orientation="vertical"
                                               android:layout_width="match_parent"
                                               android:background="@color/colorPrimary"
-                                              android:layout_height="match_parent">
+                                              android:layout_height="wrap_content">
 
     <androidx.appcompat.widget.AppCompatTextView android:layout_width="wrap_content"
                                                  android:id="@+id/reviewQuestionText"
@@ -14,26 +14,46 @@
                                                  android:layout_marginBottom="16dp"
                                                  android:padding="8dp"
                                                  android:layout_height="wrap_content"/>
+
+    <androidx.appcompat.widget.AppCompatCheckBox
+            android:text="@string/trueStatement"
+            android:layout_gravity="center_horizontal"
+            android:layout_width="wrap_content"
+            android:visibility="gone"
+            android:textColor="@color/textColorPrimary"
+            android:enabled="false"
+            android:id="@+id/reviewIsTrueCheckBox"
+            android:layout_height="wrap_content"/>
+
     <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:background="@android:color/black"/>
-    <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/reviewFirstChoice"
-            android:text="@string/reviewTemplate"
-            style="@style/reviewQuestionAnswerStyle"/>
 
-    <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/reviewSecondChoice"
-            android:text="@string/reviewTemplate"
-            style="@style/reviewQuestionAnswerStyle"/>
 
-    <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/reviewThirdChoice"
-            android:text="@string/reviewTemplate"
-            style="@style/reviewQuestionAnswerStyle"/>
-    <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/reviewFourthChoice"
-            android:text="@string/reviewTemplate"
-            style="@style/reviewQuestionAnswerStyle"/>
+    <LinearLayout android:layout_width="match_parent"
+                  android:id="@+id/reviewMultipleChoiceLayout"
+                  android:orientation="vertical" android:layout_height="wrap_content">
+
+        <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/reviewFirstChoice"
+                android:text="@string/reviewTemplate"
+                style="@style/reviewQuestionAnswerStyle"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/reviewSecondChoice"
+                android:text="@string/reviewTemplate"
+                style="@style/reviewQuestionAnswerStyle"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/reviewThirdChoice"
+                android:text="@string/reviewTemplate"
+                style="@style/reviewQuestionAnswerStyle"/>
+        <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/reviewFourthChoice"
+                android:text="@string/reviewTemplate"
+                style="@style/reviewQuestionAnswerStyle"/>
+
+    </LinearLayout>
+
 </androidx.appcompat.widget.LinearLayoutCompat>
