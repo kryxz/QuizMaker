@@ -1,4 +1,4 @@
-package com.lemonlab.quizmaker
+package com.lemonlab.quizmaker.adapters
 
 import android.app.AlertDialog
 import android.content.Context
@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.lemonlab.quizmaker.*
 
 
 class QuizzesVH(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -95,7 +96,11 @@ class QuizAdapter(
 
             confirmButton.setOnClickListener {
                 if (passwordField.text.toString() == userQuiz[position].quizPin)
-                    Navigation.findNavController(view).navigate(MainFragmentDirections.goToQuizNow(userQuiz[position].quizUUID))
+                    Navigation.findNavController(view).navigate(
+                        MainFragmentDirections.goToQuizNow(
+                            userQuiz[position].quizUUID
+                        )
+                    )
                 else if (passwordField.text!!.isNotBlank())
                     Toast.makeText(context, context.getString(R.string.wrongPassword), Toast.LENGTH_SHORT).show()
                 dialogBuilder.dismiss()
@@ -110,13 +115,23 @@ class QuizAdapter(
             if (userQuiz[position].passwordProtected)
                 enterPasswordDialog(it)
             else
-                Navigation.findNavController(it).navigate(MainFragmentDirections.goToQuizNow(userQuiz[position].quizUUID))
+                Navigation.findNavController(it).navigate(
+                    MainFragmentDirections.goToQuizNow(
+                        userQuiz[position].quizUUID
+                    )
+                )
         }
 
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): QuizzesVH {
-        return QuizzesVH(LayoutInflater.from(context).inflate(R.layout.quiz_item, parent, false))
+        return QuizzesVH(
+            LayoutInflater.from(context).inflate(
+                R.layout.quiz_item,
+                parent,
+                false
+            )
+        )
     }
 
 }

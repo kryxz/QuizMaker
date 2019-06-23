@@ -12,6 +12,7 @@ import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.lemonlab.quizmaker.adapters.QuizAdapter
 import kotlinx.android.synthetic.main.fragment_main.*
 
 
@@ -76,7 +77,6 @@ class MainFragment : Fragment() {
 
             for (item in documents) {
                 listOfQuizzes.add(item.get("quiz", MultipleChoiceQuiz::class.java)!!.quiz!!)
-
                 val source = if (item.metadata.isFromCache)
                     "local cache"
                 else
@@ -85,6 +85,10 @@ class MainFragment : Fragment() {
 
             }
             //to get questions, use item.get("quiz", MultipleChoiceQuiz::class.java)!!.questions
+            with(listOfQuizzes){
+                sortWith(compareBy {it.milliSeconds})
+                reverse()
+            }
             TempData.currentQuizzes = listOfQuizzes
 
             if (view != null)

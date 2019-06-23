@@ -2,6 +2,7 @@
 
 package com.lemonlab.quizmaker
 
+import java.util.*
 
 
 enum class QuizType {
@@ -100,7 +101,8 @@ data class Quiz(
     val quizAuthor: String,
     val quizUUID:String,
     var rating:Float,
-    var totalRatingsCount:Int
+    var totalRatingsCount:Int,
+    val milliSeconds:Long
 ) {
 
     fun setNewRating(aNewRating:Float){
@@ -110,5 +112,13 @@ data class Quiz(
     }
 
     constructor() : this("", false, false, 0,
-        "", null, "", "", 0f, 0)
+        "", null, "", "", 0f, 0, 0)
+}
+
+data class Message(
+    val sender:String,
+    val message:String,
+    val milliSeconds:Long
+){
+    constructor() : this("",  "", 0)
 }

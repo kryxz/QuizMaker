@@ -18,6 +18,7 @@ import com.dingmouren.layoutmanagergroup.viewpager.ViewPagerLayoutManager
 import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.lemonlab.quizmaker.adapters.QuestionsAdapter
 import kotlinx.android.synthetic.main.questions_fill_form.*
 import java.util.*
 import kotlin.collections.HashMap
@@ -230,7 +231,7 @@ class ViewEditQuestions : Fragment() {
 
                 TempData.quizPin, TempData.quizType, userName,
 
-                quizID, 0f, 0
+                quizID, 0f, 0, Calendar.getInstance().timeInMillis
             )
             when {
                 TempData.quizType==QuizType.MultipleChoice -> {

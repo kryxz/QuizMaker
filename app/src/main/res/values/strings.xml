@@ -8,6 +8,7 @@
     <string name="login_label">تسجيل الدخول</string>
     <string name="not_email">أدخل بريدًا صالحًا!</string>
     <string name="mainPage">الرئيسيّة</string>
+    <string name="messages">الرسائل</string>
     <string name="settingsLabel">الإعدادات</string>
     <string name="createNewQuiz">اختبار جديد</string>
 
@@ -30,6 +31,7 @@
     <string name="aChoice">اكتب خيارًا</string>
     <string name="edit">تحرير</string>
     <string name="publishQuizText">نشر الاختبار</string>
+    <string name="noMessages">ليس هناك أي رسالة بعد!</string>
 
     <string name="backToEditingButton">العودة والتحرير</string>
     <string name="publishQuizWithTitle">نشر الاختبار بعنوان %1$s؟</string>
@@ -67,7 +69,10 @@
     <string name="ok">حسنًا</string>
     <string name="placeHolderZero">0</string>
     <string name="quizAlreadyTaken">بدأ الاختبار (سبق ودخلت هذا الاختبار)</string>
-
+    <string name="send">ارسال</string>
+    <string name="messageText">محتوى الرسالة</string>
+    <string name="messageSent">تم ارسال الرسالة</string>
+    <string name="sendTo">ارسال إلى: %1$s</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 

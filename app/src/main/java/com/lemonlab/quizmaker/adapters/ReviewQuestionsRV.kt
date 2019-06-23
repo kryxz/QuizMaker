@@ -1,4 +1,4 @@
-package com.lemonlab.quizmaker
+package com.lemonlab.quizmaker.adapters
 
 import android.content.Context
 import android.graphics.Color
@@ -10,6 +10,7 @@ import android.widget.Toast
 import androidx.appcompat.widget.AppCompatCheckBox
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.recyclerview.widget.RecyclerView
+import com.lemonlab.quizmaker.*
 
 class ReviewQuestionsRV(itemView: View) : RecyclerView.ViewHolder(itemView) {
     val questionText = itemView.findViewById(R.id.reviewQuestionText) as AppCompatTextView
@@ -88,7 +89,13 @@ class QuestionsAdapter(
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ReviewQuestionsRV {
-        return ReviewQuestionsRV(LayoutInflater.from(context).inflate(R.layout.review_question_item, parent, false))
+        return ReviewQuestionsRV(
+            LayoutInflater.from(context).inflate(
+                R.layout.review_question_item,
+                parent,
+                false
+            )
+        )
     }
 }
 

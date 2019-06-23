@@ -18,9 +18,12 @@ import androidx.core.util.forEach
 import androidx.core.util.set
 import androidx.fragment.app.Fragment
 import androidx.navigation.Navigation
+import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.android.synthetic.main.fragment_take_quiz.*
+import java.util.*
+import kotlin.collections.HashMap
 
 
 class TakeQuizFragment : Fragment() {
@@ -72,8 +75,42 @@ class TakeQuizFragment : Fragment() {
 
     }
 
+    private fun sendMessageToAuthorDialog(quizAuthor: String) {
+        val dialogBuilder = AlertDialog.Builder(context!!).create()
+        val dialogView = with(layoutInflater) {
+            inflate(
+                R.layout.send_message_dialog,
+                null
+            )
+        }
+        dialogView.findViewById<AppCompatButton>(R.id.sendNowButton).setOnClickListener {
+            val msg = HashMap<String, Message>(1)
+            val message = Message(
+                FirebaseAuth.getInstance().currentUser?.displayName!!,
+                dialogView.findViewById<TextInputEditText>(R.id.messageText).text.toString(),
+                Calendar.getInstance().timeInMillis
+            )
+            msg["message"] = message
+            FirebaseFirestore.getInstance().collection("users")
+                .document(quizAuthor)
+                .collection("messages").add(msg).addOnSuccessListener {
+                    Toast.makeText(context!!, getString(R.string.messageSent), Toast.LENGTH_SHORT).show()
+                }
+            dialogBuilder.dismiss()
 
-    private fun showScoreDialog(score: Int, total: Int, quizID: String, quizType: QuizType) {
+        }
+        dialogView.findViewById<AppCompatButton>(R.id.cancelSendButton).setOnClickListener {
+            dialogBuilder.dismiss()
+        }
+
+
+        with(dialogBuilder) {
+            setView(dialogView)
+            show()
+        }
+    }
+
+    private fun showScoreDialog(score: Int, total: Int, quizID: String, quizType: QuizType, quizAuthor: String) {
         val quizRef = FirebaseFirestore.getInstance().collection("Quizzes").document(quizID)
 
         val dialogBuilder = AlertDialog.Builder(context!!).create()
@@ -94,7 +131,7 @@ class TakeQuizFragment : Fragment() {
         }
 
         dialogView.findViewById<AppCompatButton>(R.id.messageQuizAuthorButton).setOnClickListener {
-            //Show send message dialog
+            sendMessageToAuthorDialog(quizAuthor)
             dialogBuilder.dismiss()
         }
         val ratingBar: AppCompatRatingBar = dialogView.findViewById(R.id.quizFinishedRatingBar)
@@ -214,7 +251,13 @@ class TakeQuizFragment : Fragment() {
                     if (userQuiz.questions!![key.toString()]!!.answer == value)
                         score = score.inc()
                 }
-                showScoreDialog(score, userQuiz.quiz.questionsCount, quizID, userQuiz.quiz.quizType!!)
+                showScoreDialog(
+                    score,
+                    userQuiz.quiz.questionsCount,
+                    quizID,
+                    userQuiz.quiz.quizType!!,
+                    userQuiz.quiz.quizAuthor
+                )
             }
             listOf(quizNextQuestionButton, quizPreviousQuestionButton).forEach { button ->
                 button.setOnClickListener {
@@ -267,7 +310,8 @@ class TakeQuizFragment : Fragment() {
             fun nextQuestion() {
                 if (position == userQuiz.quiz.questionsCount)
                     return
-                answersArray[position] = quizChoicesGroup.indexOfChild(view!!.findViewById(quizChoicesGroup.checkedRadioButtonId))
+                answersArray[position] =
+                    quizChoicesGroup.indexOfChild(view!!.findViewById(quizChoicesGroup.checkedRadioButtonId))
                 position = position.inc()
                 (quizChoicesGroup.getChildAt(answersArray[position]) as RadioButton).isChecked = true
                 updateTexts()
@@ -277,7 +321,8 @@ class TakeQuizFragment : Fragment() {
             fun previousQuestion() {
                 if (position == 1)
                     return
-                answersArray[position] = quizChoicesGroup.indexOfChild(view!!.findViewById(quizChoicesGroup.checkedRadioButtonId))
+                answersArray[position] =
+                    quizChoicesGroup.indexOfChild(view!!.findViewById(quizChoicesGroup.checkedRadioButtonId))
                 position = position.dec()
                 (quizChoicesGroup.getChildAt(answersArray[position]) as RadioButton).isChecked = true
                 updateTexts()
@@ -289,7 +334,13 @@ class TakeQuizFragment : Fragment() {
                     if (userQuiz.questions!![key.toString()]!!.correctAnswer == value)
                         score = score.inc()
                 }
-                showScoreDialog(score, userQuiz.quiz.questionsCount, quizID, userQuiz.quiz.quizType!!)
+                showScoreDialog(
+                    score,
+                    userQuiz.quiz.questionsCount,
+                    quizID,
+                    userQuiz.quiz.quizType!!,
+                    userQuiz.quiz.quizAuthor
+                )
             }
             listOf(quizNextQuestionButton, quizPreviousQuestionButton).forEach { button ->
                 button.setOnClickListener {
@@ -315,7 +366,8 @@ class TakeQuizFragment : Fragment() {
                 (activity as AppCompatActivity).supportActionBar!!.title = userQuiz.quiz?.quizTitle
                 beginQuiz(userQuiz)
                 takeQuizProgressBar.visibility = View.GONE
-                questionNumberTextView.text = getString(R.string.questionNumber, position, userQuiz.quiz!!.questionsCount)
+                questionNumberTextView.text =
+                    getString(R.string.questionNumber, position, userQuiz.quiz!!.questionsCount)
 
             }
     }
