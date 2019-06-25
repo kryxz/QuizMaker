@@ -1,7 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent">
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+                                              android:orientation="vertical"
+                                              android:layout_width="match_parent"
+                                              android:background="@color/colorPrimary"
+                                              android:layout_height="wrap_content">
 
-</LinearLayout>
+    <androidx.appcompat.widget.AppCompatTextView android:layout_width="match_parent"
+                                                 android:text="@string/writeAnything"
+                                                 android:textSize="26sp"
+                                                 android:gravity="center_horizontal"
+                                                 android:layout_height="wrap_content"/>
+
+
+    <com.google.android.material.textfield.TextInputEditText
+            android:drawableEnd="@drawable/ic_info"
+            android:id="@+id/userBioEditText"
+            android:padding="8dp"
+            android:maxLength="100"
+            android:textColorHint="@color/textColorSecondary"
+            style="@style/loginEditTextStyle"/>
+
+    <androidx.appcompat.widget.LinearLayoutCompat android:layout_width="match_parent"
+                                                  android:layout_margin="8dp"
+                                                  android:layout_height="wrap_content">
+
+        <androidx.appcompat.widget.AppCompatButton android:layout_width="wrap_content"
+                                                   android:layout_weight="1"
+                                                   android:text="@string/confirm"
+                                                   style="@style/QuestionFormButtonStyle"
+                                                   android:id="@+id/confirmUserBio"
+                                                   android:layout_marginStart="4dp"
+                                                   android:layout_marginEnd="4dp"                                                   android:layout_height="wrap_content"/>
+
+        <androidx.appcompat.widget.AppCompatButton android:layout_width="wrap_content"
+                                                   android:layout_weight="1"
+                                                   android:text="@string/cancel"
+                                                   android:layout_marginStart="4dp"
+                                                   android:layout_marginEnd="4dp"
+                                                   style="@style/QuestionFormButtonStyle"
+                                                   android:id="@+id/cancelUserBio"
+                                                   android:layout_height="wrap_content"/>
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+</androidx.appcompat.widget.LinearLayoutCompat>

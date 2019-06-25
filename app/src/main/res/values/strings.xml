@@ -70,7 +70,7 @@
     <string name="questionNumber">%1$d/%2$d</string>
     <string name="ok">حسنًا</string>
     <string name="placeHolderZero">0</string>
-    <string name="quizAlreadyTaken">بدأ الاختبار (سبق ودخلت هذا الاختبار)</string>
+    <string name="quizAlreadyTaken">إعادة الاختبار</string>
     <string name="send">ارسال</string>
     <string name="messageText">محتوى الرسالة</string>
     <string name="messageSent">تم ارسال الرسالة</string>
@@ -84,6 +84,17 @@
     <string name="loginFailed">فشل تسجيل الدخول، تحقق من معلومات حسابك</string>
     <string name="noUser">لم يتم العثور على حساب.</string>
     <string name="NoContent">تعذر العثور على أي اختبار</string>
+
+    <string name="profileLabel">الملف الشخصي</string>
+    <string name="joinDate">تاريخ الانضمام</string>
+    <string name="quizzesTaken">سجل الاختبارات</string>
+    <string name="currentPoints">النقاط</string>
+    <string name="checkQuizzes">أدخل الاختبارات لترى الإجابات الصحيحة</string>
+    <string name="noRecentQuizzes">لم تقم بأي اختبار بعد!</string>
+    <string name="viewAnswers">عرض الإجابات</string>
+    <string name="userNameText">\@%1$s</string>
+    <string name="writeAnything">اكتب أي شيء</string>
+    <string name="editedSuccessfully">تم التعديل</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>

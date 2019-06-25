@@ -6,6 +6,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavOptions
 import androidx.navigation.Navigation
@@ -14,8 +15,6 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.lemonlab.quizmaker.adapters.QuizAdapter
 import kotlinx.android.synthetic.main.fragment_main.*
-
-import androidx.appcompat.app.AppCompatActivity
 
 
 class MainFragment : Fragment() {
@@ -67,7 +66,7 @@ class MainFragment : Fragment() {
         else
             with(QuizzesRecyclerView) {
                 layoutManager = LinearLayoutManager(context!!)
-                adapter = QuizAdapter(context!!, TempData.currentQuizzes!!)
+                adapter = QuizAdapter(context!!, TempData.currentQuizzes!!, ViewType.TakeQuiz)
                 MainFragmentProgressBar.visibility = View.GONE
             }
     }
@@ -97,7 +96,7 @@ class MainFragment : Fragment() {
             if (view != null)
                 with(QuizzesRecyclerView) {
                     layoutManager = LinearLayoutManager(context!!)
-                    adapter = QuizAdapter(context!!, listOfQuizzes)
+                    adapter = QuizAdapter(context!!, listOfQuizzes, ViewType.TakeQuiz)
                     MainFragmentProgressBar.visibility = View.GONE
                 }
         }

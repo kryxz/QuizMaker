@@ -25,11 +25,18 @@
               android:label="@string/createNewQuiz" tools:layout="@layout/fragment_create_quiz"/>
     <fragment android:name="com.lemonlab.quizmaker.ViewEditQuestions"
               android:label="@string/createNewQuiz" tools:layout="@layout/questions_fill_form"
-              android:id="@+id/viewEditQuestions"/>
+              android:id="@+id/viewEditQuestions">
+        <argument android:name="quizID" app:argType="string" android:defaultValue="empty"/>
+    </fragment>
     <fragment android:id="@+id/takeQuizFragment" android:name="com.lemonlab.quizmaker.TakeQuizFragment"
               android:label="@string/app_name" tools:layout="@layout/fragment_take_quiz">
         <argument android:name="quizID" app:argType="string"/>
     </fragment>
     <fragment android:id="@+id/messagesFragment" android:name="com.lemonlab.quizmaker.MessagesFragment"
               android:label="@string/messages" tools:layout="@layout/fragment_messages"/>
+    <fragment android:id="@+id/profileFragment" android:name="com.lemonlab.quizmaker.ProfileFragment"
+              android:label="@string/profileLabel" tools:layout="@layout/fragment_profile">
+        <action android:id="@+id/viewAnswers" app:destination="@id/viewEditQuestions"
+                app:launchSingleTop="true" app:popUpToInclusive="false" app:popUpTo="@+id/mainFragment"/>
+    </fragment>
 </navigation>

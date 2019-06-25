@@ -62,7 +62,7 @@ class LoginFragment : Fragment() {
                     loginNow()
                 }.addOnFailureListener {
                     loggingInBar.visibility = View.GONE
-                    if (it.localizedMessage.contains("no user"))
+                    if (it.localizedMessage!!.contains("no user"))
                         showToast(context!!, getString(R.string.noUser))
                     else
                         showToast(context!!, getString(R.string.loginFailed))

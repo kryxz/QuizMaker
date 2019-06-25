@@ -34,7 +34,8 @@ class QuizzesVH(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
 class QuizAdapter(
     private val context: Context,
-    private val userQuiz: List<Quiz>
+    private val userQuiz: List<Quiz>,
+    private val viewType: ViewType
 ) : RecyclerView.Adapter<QuizzesVH>() {
 
     override fun getItemCount() = userQuiz.size
@@ -72,20 +73,24 @@ class QuizAdapter(
         reportQuiz: AppCompatTextView,
         position: Int
     ) {
+        if (viewType == ViewType.ViewAnswers) {
+            startQuizButton.text = context.getString(R.string.viewAnswers)
+        }
         //decides if user already took this quiz
-        FirebaseFirestore.getInstance().collection("users")
-            .document(FirebaseAuth.getInstance().currentUser!!.displayName.toString())
-            .collection("userLog").document("takenQuizzes")
-            .get().addOnSuccessListener {
-                if (it != null) {
-                    val quizzesLog = if (it.get("log", QuizLog::class.java) != null)
-                        it.get("log", QuizLog::class.java)!!
-                    else
-                        QuizLog(mutableListOf())
-                    if (quizzesLog.userLog.contains(userQuiz[position].quizUUID))
-                        startQuizButton.text = context.getString(R.string.quizAlreadyTaken)
+        else
+            FirebaseFirestore.getInstance().collection("users")
+                .document(FirebaseAuth.getInstance().currentUser!!.displayName.toString())
+                .collection("userLog").document("takenQuizzes")
+                .get().addOnSuccessListener {
+                    if (it != null) {
+                        val quizzesLog = if (it.get("log", QuizLog::class.java) != null)
+                            it.get("log", QuizLog::class.java)!!
+                        else
+                            QuizLog(mutableListOf())
+                        if (quizzesLog.userLog.contains(userQuiz[position].quizUUID))
+                            startQuizButton.text = context.getString(R.string.quizAlreadyTaken)
+                    }
                 }
-            }
 
 
         //sets texts.
@@ -102,11 +107,6 @@ class QuizAdapter(
         quizRatingBar.rating = userQuiz[position].rating
         quizDateTextView.text = getDateFromMilliSeconds(userQuiz[position].milliSeconds)
 
-        fun deleteQuiz(quizID: String) {
-            val dataRef = FirebaseFirestore.getInstance()
-            dataRef.collection("Quizzes").document(quizID).delete()
-            dataRef.collection("userReports").document(userQuiz[position].quizUUID).delete()
-        }
 
         fun showReportDialog() {
             val dialogBuilder = android.app.AlertDialog.Builder(context).create()
@@ -136,9 +136,7 @@ class QuizAdapter(
                     else
                         Report("", 0)
                     if (reports["reports"] != null) {
-                        reports["reports"]!!.report(userID)
-                        if (reports["reports"]!!.count >= 5)
-                            deleteQuiz(userQuiz[position].quizUUID)
+                        reports["reports"]!!.report(userID, userQuiz[position].quizUUID)
                     }
                     quizRef.set(reports)
                 }
@@ -184,17 +182,24 @@ class QuizAdapter(
             dialogBuilder.show()
 
         }
+        if (viewType == ViewType.ViewAnswers) {
+            startQuizButton.setOnClickListener {
+                val action = ProfileFragmentDirections.viewAnswers()
+                action.quizID = userQuiz[position].quizUUID
+                Navigation.findNavController(it).navigate(action)
 
-        startQuizButton.setOnClickListener {
-            if (userQuiz[position].passwordProtected)
-                enterPasswordDialog(it)
-            else
-                Navigation.findNavController(it).navigate(
-                    MainFragmentDirections.goToQuizNow(
-                        userQuiz[position].quizUUID
+            }
+        } else
+            startQuizButton.setOnClickListener {
+                if (userQuiz[position].passwordProtected)
+                    enterPasswordDialog(it)
+                else
+                    Navigation.findNavController(it).navigate(
+                        MainFragmentDirections.goToQuizNow(
+                            userQuiz[position].quizUUID
+                        )
                     )
-                )
-        }
+            }
 
     }
 

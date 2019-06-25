@@ -2,6 +2,7 @@
 
 package com.lemonlab.quizmaker
 
+import com.google.firebase.firestore.FirebaseFirestore
 import java.util.*
 
 
@@ -9,20 +10,26 @@ enum class QuizType {
     MultipleChoice, TrueFalse
 }
 
+enum class ViewType {
+    TakeQuiz, ViewAnswers
+}
+
 data class User(
     var username: String,
     val email: String,
     var id: String,
+    var userBio: String,
     var points: Int,
     val joinDate: Long
 ) {
-    constructor() : this("", "", "", 0, 0)
+    constructor() : this("", "", "", "", 0, 0)
 
-    fun getJoinTime(): String {
+    fun joinTimeAsAString(): String {
         val calendar = Calendar.getInstance()
         calendar.timeInMillis = joinDate
-        return "${calendar.get(Calendar.DATE)}/${calendar.get(Calendar.MONTH) + 1}  ${calendar.get(Calendar.HOUR_OF_DAY)}:${calendar.get(
-            Calendar.MINUTE
+        return "${calendar.get(Calendar.DATE)}/${calendar.get(Calendar.MONTH) + 1}/${calendar.get(Calendar.YEAR).toString().substring(
+            2,
+            4
         )}"
     }
 }
@@ -100,9 +107,16 @@ data class TrueFalseQuiz(
 data class QuizLog(
     val userLog: MutableList<String>
 ) {
-    fun addQuiz(quizUUID: String) {
-        if (!userLog.contains(quizUUID))
+    fun addQuiz(quizUUID: String, userName:String, pointsToGet:Int) {
+        if (!userLog.contains(quizUUID)){
             userLog.add(quizUUID)
+            val userRef = FirebaseFirestore.getInstance().collection("users").document(userName)
+            userRef.get().addOnSuccessListener { document ->
+                var points = document.get("user.points", Int::class.java)!!
+                points += pointsToGet
+                userRef.update("user.points", points)
+            }
+        }
     }
 
     constructor() : this(mutableListOf())
@@ -128,7 +142,7 @@ data class Quiz(
     }
 
     constructor() : this(
-        "", false,  0,
+        "", false, 0,
         "", null, "", "", 0f, 0, 0
     )
 }
@@ -147,10 +161,16 @@ data class Report(
 ) {
     constructor() : this("", 0)
 
-    fun report(id: String) {
+    fun report(id: String, quizID: String) {
         if (!userIDs.contains(id)) {
             userIDs += " $id"
             count = count.inc()
+            if (count >= 2) {
+                val dataRef = FirebaseFirestore.getInstance()
+                dataRef.collection("Quizzes").document(quizID).delete()
+                dataRef.collection("userReports").document(quizID).delete()
+            }
+
         }
     }
 }

@@ -59,6 +59,7 @@ class CreateAccount : Fragment() {
                         username,
                         userEmail,
                         FirebaseAuth.getInstance().currentUser!!.uid,
+                        "",
                         0,
                         Calendar.getInstance().timeInMillis
                     )

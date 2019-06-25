@@ -28,20 +28,29 @@ class ViewEditQuestions : Fragment() {
     private var position = 1
     private lateinit var multipleChoiceQuestions: LinkedHashMap<String, MultipleChoiceQuestion>
     private lateinit var trueFalseQuestions: LinkedHashMap<String, TrueFalseQuestion>
+    private var quizID = "empty"
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        setHasOptionsMenu(true)
+        quizID = ViewEditQuestionsArgs.fromBundle(arguments!!).quizID
+        setHasOptionsMenu(quizID == "empty")
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.questions_fill_form, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-
-        decideQuizType()
+        decideWhatToDo()
         super.onViewCreated(view, savedInstanceState)
     }
+
+    private fun decideWhatToDo() {
+        if (quizID == "empty")
+            decideQuizType()
+        else
+            viewQuizAnswers()
+    }
+
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
         inflater!!.inflate(R.menu.view_edit_menu, menu)
@@ -174,6 +183,41 @@ class ViewEditQuestions : Fragment() {
         with(dialogBuilder) {
             setView(dialogView)
             show()
+        }
+    }
+
+    private fun viewQuizAnswers() {
+        editQuestionsLayout.visibility = View.GONE
+        val quizRef = FirebaseFirestore.getInstance().collection("Quizzes").document(quizID)
+        quizRef.get().addOnSuccessListener {
+            val quiz = it.get("quiz.quiz", Quiz::class.java)!!
+            if (quiz.quizType == QuizType.MultipleChoice)
+                with(questionsRecyclerView) {
+                    visibility = View.VISIBLE
+                    val quizQuestions = LinkedHashMap(it.get("quiz", MultipleChoiceQuiz::class.java)!!.questions!!)
+                    TempData.quizType = quiz.quizType
+                    TempData.questionsCount = quizQuestions.size
+                    layoutManager = null
+                    adapter = null
+                    onFlingListener = null
+                    (activity as AppCompatActivity).supportActionBar!!.title = quiz.quizTitle
+
+                    layoutManager = LinearLayoutManager(context!!)
+                    adapter = QuestionsAdapter(context!!, quizQuestions, null)
+                }
+            else
+                with(questionsRecyclerView) {
+                    visibility = View.VISIBLE
+                    TempData.quizType = quiz.quizType
+                    val quizQuestions = LinkedHashMap(it.get("quiz", TrueFalseQuiz::class.java)!!.questions)
+                    TempData.questionsCount = quizQuestions.size
+                    layoutManager = null
+                    adapter = null
+                    onFlingListener = null
+                    (activity as AppCompatActivity).supportActionBar!!.title = quiz.quizTitle
+                    layoutManager = LinearLayoutManager(context!!)
+                    adapter = QuestionsAdapter(context!!, null, quizQuestions)
+                }
         }
     }
 

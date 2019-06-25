@@ -57,7 +57,6 @@ class TakeQuizFragment : Fragment() {
         val fireStore = FirebaseFirestore.getInstance()
         var quizzesLog = QuizLog(mutableListOf())
         val userName = FirebaseAuth.getInstance().currentUser?.displayName!!
-        val userRef = fireStore.collection("users").document(userName)
         val log = HashMap<String, QuizLog>(1)
         val logRef =
             fireStore.collection("users")
@@ -70,15 +69,8 @@ class TakeQuizFragment : Fragment() {
                 else
                     QuizLog(mutableListOf())
 
-            quizzesLog.addQuiz(quizID)
+            quizzesLog.addQuiz(quizID, userName, pointsToGet)
             log["log"] = quizzesLog
-            userRef.get().addOnSuccessListener { document ->
-                val theUser = document.get("user", User::class.java)!!
-                theUser.points += pointsToGet
-                val user = HashMap<String, User>()
-                user["user"] = theUser
-                userRef.set(user)
-            }
             logRef.set(log)
         }
 
