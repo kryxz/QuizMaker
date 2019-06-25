@@ -6,7 +6,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
-import android.widget.Toast
 import androidx.appcompat.widget.AppCompatCheckBox
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.recyclerview.widget.RecyclerView
@@ -72,7 +71,7 @@ class QuestionsAdapter(
         secondChoice: AppCompatTextView, thirdChoice: AppCompatTextView, fourthChoice: AppCompatTextView,
         position: Int, reviewIsTrueCheckBox: AppCompatCheckBox
     ) {
-        Toast.makeText(context, context.getString(R.string.swipeLeftRight), Toast.LENGTH_SHORT).show()
+        showToast(context, context.getString(R.string.swipeLeftRight))
         reviewIsTrueCheckBox.visibility = View.GONE
         questionsText.text =
             context.getString(

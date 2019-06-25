@@ -7,7 +7,6 @@ import android.graphics.drawable.ColorDrawable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.appcompat.widget.AppCompatButton
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.AppCompatTextView
@@ -19,6 +18,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.lemonlab.quizmaker.Message
 import com.lemonlab.quizmaker.R
+import com.lemonlab.quizmaker.showToast
 import java.util.*
 import kotlin.collections.HashMap
 
@@ -60,16 +60,15 @@ class MessagesAdapter(
 
         dialogView.findViewById<AppCompatButton>(R.id.sendNowButtonReplyDialog).setOnClickListener {
             val msg = HashMap<String, Message>(1)
-            val reply = Message(
+            msg["message"] = Message(
                 FirebaseAuth.getInstance().currentUser?.displayName!!,
                 dialogView.findViewById<TextInputEditText>(R.id.messageTextReplyDialog).text.toString(),
                 Calendar.getInstance().timeInMillis
             )
-            msg["message"] = reply
             FirebaseFirestore.getInstance().collection("users")
                 .document(messageAuthor)
                 .collection("messages").add(msg).addOnSuccessListener {
-                    Toast.makeText(context, context.getString(R.string.messageSent), Toast.LENGTH_SHORT).show()
+                    showToast(context, context.getString(R.string.messageSent))
                 }
             dialogBuilder.dismiss()
 
@@ -85,11 +84,15 @@ class MessagesAdapter(
         }
 
     }
-    private fun getDateFromMilliSeconds(position: Int):String{
+
+    private fun getDateFromMilliSeconds(milliSeconds: Long): String {
         val calendar = Calendar.getInstance()
-        calendar.timeInMillis = messages[position].milliSeconds
-        return "${calendar.get(Calendar.DATE)}/${calendar.get(Calendar.MONTH)+1}  ${calendar.get(Calendar.HOUR_OF_DAY)}:${calendar.get(Calendar.MINUTE)}"
+        calendar.timeInMillis = milliSeconds
+        return "${calendar.get(Calendar.DATE)}/${calendar.get(Calendar.MONTH) + 1}  ${calendar.get(Calendar.HOUR_OF_DAY)}:${calendar.get(
+            Calendar.MINUTE
+        )}"
     }
+
     private fun loadMessages(
         senderTextView: AppCompatTextView,
         sendDateTextView: AppCompatTextView,
@@ -102,29 +105,30 @@ class MessagesAdapter(
         senderTextView.text = messages[position].sender
         messagePreviewTextView.text = messages[position].message
 
-        sendDateTextView.text = getDateFromMilliSeconds(position)
+        sendDateTextView.text = getDateFromMilliSeconds(messages[position].milliSeconds)
         replyMessageButton.setOnClickListener {
             showReplyDialog(messages[position].sender, messages[position].message)
         }
 
     }
 
-    fun deleteMessage(i:Int){
+    fun deleteMessage(i: Int) {
         val messagesRef = FirebaseFirestore.getInstance().collection("users")
             .document(FirebaseAuth.getInstance().currentUser!!.displayName!!)
             .collection("messages")
 
         messagesRef.get().addOnSuccessListener {
-                for(item in it){
-                    if(item.get("message", Message::class.java)!!.message==messages[i].message)
-                        messagesRef.document(item.id).delete().addOnSuccessListener {
-                            messages.removeAt(i)
-                            notifyItemRemoved(i)
-                        }
-                }
+            for (item in it) {
+                if (item.get("message", Message::class.java)!!.message == messages[i].message)
+                    messagesRef.document(item.id).delete().addOnSuccessListener {
+                        messages.removeAt(i)
+                        notifyItemRemoved(i)
+                    }
             }
+        }
 
     }
+
     override fun getItemCount() = messages.size
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MessagesVH {
@@ -144,7 +148,7 @@ abstract class SwipeToDeleteCallback(context: Context) : ItemTouchHelper.SimpleC
     private val intrinsicWidth = deleteIcon!!.intrinsicWidth
     private val intrinsicHeight = deleteIcon!!.intrinsicHeight
     private val background = ColorDrawable()
-    private val backgroundColor = Color.parseColor("#f44336")
+    private val backgroundColor = Color.RED
     private val clearPaint = Paint().apply { xfermode = PorterDuffXfermode(PorterDuff.Mode.CLEAR) }
 
     override fun getMovementFlags(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder): Int {
@@ -174,7 +178,13 @@ abstract class SwipeToDeleteCallback(context: Context) : ItemTouchHelper.SimpleC
         val isCanceled = dX == 0f && !isCurrentlyActive
 
         if (isCanceled) {
-            clearCanvas(c, itemView.right + dX, itemView.top.toFloat(), itemView.right.toFloat(), itemView.bottom.toFloat())
+            clearCanvas(
+                c,
+                itemView.right + dX,
+                itemView.top.toFloat(),
+                itemView.right.toFloat(),
+                itemView.bottom.toFloat()
+            )
             super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
             return
         }

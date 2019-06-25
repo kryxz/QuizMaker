@@ -11,11 +11,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.ArrayAdapter
+import android.widget.Toast
 import androidx.appcompat.widget.AppCompatButton
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.fragment.app.Fragment
 import androidx.navigation.Navigation
 import kotlinx.android.synthetic.main.fragment_create_quiz.*
+import kotlin.collections.LinkedHashMap
 
 class CreateQuiz : Fragment() {
 
@@ -89,7 +91,6 @@ class CreateQuiz : Fragment() {
 
     private fun getPreviousData() {
         isPasswordProtected.isChecked = TempData.isPasswordProtected
-        isOneTime.isChecked = TempData.isOneTimeQuiz
         if (TempData.quizTitle.isNotEmpty())
             quizTitleEditText.setText(TempData.quizTitle)
         if (TempData.quizPin != "notRequired")
@@ -123,9 +124,6 @@ class CreateQuiz : Fragment() {
                 ""
             else
                 "notRequired"
-        }
-        isOneTime.setOnCheckedChangeListener { _, isChecked ->
-            TempData.isOneTimeQuiz = isChecked
         }
 
         writeQuestionsButton.setOnClickListener {
@@ -196,6 +194,11 @@ fun Fragment.showYesNoDialog(
 
 }
 
+fun showToast(context: Context, message: String) {
+    Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+}
+
+/*
 fun Fragment.showInfoDialog(
     functionToPerform: () -> Unit,
     dialogTitle: String,
@@ -222,13 +225,13 @@ fun Fragment.showInfoDialog(
     }
 
 }
-
+*/
 fun LinkedHashMap<String, MultipleChoiceQuestion>.allQuestionsOK(): Boolean {
     var isOK = false
     this.forEach {
-        isOK = it.value.first.length > 1 && it.value.second.length > 1 &&
-                it.value.third.length > 1 && it.value.fourth.length > 1 &&
-                it.value.question.length > 1
+        isOK = it.value.first.isNotEmpty() && it.value.second.isNotEmpty() &&
+                it.value.third.isNotEmpty() && it.value.fourth.isNotEmpty() &&
+                it.value.question.isNotEmpty()
     }
     return isOK
 }
@@ -236,7 +239,7 @@ fun LinkedHashMap<String, MultipleChoiceQuestion>.allQuestionsOK(): Boolean {
 fun LinkedHashMap<String, TrueFalseQuestion>.areQuestionsOK(): Boolean {
     var isOK = false
     this.forEach {
-        isOK = it.value.question.length > 1
+        isOK = it.value.question.isNotEmpty()
     }
     return isOK
 }

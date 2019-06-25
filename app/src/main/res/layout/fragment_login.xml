@@ -4,6 +4,11 @@
              android:layout_width="match_parent"
              android:layout_height="match_parent" android:background="@color/colorPrimary"
              tools:context=".LoginFragment">
+    <ProgressBar android:layout_width="match_parent"
+                 android:alpha=".3"
+                 android:visibility="gone"
+                 android:id="@+id/loggingInBar"
+                 android:layout_height="match_parent"/>
 
     <androidx.appcompat.widget.AppCompatTextView
             android:text="@string/app_name"

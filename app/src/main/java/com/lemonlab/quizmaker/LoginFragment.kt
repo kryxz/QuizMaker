@@ -2,7 +2,7 @@ package com.lemonlab.quizmaker
 
 
 import android.os.Bundle
-import android.util.Log
+import android.util.Patterns
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -28,6 +28,17 @@ class LoginFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
     }
 
+    private fun fieldsOK(userEmail: CharSequence, userPassword: String): Boolean {
+        //returns true if userEmail is an Email, and password is 6+ chars.
+
+        if (!Patterns.EMAIL_ADDRESS.matcher(userEmail).matches())
+            loginEmailEditText.error = getString(R.string.invalidEmail)
+        if (userPassword.length < 6)
+            loginPasswordEditText.error = getString(R.string.passwordTooShort)
+
+        return (Patterns.EMAIL_ADDRESS.matcher(userEmail).matches() && userPassword.length >= 6)
+    }
+
     private fun setUpUI() {
         val fireBaseAuth = FirebaseAuth.getInstance()
         fun loginNow() {
@@ -45,12 +56,16 @@ class LoginFragment : Fragment() {
         loginButton.setOnClickListener {
             val userEmail = loginEmailEditText.text.toString()
             val userPassword = loginPasswordEditText.text.toString()
-            if (userEmail.contains('@') && userPassword.length >= 6) {
+            if (fieldsOK(userEmail, userPassword)) {
+                loggingInBar.visibility = View.VISIBLE
                 fireBaseAuth.signInWithEmailAndPassword(userEmail, userPassword).addOnSuccessListener {
                     loginNow()
-
-                }.addOnFailureListener { exception ->
-                    Log.i("Login", exception.message)
+                }.addOnFailureListener {
+                    loggingInBar.visibility = View.GONE
+                    if (it.localizedMessage.contains("no user"))
+                        showToast(context!!, getString(R.string.noUser))
+                    else
+                        showToast(context!!, getString(R.string.loginFailed))
                 }
             }
         }

@@ -9,6 +9,13 @@
     <ProgressBar android:layout_width="match_parent" android:layout_height="match_parent"
                  android:id="@+id/MainFragmentProgressBar"
     />
+    <androidx.appcompat.widget.AppCompatTextView android:layout_width="match_parent"
+                                                 android:text="@string/NoContent"
+                                                 android:gravity="center"
+                                                 android:textSize="34sp"
+                                                 android:id="@+id/NoContentTextView"
+                                                 android:visibility="gone"
+                                                 android:layout_height="match_parent"/>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/createQuizButton"

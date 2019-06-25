@@ -41,7 +41,7 @@ class MessagesFragment : Fragment() {
     }
 
     private fun getMessages() {
-
+        MessagesProgressBar.visibility = View.VISIBLE
         FirebaseFirestore.getInstance().collection("users")
             .document(FirebaseAuth.getInstance().currentUser?.displayName!!)
             .collection("messages").get().addOnSuccessListener { documents ->
@@ -61,13 +61,8 @@ class MessagesFragment : Fragment() {
                             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                                 val adapter = MessagesRecyclerView.adapter as MessagesAdapter
                                 adapter.deleteMessage(viewHolder.adapterPosition)
-                                Handler().postDelayed({
-                                    if (view != null && adapter.itemCount==0)
-                                        with(noMessagesTextView) {
-                                            visibility = View.VISIBLE
-                                            MessagesProgressBar.visibility = View.GONE
-                                        }
-                                }, 2000)
+                                Handler().postDelayed(::getMessages, 2000)
+
                             }
 
                         }

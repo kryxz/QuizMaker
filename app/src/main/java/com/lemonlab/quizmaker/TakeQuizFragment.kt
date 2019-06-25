@@ -9,7 +9,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.RadioButton
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatButton
 import androidx.appcompat.widget.AppCompatRatingBar
@@ -45,21 +44,24 @@ class TakeQuizFragment : Fragment() {
         val quizID = TakeQuizFragmentArgs.fromBundle(arguments!!).quizID
         FirebaseFirestore.getInstance().collection("Quizzes").document(quizID).get()
             .addOnSuccessListener { document ->
-                val quiz = document.get("quiz", MultipleChoiceQuiz::class.java)!!.quiz
-                if (quiz!!.quizType == QuizType.MultipleChoice)
-                    setUpMultipleChoiceQuiz(quizID)
-                else
-                    setUpTrueFalse(quizID)
+                val quiz = document.get("quiz.quiz", Quiz::class.java)!!
+                if (quiz.quizType == QuizType.MultipleChoice && view != null)
+                    setUpMultipleChoiceQuiz(document.get("quiz", MultipleChoiceQuiz::class.java)!!, quizID)
+                else if (view != null)
+                    setUpTrueFalse(document.get("quiz", TrueFalseQuiz::class.java)!!, quizID)
             }
     }
 
 
-    private fun logQuiz(quizID: String) {
+    private fun logQuiz(quizID: String, pointsToGet: Int) {
+        val fireStore = FirebaseFirestore.getInstance()
         var quizzesLog = QuizLog(mutableListOf())
+        val userName = FirebaseAuth.getInstance().currentUser?.displayName!!
+        val userRef = fireStore.collection("users").document(userName)
         val log = HashMap<String, QuizLog>(1)
         val logRef =
-            FirebaseFirestore.getInstance().collection("users")
-                .document(FirebaseAuth.getInstance().currentUser?.displayName!!)
+            fireStore.collection("users")
+                .document(userName)
                 .collection("userLog").document("takenQuizzes")
         logRef.get().addOnSuccessListener {
             if (it != null)
@@ -70,6 +72,13 @@ class TakeQuizFragment : Fragment() {
 
             quizzesLog.addQuiz(quizID)
             log["log"] = quizzesLog
+            userRef.get().addOnSuccessListener { document ->
+                val theUser = document.get("user", User::class.java)!!
+                theUser.points += pointsToGet
+                val user = HashMap<String, User>()
+                user["user"] = theUser
+                userRef.set(user)
+            }
             logRef.set(log)
         }
 
@@ -85,16 +94,15 @@ class TakeQuizFragment : Fragment() {
         }
         dialogView.findViewById<AppCompatButton>(R.id.sendNowButton).setOnClickListener {
             val msg = HashMap<String, Message>(1)
-            val message = Message(
+            msg["message"] = Message(
                 FirebaseAuth.getInstance().currentUser?.displayName!!,
                 dialogView.findViewById<TextInputEditText>(R.id.messageText).text.toString(),
                 Calendar.getInstance().timeInMillis
             )
-            msg["message"] = message
             FirebaseFirestore.getInstance().collection("users")
                 .document(quizAuthor)
                 .collection("messages").add(msg).addOnSuccessListener {
-                    Toast.makeText(context!!, getString(R.string.messageSent), Toast.LENGTH_SHORT).show()
+                    showToast(context!!, getString(R.string.messageSent))
                 }
             dialogBuilder.dismiss()
 
@@ -110,7 +118,7 @@ class TakeQuizFragment : Fragment() {
         }
     }
 
-    private fun showScoreDialog(score: Int, total: Int, quizID: String, quizType: QuizType, quizAuthor: String) {
+    private fun showScoreDialog(score: Int, total: Int, quizID: String, quizAuthor: String) {
         val quizRef = FirebaseFirestore.getInstance().collection("Quizzes").document(quizID)
 
         val dialogBuilder = AlertDialog.Builder(context!!).create()
@@ -125,8 +133,7 @@ class TakeQuizFragment : Fragment() {
 
         dialogView.findViewById<AppCompatButton>(R.id.quizFinishedOKButton).setOnClickListener {
             Navigation.findNavController(view!!).navigate(R.id.mainFragment)
-            TempData.currentQuizzes = null
-            logQuiz(quizID)
+            logQuiz(quizID, score)
             dialogBuilder.dismiss()
         }
 
@@ -136,38 +143,28 @@ class TakeQuizFragment : Fragment() {
         }
         val ratingBar: AppCompatRatingBar = dialogView.findViewById(R.id.quizFinishedRatingBar)
 
-        fun sendNowMultipleChoice() {
+        fun sendRatingNow() {
+            TempData.currentQuizzes = null
             quizRef.get()
                 .addOnSuccessListener { document ->
-                    val userQuiz = document.get("quiz", MultipleChoiceQuiz::class.java)!!
-                    val quiz: HashMap<String, MultipleChoiceQuiz> = HashMap()
+                    val theQuiz = document.get("quiz.quiz", Quiz::class.java)!!
 
-                    with(userQuiz.quiz!!) {
-                        setNewRating(ratingBar.rating)
-                    }
-
-                    quiz["quiz"] = userQuiz
-
-                    quizRef.set(quiz).addOnSuccessListener {
-                        Toast.makeText(context!!, getString(R.string.ratingSent), Toast.LENGTH_SHORT).show()
-                    }
-                }
-        }
-
-        fun sendNowTrueFalse() {
-            quizRef.get()
-                .addOnSuccessListener { document ->
-                    val userQuiz = document.get("quiz", TrueFalseQuiz::class.java)!!
-                    val quiz: HashMap<String, TrueFalseQuiz> = HashMap()
-
-                    with(userQuiz.quiz!!) {
-                        setNewRating(ratingBar.rating)
-                    }
-
-                    quiz["quiz"] = userQuiz
-
-                    quizRef.set(quiz).addOnSuccessListener {
-                        Toast.makeText(context!!, getString(R.string.ratingSent), Toast.LENGTH_SHORT).show()
+                    if (theQuiz.quizType == QuizType.TrueFalse) {
+                        val quiz: HashMap<String, TrueFalseQuiz> = HashMap()
+                        val userQuiz = document.get("quiz", TrueFalseQuiz::class.java)!!
+                        quiz["quiz"] = userQuiz
+                        userQuiz.quiz!!.setNewRating(ratingBar.rating)
+                        quizRef.set(quiz).addOnSuccessListener {
+                            showToast(context!!, getString(R.string.ratingSent))
+                        }
+                    } else {
+                        val quiz: HashMap<String, MultipleChoiceQuiz> = HashMap()
+                        val userQuiz = document.get("quiz", MultipleChoiceQuiz::class.java)!!
+                        quiz["quiz"] = userQuiz
+                        userQuiz.quiz!!.setNewRating(ratingBar.rating)
+                        quizRef.set(quiz).addOnSuccessListener {
+                            showToast(context!!, getString(R.string.ratingSent))
+                        }
                     }
                 }
         }
@@ -184,10 +181,7 @@ class TakeQuizFragment : Fragment() {
                         QuizLog(mutableListOf())
 
                     if (!quizzesLog.userLog.contains(quizID)) {
-                        if (quizType == QuizType.MultipleChoice)
-                            sendNowMultipleChoice()
-                        else
-                            sendNowTrueFalse()
+                        sendRatingNow()
                     }
                 }
 
@@ -200,7 +194,7 @@ class TakeQuizFragment : Fragment() {
             }
             setOnClickListener {
                 //Send quiz to log.
-                logQuiz(quizID)
+                logQuiz(quizID, score)
                 //Send Rating to database.
                 sendRating()
             }
@@ -214,8 +208,7 @@ class TakeQuizFragment : Fragment() {
 
     }
 
-    private fun setUpTrueFalse(quizID: String) {
-        val fireStoreDatabase = FirebaseFirestore.getInstance()
+    private fun setUpTrueFalse(userQuiz: TrueFalseQuiz, quizID: String) {
         var position = 1
         questionNumberTextView.text = position.toString()
         quizChoicesGroup.visibility = View.GONE
@@ -255,7 +248,6 @@ class TakeQuizFragment : Fragment() {
                     score,
                     userQuiz.quiz.questionsCount,
                     quizID,
-                    userQuiz.quiz.quizType!!,
                     userQuiz.quiz.quizAuthor
                 )
             }
@@ -278,20 +270,15 @@ class TakeQuizFragment : Fragment() {
             answersArray.put(position, answerCheckBox.isChecked)
             updateView()
         }
-        fireStoreDatabase.collection("Quizzes").document(quizID).get()
-            .addOnSuccessListener { document ->
-                val userQuiz = document.get("quiz", TrueFalseQuiz::class.java)!!
-                (activity as AppCompatActivity).supportActionBar!!.title = userQuiz.quiz?.quizTitle
-                beginQuiz(userQuiz)
-                takeQuizProgressBar.visibility = View.GONE
-                questionNumberTextView.text =
-                    getString(R.string.questionNumber, position, userQuiz.quiz!!.questionsCount)
+        (activity as AppCompatActivity).supportActionBar!!.title = userQuiz.quiz?.quizTitle
+        beginQuiz(userQuiz)
+        takeQuizProgressBar.visibility = View.GONE
+        questionNumberTextView.text =
+            getString(R.string.questionNumber, position, userQuiz.quiz!!.questionsCount)
 
-            }
     }
 
-    private fun setUpMultipleChoiceQuiz(quizID: String) {
-        val fireStoreDatabase = FirebaseFirestore.getInstance()
+    private fun setUpMultipleChoiceQuiz(userQuiz: MultipleChoiceQuiz, quizID: String) {
         var position = 1
         questionNumberTextView.text = position.toString()
         answerCheckBox.visibility = View.GONE
@@ -305,6 +292,7 @@ class TakeQuizFragment : Fragment() {
                 fourthAnswer.text = userQuiz.questions[(position).toString()]!!.fourth
                 questionNumberTextView.text =
                     getString(R.string.questionNumber, position, userQuiz.quiz.questionsCount)
+                (quizChoicesGroup.getChildAt(answersArray[position]) as RadioButton).isChecked = true
             }
 
             fun nextQuestion() {
@@ -313,7 +301,6 @@ class TakeQuizFragment : Fragment() {
                 answersArray[position] =
                     quizChoicesGroup.indexOfChild(view!!.findViewById(quizChoicesGroup.checkedRadioButtonId))
                 position = position.inc()
-                (quizChoicesGroup.getChildAt(answersArray[position]) as RadioButton).isChecked = true
                 updateTexts()
 
             }
@@ -324,7 +311,6 @@ class TakeQuizFragment : Fragment() {
                 answersArray[position] =
                     quizChoicesGroup.indexOfChild(view!!.findViewById(quizChoicesGroup.checkedRadioButtonId))
                 position = position.dec()
-                (quizChoicesGroup.getChildAt(answersArray[position]) as RadioButton).isChecked = true
                 updateTexts()
             }
 
@@ -338,7 +324,6 @@ class TakeQuizFragment : Fragment() {
                     score,
                     userQuiz.quiz.questionsCount,
                     quizID,
-                    userQuiz.quiz.quizType!!,
                     userQuiz.quiz.quizAuthor
                 )
             }
@@ -360,16 +345,12 @@ class TakeQuizFragment : Fragment() {
             }
             updateTexts()
         }
-        fireStoreDatabase.collection("Quizzes").document(quizID).get()
-            .addOnSuccessListener { document ->
-                val userQuiz = document.get("quiz", MultipleChoiceQuiz::class.java)!!
-                (activity as AppCompatActivity).supportActionBar!!.title = userQuiz.quiz?.quizTitle
-                beginQuiz(userQuiz)
-                takeQuizProgressBar.visibility = View.GONE
-                questionNumberTextView.text =
-                    getString(R.string.questionNumber, position, userQuiz.quiz!!.questionsCount)
+        (activity as AppCompatActivity).supportActionBar!!.title = userQuiz.quiz?.quizTitle
+        beginQuiz(userQuiz)
+        takeQuizProgressBar.visibility = View.GONE
+        questionNumberTextView.text =
+            getString(R.string.questionNumber, position, userQuiz.quiz!!.questionsCount)
 
-            }
     }
 
 

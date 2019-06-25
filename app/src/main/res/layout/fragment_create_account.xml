@@ -5,6 +5,12 @@
                                                    android:layout_height="match_parent" android:background="@color/colorPrimary"
                                                    tools:context=".LoginFragment">
 
+    <ProgressBar android:layout_width="match_parent"
+                 android:alpha=".2"
+                 android:visibility="gone"
+                 android:id="@+id/creatingAccountBar"
+                 android:layout_height="match_parent"/>
+
     <androidx.appcompat.widget.AppCompatTextView
             android:text="@string/app_name"
             android:layout_width="wrap_content"

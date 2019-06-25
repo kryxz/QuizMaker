@@ -15,6 +15,8 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.lemonlab.quizmaker.adapters.QuizAdapter
 import kotlinx.android.synthetic.main.fragment_main.*
 
+import androidx.appcompat.app.AppCompatActivity
+
 
 class MainFragment : Fragment() {
 
@@ -28,6 +30,7 @@ class MainFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         setUp()
+        (activity as AppCompatActivity).supportActionBar!!.setHomeAsUpIndicator(R.drawable.ic_drawer)
         super.onViewCreated(view, savedInstanceState)
     }
 
@@ -76,7 +79,7 @@ class MainFragment : Fragment() {
 
 
             for (item in documents) {
-                listOfQuizzes.add(item.get("quiz", MultipleChoiceQuiz::class.java)!!.quiz!!)
+                listOfQuizzes.add(item.get("quiz.quiz", Quiz::class.java)!!)
                 val source = if (item.metadata.isFromCache)
                     "local cache"
                 else
@@ -85,8 +88,8 @@ class MainFragment : Fragment() {
 
             }
             //to get questions, use item.get("quiz", MultipleChoiceQuiz::class.java)!!.questions
-            with(listOfQuizzes){
-                sortWith(compareBy {it.milliSeconds})
+            with(listOfQuizzes) {
+                sortWith(compareBy { it.milliSeconds })
                 reverse()
             }
             TempData.currentQuizzes = listOfQuizzes

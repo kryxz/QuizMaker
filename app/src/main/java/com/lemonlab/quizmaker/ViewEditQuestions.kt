@@ -7,7 +7,6 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.view.*
 import android.widget.ArrayAdapter
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatButton
 import androidx.appcompat.widget.AppCompatEditText
@@ -77,7 +76,7 @@ class ViewEditQuestions : Fragment() {
         if (item!!.itemId == R.id.editQuiz && questionsRecyclerView.layoutManager == null)
             showEditDialog()
         else if (item.itemId == R.id.editQuiz)
-            Toast.makeText(context!!, "لا يمكنك التعديل من هنا", Toast.LENGTH_SHORT).show()
+            showToast(context!!, getString(R.string.cannotEdit))
         return super.onOptionsItemSelected(item)
     }
 
@@ -183,17 +182,17 @@ class ViewEditQuestions : Fragment() {
         editQuestionsLayout.visibility = View.GONE
 
         bottomLayoutViewEdit.visibility = View.VISIBLE
-        if(TempData.quizType==QuizType.MultipleChoice)
-        with(questionsRecyclerView) {
-            TempData.multiChoiceCachedQuestions = multipleChoiceQuestions
-            layoutManager = null
-            adapter = null
-            onFlingListener = null
+        if (TempData.quizType == QuizType.MultipleChoice)
+            with(questionsRecyclerView) {
+                TempData.multiChoiceCachedQuestions = multipleChoiceQuestions
+                layoutManager = null
+                adapter = null
+                onFlingListener = null
 
-            visibility = View.VISIBLE
-            layoutManager = ViewPagerLayoutManager(context!!, 0)
-            adapter = QuestionsAdapter(context!!, multipleChoiceQuestions, null)
-        }
+                visibility = View.VISIBLE
+                layoutManager = ViewPagerLayoutManager(context!!, 0)
+                adapter = QuestionsAdapter(context!!, multipleChoiceQuestions, null)
+            }
         else
             with(questionsRecyclerView) {
                 TempData.trueFalseCachedQuestions = trueFalseQuestions
@@ -224,37 +223,39 @@ class ViewEditQuestions : Fragment() {
             val quizID =
                 FirebaseAuth.getInstance().currentUser!!.displayName.toString() +
                         UUID.randomUUID().toString().substring(0, 10)
-            val quizData =                     Quiz(
+            val quizData = Quiz(
                 TempData.quizTitle, TempData.isPasswordProtected,
 
-                TempData.isOneTimeQuiz, TempData.questionsCount,
+                TempData.questionsCount,
 
                 TempData.quizPin, TempData.quizType, userName,
 
                 quizID, 0f, 0, Calendar.getInstance().timeInMillis
             )
             when {
-                TempData.quizType==QuizType.MultipleChoice -> {
+                TempData.quizType == QuizType.MultipleChoice -> {
                     val quiz: HashMap<String, MultipleChoiceQuiz> = HashMap()
                     quiz["quiz"] = MultipleChoiceQuiz(quizData, multipleChoiceQuestions)
 
-                    FirebaseFirestore.getInstance().collection("Quizzes").document(quizID).set(quiz).addOnSuccessListener {
-                        //resets all temp data to their default values.
-                        TempData.resetData()
+                    FirebaseFirestore.getInstance().collection("Quizzes").document(quizID).set(quiz)
+                        .addOnSuccessListener {
+                            //resets all temp data to their default values.
+                            TempData.resetData()
 
-                        Navigation.findNavController(view!!).navigate(R.id.mainFragment)
-                    }
+                            Navigation.findNavController(view!!).navigate(R.id.mainFragment)
+                        }
                 }
                 else -> {
                     val quiz: HashMap<String, TrueFalseQuiz> = HashMap()
                     quiz["quiz"] = TrueFalseQuiz(quizData, trueFalseQuestions)
 
-                    FirebaseFirestore.getInstance().collection("Quizzes").document(quizID).set(quiz).addOnSuccessListener {
-                        //resets all temp data to their default values.
-                        TempData.resetData()
+                    FirebaseFirestore.getInstance().collection("Quizzes").document(quizID).set(quiz)
+                        .addOnSuccessListener {
+                            //resets all temp data to their default values.
+                            TempData.resetData()
 
-                        Navigation.findNavController(view!!).navigate(R.id.mainFragment)
-                    }
+                            Navigation.findNavController(view!!).navigate(R.id.mainFragment)
+                        }
                 }
             }
 
@@ -301,7 +302,7 @@ class ViewEditQuestions : Fragment() {
                     if (multipleChoiceQuestions.size >= TempData.questionsCount && multipleChoiceQuestions.allQuestionsOK())
                         reviewQuiz()
                     else
-                        Toast.makeText(context!!, getString(R.string.completeAllQuestions), Toast.LENGTH_SHORT).show()
+                        showToast(context!!, getString(R.string.completeAllQuestions))
                 }
             }
         }
@@ -400,6 +401,7 @@ class ViewEditQuestions : Fragment() {
             clearFields()
             setTextTrueFalse()
         }
+
         fun canReviewQuiz() {
             with(reviewQuizButton) {
                 this.setOnClickListener {
@@ -409,7 +411,7 @@ class ViewEditQuestions : Fragment() {
                     if (trueFalseQuestions.size >= TempData.questionsCount && trueFalseQuestions.areQuestionsOK())
                         reviewQuiz()
                     else
-                        Toast.makeText(context!!, getString(R.string.completeAllQuestions), Toast.LENGTH_SHORT).show()
+                        showToast(context!!, getString(R.string.completeAllQuestions))
                 }
             }
         }

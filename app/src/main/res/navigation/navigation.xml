@@ -10,7 +10,10 @@
                 app:launchSingleTop="true" app:popUpToInclusive="false"/>
     </fragment>
     <fragment android:id="@+id/createAccount" android:name="com.lemonlab.quizmaker.CreateAccount"
-              android:label="@string/create_account" tools:layout="@layout/fragment_create_account"/>
+              android:label="@string/create_account" tools:layout="@layout/fragment_create_account">
+        <action android:id="@+id/createToMain" app:destination="@id/mainFragment" app:launchSingleTop="true"
+                app:popUpToInclusive="false"/>
+    </fragment>
     <fragment android:id="@+id/mainFragment" android:name="com.lemonlab.quizmaker.MainFragment"
               android:label="@string/mainPage" tools:layout="@layout/fragment_main">
         <action android:id="@+id/MainToLogin" app:destination="@id/loginFragment"/>

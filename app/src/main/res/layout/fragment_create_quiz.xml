@@ -25,26 +25,16 @@
 
 
     <androidx.appcompat.widget.AppCompatCheckBox
-            android:text="@string/isOneTimeQuiz"
-            android:id="@+id/isOneTime"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="8dp"
-            android:textColor="@color/textColorPrimary"
-            app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="8dp"
-            app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="8dp" android:layout_marginTop="8dp"
-            app:layout_constraintTop_toBottomOf="@+id/quizTitleInputLayout"/>
-
-    <androidx.appcompat.widget.AppCompatCheckBox
             android:text="@string/isQuizPasswordProtected"
             android:id="@+id/isPasswordProtected"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="8dp"
             android:textColor="@color/textColorPrimary"
-            app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="8dp"
-            app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="8dp" android:layout_marginTop="8dp"
-            app:layout_constraintTop_toBottomOf="@+id/isOneTime"/>
+            android:layout_marginStart="8dp"
+            app:layout_constraintStart_toStartOf="parent" android:layout_marginEnd="8dp"
+            app:layout_constraintEnd_toEndOf="parent" android:layout_marginTop="8dp"
+            app:layout_constraintTop_toBottomOf="@+id/quizTitleInputLayout"/>
 
     <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
