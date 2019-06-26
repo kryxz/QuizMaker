@@ -53,7 +53,11 @@
                     android:drawableEnd="@drawable/ic_lock"
                     android:id="@+id/loginPasswordEditText"
                     android:hint="@string/login_password" style="@style/loginEditTextStyle"/>
-
+            <androidx.appcompat.widget.AppCompatCheckBox android:layout_width="match_parent"
+                                                         android:textColor="@color/textColorPrimary"
+                                                         android:text="@string/showPassword"
+                                                         android:id="@+id/showLoginPasswordCheckBox"
+                                                         android:layout_height="wrap_content"/>
         </com.google.android.material.textfield.TextInputLayout>
 
     </androidx.appcompat.widget.LinearLayoutCompat>

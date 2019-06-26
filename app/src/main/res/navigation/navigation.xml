@@ -18,6 +18,7 @@
               android:label="@string/mainPage" tools:layout="@layout/fragment_main">
         <action android:id="@+id/MainToLogin" app:destination="@id/loginFragment"/>
         <action android:id="@+id/goToQuizNow" app:destination="@+id/takeQuizFragment"/>
+        <action android:id="@+id/viewProfile" app:destination="@id/profileFragment"/>
     </fragment>
     <fragment android:id="@+id/settingsFragment" android:name="com.lemonlab.quizmaker.SettingsFragment"
               android:label="@string/settingsLabel" tools:layout="@layout/fragment_settings"/>
@@ -37,6 +38,8 @@
     <fragment android:id="@+id/profileFragment" android:name="com.lemonlab.quizmaker.ProfileFragment"
               android:label="@string/profileLabel" tools:layout="@layout/fragment_profile">
         <action android:id="@+id/viewAnswers" app:destination="@id/viewEditQuestions"
-                app:launchSingleTop="true" app:popUpToInclusive="false" app:popUpTo="@+id/mainFragment"/>
+                app:launchSingleTop="true" app:popUpToInclusive="false"/>
+        <argument android:name="isViewer" app:argType="boolean" android:defaultValue="false"/>
+        <argument android:name="username" app:argType="string" android:defaultValue="empty"/>
     </fragment>
 </navigation>

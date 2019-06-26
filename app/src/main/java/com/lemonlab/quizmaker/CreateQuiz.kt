@@ -198,34 +198,6 @@ fun showToast(context: Context, message: String) {
     Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
 }
 
-/*
-fun Fragment.showInfoDialog(
-    functionToPerform: () -> Unit,
-    dialogTitle: String,
-    dialogMessage: String
-) {
-    val dialogBuilder = AlertDialog.Builder(context!!).create()
-    val dialogView = with(layoutInflater) {
-        inflate(
-            R.layout.info_dialog,
-            null
-        )
-    }
-    dialogView.findViewById<AppCompatTextView>(R.id.infoDialogTitle).text = dialogTitle
-    dialogView.findViewById<AppCompatTextView>(R.id.infoDialogMessageText).text = dialogMessage
-
-    dialogView.findViewById<AppCompatButton>(R.id.infoDialogConfirmButton).setOnClickListener {
-        functionToPerform()
-        dialogBuilder.dismiss()
-    }
-
-    with(dialogBuilder) {
-        setView(dialogView)
-        show()
-    }
-
-}
-*/
 fun LinkedHashMap<String, MultipleChoiceQuestion>.allQuestionsOK(): Boolean {
     var isOK = false
     this.forEach {

@@ -3,7 +3,7 @@
     <string name="login_email">البريد الإلكتروني</string>
     <string name="login_password">كلمة المرور</string>
     <string name="signUp_password">كلمة المرور الجديدة</string>
-    <string name="signUp_displayName">اسمك في التطبيق</string>
+    <string name="signUp_displayName">اسم المستخدم(بالانكليزية، بدون فراغات)</string>
     <string name="create_account">إنشاء حساب</string>
     <string name="login_label">تسجيل الدخول</string>
     <string name="not_email">أدخل بريدًا صالحًا!</string>
@@ -98,6 +98,14 @@
     <string name="editedSuccessfully">تم التعديل</string>
     <string name="cacheDeleted">تم حذف البيانات المؤقتة</string>
     <string name="changeLanguage">تغيير اللغة</string>
+    <string name="emptyLog">السجل فارغ</string>
+    <string name="userProfileLabel">%1$s الملف الشخصي لـ</string>
+    <string name="cannotViewLog">لا يمكنك عرض السجل حاليًا</string>
+    <string name="answerQuestions">أجب على جميع الأسئلة</string>
+    <string name="showPassword">عرض كلمة المرور</string>
+    <string name="suggestions">اسم المستخدم موجود، بعض الاقتراحات: \n
+        %1$s
+    </string>
 
     <string name="privacyPolicyAr">سياسة الخصوصية والاستخدام</string>
     <string name="privacyPolicyEn">Privacy Policy and Terms of Service</string>
@@ -112,6 +120,19 @@
     <string-array name="quizQuestionsTypes">
         <item>متعدد الاختيار</item>
         <item>صح، خطأ</item>
+    </string-array>
+    <string-array name="randomBios">
+        <item>جاهز!</item>
+        <item>أهلًَا، فلنختبر سويًا!</item>
+        <item>فقط من مات فاته التعلم!</item>
+        <item>يمكنك السؤال بشكل عام أو خاص، لكنك ستحصل على نفس الإجابة</item>
+        <item>إذا كنت تعرف، فأنت تعرف</item>
+        <item>إذا كان عليك أن تسأل، لن تعرف</item>
+        <item>سأكمل هذا لاحقًا!</item>
+        <item>رائع!</item>
+        <item>هذا هو الجزء الذي تختبر فيه!</item>
+        <item>مرحبًا بالعالم!</item>
+        <item>مرحبًا بالاختبار!</item>
     </string-array>
 
     <string-array name="faqs">
@@ -137,9 +158,10 @@
         <item>4</item>
     </string-array>
 
-    <string name="aboutLemonLabAr">    "مختبر الليمون فريق يسعى لنشر تطبيقات تساعد الناس وتسهل حياتهم. \n"
+    <string name="aboutLemonLabAr">"مختبر الليمون فريق يسعى لنشر تطبيقات تساعد الناس وتسهل حياتهم. \n"
         "نحاول أن نستخدم أحدث الخدمات وأفضل الطرق لإيصال تطبيقاتنا إلى مستوىً منافس. "
-        "تطبيقاتنا ترفيهية في غالبها، لكن قد نطوّر بعض التطبيقات التعليمية بين حين وآخر.</string>
+        "تطبيقاتنا ترفيهية في غالبها، لكن قد نطوّر بعض التطبيقات التعليمية بين حين وآخر.
+    </string>
 
     <string name="aboutLemonLabTitle">عن مختبر الليمون</string>
 

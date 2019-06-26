@@ -3,6 +3,7 @@ package com.lemonlab.quizmaker
 
 import android.content.Context
 import android.os.Bundle
+import android.text.method.PasswordTransformationMethod
 import android.util.Patterns
 import android.view.LayoutInflater
 import android.view.View
@@ -48,9 +49,19 @@ class LoginFragment : Fragment() {
 
         return (Patterns.EMAIL_ADDRESS.matcher(userEmail).matches() && userPassword.length >= 6)
     }
+    private fun showHidePassword() {
+        showLoginPasswordCheckBox.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked)
+                loginPasswordEditText.transformationMethod = null
+            else
+                loginPasswordEditText.transformationMethod = PasswordTransformationMethod()
 
+        }
+    }
     private fun setUpUI() {
         val fireBaseAuth = FirebaseAuth.getInstance()
+        loginPasswordEditText.transformationMethod = PasswordTransformationMethod()
+        showHidePassword()
         fun loginNow() {
             Navigation.findNavController(view!!).navigate(
                 LoginFragmentDirections.loginToMain(),

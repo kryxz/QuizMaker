@@ -69,6 +69,7 @@ class TempData {
             multiChoiceCachedQuestions = null
             trueFalseCachedQuestions = null
         }
+        var user:User? = null
     }
 }
 

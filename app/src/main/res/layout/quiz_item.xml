@@ -19,6 +19,7 @@
                                                   android:layout_gravity="center"
                                                   android:id="@+id/quizRatingBar"
                                                   android:isIndicator="true"
+                                                  android:theme="@style/RatingBar"
                                                   android:layout_height="wrap_content"/>
 
     <androidx.appcompat.widget.LinearLayoutCompat android:layout_width="match_parent"

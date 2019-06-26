@@ -48,7 +48,7 @@ class MainActivity : AppCompatActivity() {
         val navController = Navigation.findNavController(this, R.id.navigationHost)
         NavigationUI.setupWithNavController(navView, navController)
 
-        setupActionBarWithNavController(navController, drawer_layout)
+        //setupActionBarWithNavController(navController, drawer_layout)
         setupActionBarWithNavController(navController, AppBarConfiguration.Builder(R.id.loginFragment).build())
 
         navController.addOnDestinationChangedListener { controller, destination, _ ->

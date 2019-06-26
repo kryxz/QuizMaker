@@ -14,6 +14,11 @@
     <style name="DefaultTheme" parent="ThemeOverlay.AppCompat.Dialog.Alert">
     </style>
 
+    <style name="RatingBar" parent="ThemeOverlay.AppCompat">
+        <item name="colorControlNormal">@color/colorAccent</item>
+        <item name="colorControlActivated">@color/colorSilver</item>
+    </style>
+
     <style name="loginEditTextStyle">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
@@ -21,6 +26,7 @@
         <item name="android:layout_marginTop">8dp</item>
         <item name="android:layout_marginBottom">8dp</item>
         <item name="android:textColor">@color/textColorPrimary</item>
+        <item name="android:fontFamily">@font/mada</item>
     </style>
 
     <style name="QuestionFormButtonStyle">

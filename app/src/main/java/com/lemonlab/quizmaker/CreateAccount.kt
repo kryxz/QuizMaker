@@ -3,6 +3,7 @@ package com.lemonlab.quizmaker
 
 import android.content.Context
 import android.os.Bundle
+import android.text.method.PasswordTransformationMethod
 import android.util.Patterns
 import android.view.LayoutInflater
 import android.view.View
@@ -17,6 +18,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.android.synthetic.main.fragment_create_account.*
 import java.util.*
 import kotlin.collections.HashMap
+import kotlin.random.Random
 
 
 class CreateAccount : Fragment() {
@@ -64,12 +66,13 @@ class CreateAccount : Fragment() {
                     UserProfileChangeRequest.Builder()
                         .setDisplayName(username).build()
                 )
+                val randomBios = resources.getStringArray(R.array.randomBios)
                 newUser["user"] =
                     User(
                         username,
                         userEmail,
                         FirebaseAuth.getInstance().currentUser!!.uid,
-                        "",
+                        randomBios[Random.nextInt(0, randomBios.size)],
                         0,
                         Calendar.getInstance().timeInMillis
                     )
@@ -86,41 +89,66 @@ class CreateAccount : Fragment() {
         }
     }
 
+    private fun removeSpecialChars(input: String): String {
+        return removeWhitespace(input).replace(Regex("[^a-zA-Z0-9_ ]"), "").replace(" ", "")
+    }
+
+    private fun removeWhitespace(string: String): String {
+        var isFirstSpace = false
+        var result = ""
+        for (char in string) {
+            if (char != ' ' && char != '\n') {
+                isFirstSpace = true
+                result += char
+            } else if (isFirstSpace) {
+                result += " "
+                isFirstSpace = false
+            }
+        }
+        return result
+    }
+
+    private fun showHidePassword() {
+        showPasswordCheckBox.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked)
+                signUpPasswordEditText.transformationMethod = null
+            else
+                signUpPasswordEditText.transformationMethod = PasswordTransformationMethod()
+
+        }
+    }
+
     private fun setUpUI() {
+        showHidePassword()
+        signUpPasswordEditText.transformationMethod = PasswordTransformationMethod()
         val fireStoreDatabaseUsers = FirebaseFirestore.getInstance().collection("users")
         signUpButton.setOnClickListener {
-            val username = signUpDisplayName.text.toString()
+            val username = removeSpecialChars(signUpDisplayName.text.toString())
             val userEmail = signUpEmailEditText.text.toString()
             val userPassword = signUpPasswordEditText.text.toString()
             if (fieldsOK(userEmail, userPassword)) {
                 var isUserNameOK = false
                 var isEmailOK = false
                 fireStoreDatabaseUsers.get().addOnSuccessListener {
-                    if (it.documents.isNotEmpty())
-                        for (doc in it) {
-                            isEmailOK = if (it != null)
-                                !doc.get("user.email", String::class.java).toString().equals(
-                                    userEmail,
-                                    ignoreCase = true
-                                )
-                            else
-                                true
-                            isUserNameOK = if (it != null)
-                                !doc.get("user.username", String::class.java).toString().equals(
-                                    username,
-                                    ignoreCase = true
-                                )
-                            else
-                                true
-                        } else {
-                        isUserNameOK = true
-                        isEmailOK = true
+
+                    for (doc in it) {
+                        isEmailOK = if (it != null)
+                            !doc.get("user.email", String::class.java).toString().equals(userEmail, ignoreCase = true)
+                        else
+                            true
+                        isUserNameOK = if (it != null)
+                            !doc.get("user.username", String::class.java).toString().equals(
+                                username,
+                                ignoreCase = true
+                            )
+                        else
+                            true
                     }
                     when {
                         isUserNameOK && isEmailOK -> createAccountAndSignIn(username, userEmail, userPassword)
                         !isEmailOK && !isUserNameOK -> invalidUserNameAndEmail()
                         !isEmailOK -> signUpEmailEditText.error = getString(R.string.accountExists)
-                        else -> signUpDisplayName.error = getString(R.string.userNameExists)
+                        else -> userNameExists()
                     }
                 }
             } else
@@ -128,9 +156,23 @@ class CreateAccount : Fragment() {
         }
     }
 
+    private fun userNameExists() {
+        signUpDisplayName.error = getString(R.string.userNameExists)
+        val userName = signUpEmailEditText.text.toString().substringBefore('@')
+        val suggestions = listOf(
+            "$userName${Random.nextInt(100, 1000)}",
+            "$userName${Random.nextInt(100, 1000)}",
+            "$userName${Random.nextInt(100, 1000)}"
+        )
+            .toString().replace("[", "").replace("]", "")
+        with(suggestedNamesTextView) {
+            text = getString(R.string.suggestions, suggestions)
+            visibility = View.VISIBLE
+        }
+    }
+
     private fun invalidUserNameAndEmail() {
         signUpEmailEditText.error = getString(R.string.accountExists)
-        signUpDisplayName.error = getString(R.string.userNameExists)
 
     }
 

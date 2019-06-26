@@ -5,6 +5,8 @@
     <color name="colorPrimaryLight">#5c6bc0</color>
 
     <color name="colorAccent">#000051</color>
+    <color name="colorSilver">#bfbfbf</color>
+    <color name="colorGreen">#00e640</color>
 
     <color name="textColorPrimary">#FFFFFF</color>
     <color name="textColorSecondary">#9fa8da</color>

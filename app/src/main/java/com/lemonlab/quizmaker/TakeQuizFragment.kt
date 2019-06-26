@@ -13,10 +13,12 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.RadioButton
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatButton
+import androidx.appcompat.widget.AppCompatRadioButton
 import androidx.appcompat.widget.AppCompatRatingBar
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.util.forEach
 import androidx.core.util.set
+import androidx.core.view.children
 import androidx.fragment.app.Fragment
 import androidx.navigation.Navigation
 import com.google.android.material.textfield.TextInputEditText
@@ -45,6 +47,7 @@ class TakeQuizFragment : Fragment() {
         )
         super.onDestroyView()
     }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         decideQuizType()
         super.onViewCreated(view, savedInstanceState)
@@ -120,7 +123,15 @@ class TakeQuizFragment : Fragment() {
         }
     }
 
+    private fun disableUI() {
+        for (item in quizChoicesGroup.children) {
+            (item as AppCompatRadioButton).isEnabled = false
+        }
+        answerCheckBox.isEnabled = false
+    }
+
     private fun showScoreDialog(score: Int, total: Int, quizID: String, quizAuthor: String) {
+        disableUI()
         val quizRef = FirebaseFirestore.getInstance().collection("Quizzes").document(quizID)
 
         val dialogBuilder = AlertDialog.Builder(context!!).create()
@@ -150,23 +161,9 @@ class TakeQuizFragment : Fragment() {
             quizRef.get()
                 .addOnSuccessListener { document ->
                     val theQuiz = document.get("quiz.quiz", Quiz::class.java)!!
-
-                    if (theQuiz.quizType == QuizType.TrueFalse) {
-                        val quiz: HashMap<String, TrueFalseQuiz> = HashMap()
-                        val userQuiz = document.get("quiz", TrueFalseQuiz::class.java)!!
-                        quiz["quiz"] = userQuiz
-                        userQuiz.quiz!!.setNewRating(ratingBar.rating)
-                        quizRef.set(quiz).addOnSuccessListener {
-                            showToast(context!!, getString(R.string.ratingSent))
-                        }
-                    } else {
-                        val quiz: HashMap<String, MultipleChoiceQuiz> = HashMap()
-                        val userQuiz = document.get("quiz", MultipleChoiceQuiz::class.java)!!
-                        quiz["quiz"] = userQuiz
-                        userQuiz.quiz!!.setNewRating(ratingBar.rating)
-                        quizRef.set(quiz).addOnSuccessListener {
-                            showToast(context!!, getString(R.string.ratingSent))
-                        }
+                    theQuiz.setNewRating(ratingBar.rating)
+                    quizRef.update("quiz.quiz", theQuiz).addOnSuccessListener {
+                        showToast(context!!, getString(R.string.ratingSent))
                     }
                 }
         }
@@ -268,6 +265,8 @@ class TakeQuizFragment : Fragment() {
             submitAnswers.setOnClickListener {
                 if (answersArray.size() == userQuiz.quiz.questionsCount)
                     calculateScore()
+                else
+                    showToast(context!!, getString(R.string.answerQuestions))
             }
             answersArray.put(position, answerCheckBox.isChecked)
             updateView()
@@ -318,6 +317,8 @@ class TakeQuizFragment : Fragment() {
 
             fun calculateScore() {
                 var score = 0
+                answersArray[position] =
+                    quizChoicesGroup.indexOfChild(view!!.findViewById(quizChoicesGroup.checkedRadioButtonId))
                 answersArray.forEach { key, value ->
                     if (userQuiz.questions!![key.toString()]!!.correctAnswer == value)
                         score = score.inc()
@@ -342,8 +343,11 @@ class TakeQuizFragment : Fragment() {
                     answersArray[position] = group.indexOfChild(view!!.findViewById(group.checkedRadioButtonId))
             }
             submitAnswers.setOnClickListener {
-                if (answersArray.size() == userQuiz.quiz.questionsCount)
-                    calculateScore()
+                when {
+                    answersArray.size() == userQuiz.quiz.questionsCount || position == userQuiz.quiz.questionsCount ->
+                        calculateScore()
+                    else -> showToast(context!!, getString(R.string.answerQuestions))
+                }
             }
             updateTexts()
         }

@@ -189,7 +189,7 @@ class TextViewAdapter(
             setOnClickListener {
                 animate().scaleX(0f).scaleY(0f).setDuration(100)
                     .withEndAction { animate().scaleX(1f).scaleY(1f).duration = 100 }
-                context.cacheDir.deleteRecursively()
+                context.cacheDir.delete()
                 showToast(context, context.getString(R.string.cacheDeleted))
             }
         }

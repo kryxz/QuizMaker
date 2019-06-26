@@ -106,8 +106,12 @@ class QuizAdapter(
         quizQuestionCount.text = context.getString(R.string.questionsCountText, userQuiz[position].questionsCount)
         quizRatingBar.rating = userQuiz[position].rating
         quizDateTextView.text = getDateFromMilliSeconds(userQuiz[position].milliSeconds)
-
-
+        quizAuthorText.setOnClickListener {
+            val action = MainFragmentDirections.viewProfile()
+            action.isViewer = true
+            action.username = userQuiz[position].quizAuthor
+            Navigation.findNavController(it).navigate(action)
+        }
         fun showReportDialog() {
             val dialogBuilder = android.app.AlertDialog.Builder(context).create()
             val dialogView = with(LayoutInflater.from(context)) {
@@ -193,9 +197,10 @@ class QuizAdapter(
             startQuizButton.setOnClickListener {
                 it.animate().scaleX(.3f).scaleY(.3f).setDuration(50)
                     .withEndAction {
-                        if (userQuiz[position].passwordProtected)
+                        if (userQuiz[position].passwordProtected) {
                             enterPasswordDialog(it)
-                        else
+                            it.animate().scaleX(1f).scaleY(1f).duration = 50
+                        } else
                             Navigation.findNavController(it).navigate(
                                 MainFragmentDirections.goToQuizNow(
                                     userQuiz[position].quizUUID

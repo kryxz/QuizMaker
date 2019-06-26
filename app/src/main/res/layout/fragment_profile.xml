@@ -118,14 +118,14 @@
                                                          android:layout_marginEnd="8dp"
                                                          app:layout_constraintTop_toBottomOf="@+id/linearLayoutCompat3"
                                                          android:layout_marginTop="16dp"
-                                                         android:id="@+id/appCompatTextView2"/>
+                                                         android:id="@+id/tapAQuizTextView"/>
             <View
                     android:layout_width="match_parent"
                     android:layout_height="2dp"
                     android:background="@color/colorPrimaryDark"
                     app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="2dp"
                     app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="2dp"
-                    app:layout_constraintTop_toBottomOf="@+id/appCompatTextView2" android:layout_marginTop="16dp"
+                    app:layout_constraintTop_toBottomOf="@+id/tapAQuizTextView" android:layout_marginTop="16dp"
                     android:id="@+id/view"/>
 
 
@@ -139,6 +139,13 @@
                          android:visibility="gone"
                          android:alpha=".3"
             />
+            <androidx.appcompat.widget.AppCompatTextView android:layout_width="match_parent"
+                                                         android:gravity="center"
+                                                         android:textSize="32sp"
+                                                         android:visibility="gone"
+                                                         android:id="@+id/logEmptyTextView"
+                                                         android:text="@string/emptyLog"
+                                                         android:layout_height="match_parent"/>
 
             <androidx.recyclerview.widget.RecyclerView android:layout_width="match_parent"
                                                        android:id="@+id/userLogRecyclerView"
