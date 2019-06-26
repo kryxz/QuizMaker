@@ -1,11 +1,13 @@
 package com.lemonlab.quizmaker
 
 
+import android.content.Context
 import android.os.Bundle
 import android.util.Patterns
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavOptions
 import androidx.navigation.Navigation
@@ -32,6 +34,14 @@ class CreateAccount : Fragment() {
         super.onViewCreated(view, savedInstanceState)
     }
 
+    override fun onDestroyView() {
+        //Hides keypad
+        (activity!!.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager).hideSoftInputFromWindow(
+            view!!.windowToken,
+            0
+        )
+        super.onDestroyView()
+    }
 
     private fun fieldsOK(userEmail: CharSequence, userPassword: String): Boolean {
         //returns true if userEmail is an Email, and password is 6+ chars.

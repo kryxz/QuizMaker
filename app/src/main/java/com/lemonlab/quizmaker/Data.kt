@@ -174,3 +174,11 @@ data class Report(
         }
     }
 }
+enum class Option{
+    CACHE, FAQ, APPS, LOGOUT, ABOUT, PRIVACY
+}
+data class OptionsItem(
+    val icon:Int,
+    val text:String,
+    val type:Option
+)

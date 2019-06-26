@@ -1,11 +1,13 @@
 package com.lemonlab.quizmaker
 
 
+import android.content.Context
 import android.os.Bundle
 import android.util.Patterns
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavOptions
 import androidx.navigation.Navigation
@@ -23,6 +25,14 @@ class LoginFragment : Fragment() {
         return inflater.inflate(R.layout.fragment_login, container, false)
     }
 
+    override fun onDestroyView() {
+        //Hides keypad
+        (activity!!.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager).hideSoftInputFromWindow(
+            view!!.windowToken,
+            0
+        )
+        super.onDestroyView()
+    }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         setUpUI()
         super.onViewCreated(view, savedInstanceState)

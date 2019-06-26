@@ -69,6 +69,7 @@
     <string name="ratingSent">تم ارسال التقييم!</string>
     <string name="questionNumber">%1$d/%2$d</string>
     <string name="ok">حسنًا</string>
+    <string name="okEn">حسنًا</string>
     <string name="placeHolderZero">0</string>
     <string name="quizAlreadyTaken">إعادة الاختبار</string>
     <string name="send">ارسال</string>
@@ -95,14 +96,38 @@
     <string name="userNameText">\@%1$s</string>
     <string name="writeAnything">اكتب أي شيء</string>
     <string name="editedSuccessfully">تم التعديل</string>
+    <string name="cacheDeleted">تم حذف البيانات المؤقتة</string>
+    <string name="changeLanguage">تغيير اللغة</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="privacyPolicyAr">سياسة الخصوصية والاستخدام</string>
+    <string name="privacyPolicyEn">Privacy Policy and Terms of Service</string>
+
+
     <string name="cannotEdit">لا يمكنك التعديل من هنا</string>
+    <string name="clearCache">حذف البيانات المؤقتة</string>
+    <string name="FAQTitle">أسئلة شائعة</string>
+    <string name="logout">تسجيل الخروج</string>
+    <string name="moreApps">المزيد من التطبيقات</string>
 
     <string-array name="quizQuestionsTypes">
         <item>متعدد الاختيار</item>
         <item>صح، خطأ</item>
+    </string-array>
+
+    <string-array name="faqs">
+        <item>ما هي أهمّية النقاط؟</item>
+        <item>كيف تحسب النقاط التي أحصل عليها؟</item>
+        <item>من يمكنه رؤية الاختبار الذي أنشره؟</item>
+        <item>هل سيتم تحديث التطبيق؟</item>
+        <item>وصلني رسالة مسيئة، كيف أتصرف؟</item>
+    </string-array>
+
+    <string-array name="faqsAnswers">
+        <item>سيكون هناك ميزات يمكنك استخدام النقاط للحصول عليها.</item>
+        <item>تحسب النقاط حسب عدد الإجابات الصحيحة.</item>
+        <item>يمكن ﻷي مستخدم في التطبيق رؤية الاختبار. قد نقوم بوضع خيار للخصوصيّة في المستقبل.</item>
+        <item>فريقنا لديه مشاغل أخرى دائمًا، مع ذلك، إذا رأينا أن التطبيق قد حقق نجاحًا، فسنعمل على ذلك.</item>
+        <item>نعتذر عن ذلك. في الوقت الراهن يمكنك حذفها بسحبها من اليمين إلى اليسار.</item>
     </string-array>
 
     <string-array name="multipleChoices">
@@ -111,4 +136,164 @@
         <item>3</item>
         <item>4</item>
     </string-array>
+
+    <string name="aboutLemonLabAr">    "مختبر الليمون فريق يسعى لنشر تطبيقات تساعد الناس وتسهل حياتهم. \n"
+        "نحاول أن نستخدم أحدث الخدمات وأفضل الطرق لإيصال تطبيقاتنا إلى مستوىً منافس. "
+        "تطبيقاتنا ترفيهية في غالبها، لكن قد نطوّر بعض التطبيقات التعليمية بين حين وآخر.</string>
+
+    <string name="aboutLemonLabTitle">عن مختبر الليمون</string>
+
+    <string name="privacyPolicyText">Privacy Policy of Lemon Lab\n
+        \n
+        Lemon Lab provides many services including this app.\n
+        \n
+        This page is used to inform Lemon Lab offers visitors regarding our policies with the collection، use، and
+        disclosure of Personal Information if anyone decided to use our Service، the Lemon Lab.\n
+        \n
+        If you choose to use our Service، then you agree to the collection and use of information in relation with this
+        policy. The Personal Information that we collect are used for providing and improving the Service. We will not
+        use or share your information with anyone except as described in this Privacy Policy.\n
+        \n
+        The terms used in this Privacy Policy have the same meanings as in our Terms and Conditions، which is accessible
+        at Lemon lab، unless otherwise defined in this Privacy Policy.\n
+        \n
+        Information Collection and Use\n
+        \n
+        For a better experience while using our Service، we may require you to provide us with certain personally
+        identifiable information، including but not limited to your name، phone number، and postal address. The
+        information that we collect will be used to contact or identify you.\n
+        \n
+        Log Data\n
+        \n
+        We want to inform you that whenever you visit our Service، we collect information that your browser sends to us
+        that is called Log Data. This Log Data may include information such as your computer’s Internet Protocol (\IP\)
+        address، browser version، pages of our Service that you visit، the time and date of your visit، the time spent
+        on those pages، and other statistics.\n
+        \n
+        Cookies\n
+        \n
+        Cookies are files with small amount of data that is commonly used an anonymous unique identifier. These are sent
+        to your browser from the website that you visit and are stored on your computer’s hard drive.\n
+        \n
+        Our apps uses these cookies to collection information and to improve our Service. You have the option to either
+        accept or refuse these cookies، and know when a cookie is being sent to your computer. If you choose to refuse
+        our cookies، you may not be able to use some portions of our Service.\n
+        \n
+        Service Providers\n
+        \n
+        We may employ third-party companies and individuals due to the following reasons:\n
+        \n
+        To facilitate our Service;\n
+        To provide the Service on our behalf; \n
+        To perform Service -related services; \n
+        or \n
+        To assist us in analyzing how our Service is used.\n
+        \n
+        We want to inform our Service users that these third parties have access to your Personal Information. The
+        reason is to perform the tasks assigned to them on our behalf. However، they are obligated not to disclose or
+        use the information for any other purpose.\n
+        \n
+        Security\n
+        \n
+        We value your trust in providing us your Personal Information، thus we are striving to use commercially
+        acceptable means of protecting it. But remember that no method of transmission over the internet، or method of
+        electronic storage is 100% secure and reliable، and we cannot guarantee its absolute security.\n
+        \n
+        Links to Other Sites\n
+        \n
+        Our Service may contain links to other sites. If you click on a third-party link، you will be directed to that
+        site. Note that these external sites are not operated by us. Therefore، we strongly advise you to review the
+        Privacy Policy of these websites. We have no control over، and assume no responsibility for the content، privacy
+        policies، or practices of any third-party sites or services.\n
+        \n
+        Children’s Privacy\n
+        \n
+        Our Services do not address anyone under the age of 6. We do not knowingly collect personal identifiable
+        information from children under 6. In the case we discover that a child under 6 has provided us with personal
+        information، we immediately delete this from our servers. If you are a parent or guardian and you are aware that
+        your child has provided us with personal information، please contact us so that we will be able to do necessary
+        actions.\n
+        \n
+        Changes to This Privacy Policy\n
+        \n
+        We may update our Privacy Policy from time to time. Thus، we advise you to review this page periodically for any
+        changes. We will notify you of any changes by posting the new Privacy Policy on this page. These changes are
+        effective immediately، after they are posted on this page.\n
+        \n
+        Contact Us\n
+        \n
+        If you have any questions or suggestions about our Privacy Policy، do not hesitate to contact us at
+        zaka7024@gmail.com.\n
+    </string>
+
+    <string name="privacyPolicyTextAr">سياسة الخصوصية لدى مختبر الليمون\n
+        \n
+        يوفر مختبر الليمون عدة خدمات، منها هذا التطبيق.\n
+        \n
+        هذه الصفحة تحتوي على معلومات لإخبار أي من مستخدمي خدمات مختبر الليمون عن المعلومات الشخصية التي قد نجمعها عند
+        استخدامك لإحدى الخدمات.\n
+        \n
+        إذا استخدمت خدماتنا، فأنت توافق على تحصيل المعلومات واستخدامها حسب هذه السياسة. المعلومات الشخصية التي نجمعها هي
+        فقط لتطوير الخدمات التي يوفرها مختبر الليمون ولن نشاركها مع أحد إلا كما يذكر لاحقًا.\n
+        \n
+        المصطلحات المستخدمة في سياسة الخصوصية لها نفس المعنى في شروط الخدمة التي يمكنك الوصول إليها في مختبر الليمون.
+        إلا إذا قيل غير ذلك.\n
+        \n
+        تجميع المعلومات واستخدامها\n
+        \n
+        لتجربة أفضل خلال استخدام خدماتنا، قد نطلب منك معلومات تعريفية شخصية تشمل ولا تقتصر على اسمك وهاتفك وعنوانك
+        البريدي، وسوف تستخدم للتواصل معك أو التعريف بك.\n
+        \n
+        بيانات التسجيل\n
+        \n
+        نود إخبارك أنه في كل مرة تستخدم خدماتنا، فإننا نجمع معلومات يرسلها هاتفك تسمى معلومات التسجيل وقد تشمل بروتوكول
+        الانترنت، نسخة المتصفح أو الجهاز، والأماكن التي تزورها في خدماتنا، وقت زيارتك ومدتها وبعض الاحصائيات الأخرى\n
+        \n
+        ملفات تعريف الارتباط على الإنترنت\n
+        \n
+        ملفات تعريف الارتباط على الإنترنت هي ملفات صغيرة تحوي بيانات قليلة تستخدم بشكل واسع كمعرف فريد مجهول، ترسل إلى
+        المتصفح عبر مواقع الويب وتخزن على جهازك\n
+        \n
+        تطبيقنا يستخدم ملفات تعريف الارتباط لجمع المعلومات لتطوير خدماتنا، لديك الخيار لرفض أو قبول هذه الملفات والمعرفة
+        في حال استخدامنا لها. وفي حال رفضك لهذه الملفات قد لا تستطيع استخدام جزء من خدماتنا.\n
+        \n
+        موفرو الخدمات\n
+        \n
+        قد نوظف أفرادًا أو شركات كطرف ثالث للأسباب التالية:\n
+        \n
+        لتسهيل خدماتنا.\n
+        ليوفروا خدماتنا نيابة عنا.\n
+        ليقوموا بخدمات متعلقة بالخدمات التي نقدمها.\n
+        أو \n
+        لمساعدتنا في تحليل الطريقة التي تستخدم فيها خدماتنا.\n
+        \n
+        نود إخبار مستخدمي خدماتنا أن هذه الشركات لها وصول إلى بياناتهم الشخصية والسبب لتنفيذهم مهمات نحن مختبر الليمون
+        طلبناها منهم. وهم مجبرون على أية حال على عدم استخدام تلك البيانات لأي هدف آخر.\n
+        \n
+        الأمن\n
+        \n
+        نحن نقدر ثقتك في خدماتنا عند توفيرك للمعلومات لذلك نحن نستخدم طرقًا مقبولة لحمايتها لكن يجب أن تتذكر أنه ليس
+        هناك طريقة على الانترنت أو إلكترونية آمنة كليًا.\n
+        \n
+        روابط لمواقع أخرى\n
+        \n
+        قد تحتوي خدماتنا روابط لمواقع أخرى، لذا فإننا ننصح بمراجعة سياسة الخصوصية لتلك المواقع لأننا لسنا مسؤولين عن أي
+        انتهاك لأن تلك المواقع ليست من مختبر الليمون\n
+        \n
+        خصوصية الأطفال\n
+        \n
+        خدماتنا لا تستقبل أي طفل تحت الست سنوات، إذا لاحظنا أن طفلًا تحت الست سنوات قد أعطى معلومات شخصية فإننا نحذفها
+        فور وصولها. إذا كنت والدًا أو ولي أمر طفل تعتقد أنه استخدم خدماتنا، تواصل معنا وسنقوم بالإجراءات الضرورية.\n
+        \n
+        التغييرات على سياسة الخصوصية\n
+        \n
+        \nقد نقوم بتغيير سياسة الخصوصية لدينا في أي وقت، لذا ينصح بالاطلاع على هذه الصفحة دوريًا. علمًا بأننا سنعلمك في
+        حال التغيير، والتغييرات ستطبق فور نشرها هنا.
+        \n
+        \n
+        تواصل معنا \n
+        \n
+        إذا كان لديك أي أسئلة أو اقتراحات أو استفسارات حول سياسة الخصوصية، لا تتردد في مراسلتنا على zaka7024@gmail.com\n
+    </string>
+
 </resources>

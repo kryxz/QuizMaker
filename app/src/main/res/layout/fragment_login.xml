@@ -70,7 +70,7 @@
     <androidx.appcompat.widget.AppCompatButton
             android:text="@string/login_label"
             android:textColor="@color/textColorPrimary"
-            android:background="@color/colorPrimaryDark"
+            android:background="@drawable/button_selector"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="8dp"

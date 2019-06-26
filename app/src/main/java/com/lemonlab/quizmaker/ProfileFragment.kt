@@ -2,10 +2,12 @@ package com.lemonlab.quizmaker
 
 
 import android.app.AlertDialog
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.widget.AppCompatButton
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -30,6 +32,15 @@ class ProfileFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         getDateFromToSetupProfile()
         super.onViewCreated(view, savedInstanceState)
+    }
+
+    override fun onDestroyView() {
+        //Hides keypad
+        (activity!!.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager).hideSoftInputFromWindow(
+            view!!.windowToken,
+            0
+        )
+        super.onDestroyView()
     }
 
     private fun showEditBioDialog(profileRef: DocumentReference) {
@@ -94,26 +105,28 @@ class ProfileFragment : Fragment() {
         val profileRef = FirebaseFirestore.getInstance().collection("users").document(userName)
         profileRef.get().addOnSuccessListener {
             profileRef.collection("userLog").document("takenQuizzes").get().addOnSuccessListener { document ->
-                val log = document.get("log", QuizLog::class.java)
-                if (log != null)
-                    quizzesTakenTextView.text = log.userLog.size.toString()
-                else
-                    quizzesTakenTextView.text = getString(R.string.placeHolderZero)
+                if (view != null) {
+                    val log = document.get("log", QuizLog::class.java)
+                    if (log != null)
+                        quizzesTakenTextView.text = log.userLog.size.toString()
+                    else
+                        quizzesTakenTextView.text = getString(R.string.placeHolderZero)
 
-                loadLog(log!!.userLog)
-
+                    loadLog(log!!.userLog)
+                }
             }
-            profileFragmentProgressBar.visibility = View.GONE
-            val user = it.get("user", User::class.java)!!
-            joinDateTextView.text = user.joinTimeAsAString()
-            currentPointsTextView.text = user.points.toString()
-            userBioTextView.text = user.userBio
-            userBioTextView.setOnClickListener {
-                showEditBioDialog(profileRef)
+            if (view != null) {
+                profileFragmentProgressBar.visibility = View.GONE
+                val user = it.get("user", User::class.java)!!
+                joinDateTextView.text = user.joinTimeAsAString()
+                currentPointsTextView.text = user.points.toString()
+                userBioTextView.text = user.userBio
+                userBioTextView.setOnClickListener {
+                    showEditBioDialog(profileRef)
+                }
+                userNameTextView.text = getString(R.string.userNameText, userName)
             }
-            userNameTextView.text = getString(R.string.userNameText, userName)
         }
-
     }
 
 }

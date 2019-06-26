@@ -1,11 +1,13 @@
 package com.lemonlab.quizmaker
 
 
+import android.content.Context
 import android.os.Bundle
 import android.os.Handler
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -48,7 +50,7 @@ class MessagesFragment : Fragment() {
                 val listOfMessages = mutableListOf<Message>()
                 for (item in documents)
                     listOfMessages.add(item.get("message", Message::class.java)!!)
-                if (listOfMessages.isNotEmpty())
+                if (listOfMessages.isNotEmpty() && view != null)
                     with(MessagesRecyclerView) {
 
                         with(listOfMessages) {
@@ -82,6 +84,11 @@ class MessagesFragment : Fragment() {
             adapter = null
             onFlingListener = null
         }
+        //Hides keypad
+        (activity!!.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager).hideSoftInputFromWindow(
+            view!!.windowToken,
+            0
+        )
         super.onDestroyView()
     }
 }

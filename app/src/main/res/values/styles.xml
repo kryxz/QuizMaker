@@ -10,9 +10,9 @@
         <item name="android:textColor">@color/textColorPrimary</item>
         <item name="android:textSize">19sp</item>
         <item name="android:textColorHint">@color/textColorSecondary</item>
-        <item name="homeAsUpIndicator">@drawable/ic_delete</item>
     </style>
-
+    <style name="DefaultTheme" parent="ThemeOverlay.AppCompat.Dialog.Alert">
+    </style>
 
     <style name="loginEditTextStyle">
         <item name="android:layout_width">match_parent</item>
@@ -24,10 +24,10 @@
     </style>
 
     <style name="QuestionFormButtonStyle">
+        <item name="android:background">@drawable/button_selector</item>
         <item name="android:padding">8dp</item>
         <item name="android:textSize">20sp</item>
         <item name="android:textColor">@color/textColorPrimary</item>
-        <item name="android:background">@color/colorPrimaryDark</item>
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
     </style>

@@ -46,7 +46,10 @@ class MainFragment : Fragment() {
         loginIfNoUser()
         getData()
         createQuizButton.setOnClickListener {
-            Navigation.findNavController(it).navigate(R.id.createQuiz)
+            it.animate().scaleX(.3f).scaleY(.3f).setDuration(50)
+                .withEndAction {
+                    Navigation.findNavController(it).navigate(R.id.createQuiz)
+                }
         }
 
     }

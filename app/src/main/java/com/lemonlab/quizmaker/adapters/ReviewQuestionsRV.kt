@@ -71,7 +71,6 @@ class QuestionsAdapter(
         secondChoice: AppCompatTextView, thirdChoice: AppCompatTextView, fourthChoice: AppCompatTextView,
         position: Int, reviewIsTrueCheckBox: AppCompatCheckBox
     ) {
-        showToast(context, context.getString(R.string.swipeLeftRight))
         reviewIsTrueCheckBox.visibility = View.GONE
         questionsText.text =
             context.getString(

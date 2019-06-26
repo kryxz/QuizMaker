@@ -2,10 +2,12 @@ package com.lemonlab.quizmaker
 
 
 import android.app.AlertDialog
+import android.content.Context
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.*
+import android.view.inputmethod.InputMethodManager
 import android.widget.ArrayAdapter
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatButton
@@ -44,6 +46,14 @@ class ViewEditQuestions : Fragment() {
         super.onViewCreated(view, savedInstanceState)
     }
 
+    override fun onDestroyView() {
+        //Hides keypad
+        (activity!!.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager).hideSoftInputFromWindow(
+            view!!.windowToken,
+            0
+        )
+        super.onDestroyView()
+    }
     private fun decideWhatToDo() {
         if (quizID == "empty")
             decideQuizType()
@@ -235,6 +245,7 @@ class ViewEditQuestions : Fragment() {
 
                 visibility = View.VISIBLE
                 layoutManager = ViewPagerLayoutManager(context!!, 0)
+                showToast(context!!, getString(R.string.swipeLeftRight))
                 adapter = QuestionsAdapter(context!!, multipleChoiceQuestions, null)
             }
         else

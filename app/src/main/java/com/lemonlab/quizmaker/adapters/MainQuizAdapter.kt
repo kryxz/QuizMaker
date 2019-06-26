@@ -191,14 +191,19 @@ class QuizAdapter(
             }
         } else
             startQuizButton.setOnClickListener {
-                if (userQuiz[position].passwordProtected)
-                    enterPasswordDialog(it)
-                else
-                    Navigation.findNavController(it).navigate(
-                        MainFragmentDirections.goToQuizNow(
-                            userQuiz[position].quizUUID
-                        )
-                    )
+                it.animate().scaleX(.3f).scaleY(.3f).setDuration(50)
+                    .withEndAction {
+                        if (userQuiz[position].passwordProtected)
+                            enterPasswordDialog(it)
+                        else
+                            Navigation.findNavController(it).navigate(
+                                MainFragmentDirections.goToQuizNow(
+                                    userQuiz[position].quizUUID
+                                )
+                            )
+                    }
+
+
             }
 
     }
