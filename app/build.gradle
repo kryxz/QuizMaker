@@ -37,10 +37,13 @@ dependencies {
     implementation 'com.google.firebase:firebase-core:17.0.0'
     implementation 'com.google.firebase:firebase-auth:18.0.0'
     implementation 'com.google.firebase:firebase-firestore:20.1.0'
+    implementation 'com.google.firebase:firebase-messaging:19.0.1'
 
 
     implementation 'androidx.navigation:navigation-fragment-ktx:2.0.0'
     implementation 'androidx.navigation:navigation-ui-ktx:2.0.0'
+
+    implementation 'com.android.volley:volley:1.1.0'
 
     implementation 'com.github.DingMouRen:LayoutManagerGroup:1e6f4f96eb'
 

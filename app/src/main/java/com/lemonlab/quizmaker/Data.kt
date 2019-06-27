@@ -2,12 +2,17 @@
 
 package com.lemonlab.quizmaker
 
+import android.content.Context
 import com.google.firebase.firestore.FirebaseFirestore
 import java.util.*
 
 
 enum class QuizType {
     MultipleChoice, TrueFalse
+}
+
+enum class NotificationType {
+    MESSAGE, QUIZ
 }
 
 enum class ViewType {
@@ -69,7 +74,8 @@ class TempData {
             multiChoiceCachedQuestions = null
             trueFalseCachedQuestions = null
         }
-        var user:User? = null
+
+        var user: User? = null
     }
 }
 
@@ -108,15 +114,22 @@ data class TrueFalseQuiz(
 data class QuizLog(
     val userLog: MutableList<String>
 ) {
-    fun addQuiz(quizUUID: String, userName:String, pointsToGet:Int) {
-        if (!userLog.contains(quizUUID)){
+    fun addQuiz(quizUUID: String, userName: String, pointsToGet: Int, quizAuthor: String, context: Context) {
+        if (!userLog.contains(quizUUID)) {
             userLog.add(quizUUID)
-            val userRef = FirebaseFirestore.getInstance().collection("users").document(userName)
-            userRef.get().addOnSuccessListener { document ->
+            val usersRef = FirebaseFirestore.getInstance().collection("users")
+            usersRef.document(userName).get().addOnSuccessListener { document ->
                 var points = document.get("user.points", Int::class.java)!!
                 points += pointsToGet
-                userRef.update("user.points", points)
+                usersRef.document(userName).update("user.points", points)
+                usersRef.document(quizAuthor).get().addOnSuccessListener { doc ->
+                    var authorPoints = doc.get("user.points", Int::class.java)!!
+                    authorPoints += pointsToGet
+                    usersRef.document(quizAuthor).update("user.points", authorPoints)
+                    NotificationSender().sendNotification(context, quizAuthor, NotificationType.QUIZ)
+                }
             }
+
         }
     }
 
@@ -166,20 +179,23 @@ data class Report(
         if (!userIDs.contains(id)) {
             userIDs += " $id"
             count = count.inc()
-            if (count >= 2) {
+            if (count >= 5) {
                 val dataRef = FirebaseFirestore.getInstance()
                 dataRef.collection("Quizzes").document(quizID).delete()
                 dataRef.collection("userReports").document(quizID).delete()
+                TempData.currentQuizzes = null
             }
 
         }
     }
 }
-enum class Option{
+
+enum class Option {
     CACHE, FAQ, APPS, LOGOUT, ABOUT, PRIVACY
 }
+
 data class OptionsItem(
-    val icon:Int,
-    val text:String,
-    val type:Option
+    val icon: Int,
+    val text: String,
+    val type: Option
 )

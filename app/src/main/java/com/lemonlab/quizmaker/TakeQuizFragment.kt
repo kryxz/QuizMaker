@@ -66,7 +66,7 @@ class TakeQuizFragment : Fragment() {
     }
 
 
-    private fun logQuiz(quizID: String, pointsToGet: Int) {
+    private fun logQuiz(quizID: String, pointsToGet: Int, quizAuthor: String) {
         val fireStore = FirebaseFirestore.getInstance()
         var quizzesLog = QuizLog(mutableListOf())
         val userName = FirebaseAuth.getInstance().currentUser?.displayName!!
@@ -81,8 +81,8 @@ class TakeQuizFragment : Fragment() {
                     it.get("log", QuizLog::class.java)!!
                 else
                     QuizLog(mutableListOf())
-
-            quizzesLog.addQuiz(quizID, userName, pointsToGet)
+            //Updates points for author and user, and sends a notification to the quiz author.
+            quizzesLog.addQuiz(quizID, userName, pointsToGet, quizAuthor, context!!)
             log["log"] = quizzesLog
             logRef.set(log)
         }
@@ -107,6 +107,7 @@ class TakeQuizFragment : Fragment() {
             FirebaseFirestore.getInstance().collection("users")
                 .document(quizAuthor)
                 .collection("messages").add(msg).addOnSuccessListener {
+                    NotificationSender().sendNotification(context!!, quizAuthor, NotificationType.MESSAGE)
                     showToast(context!!, getString(R.string.messageSent))
                 }
             dialogBuilder.dismiss()
@@ -146,7 +147,7 @@ class TakeQuizFragment : Fragment() {
 
         dialogView.findViewById<AppCompatButton>(R.id.quizFinishedOKButton).setOnClickListener {
             Navigation.findNavController(view!!).navigate(R.id.mainFragment)
-            logQuiz(quizID, score)
+            logQuiz(quizID, score, quizAuthor)
             dialogBuilder.dismiss()
         }
 
@@ -193,7 +194,7 @@ class TakeQuizFragment : Fragment() {
             }
             setOnClickListener {
                 //Send quiz to log.
-                logQuiz(quizID, score)
+                logQuiz(quizID, score, quizAuthor)
                 //Send Rating to database.
                 sendRating()
             }

@@ -183,6 +183,8 @@ class ProfileFragment : Fragment() {
 
 
     private fun setUpProfileUI(user: User, profileRef: DocumentReference) {
+        if (view == null)
+            return
         profileFragmentProgressBar.visibility = View.GONE
         joinDateTextView.text = user.joinTimeAsAString()
         currentPointsTextView.text = user.points.toString()
@@ -193,14 +195,12 @@ class ProfileFragment : Fragment() {
         userNameTextView.text = getString(R.string.userNameText, user.username)
 
         profileRef.get().addOnSuccessListener {
-            if (view != null) {
-                val newUser = it.get("user", User::class.java)!!
-                if (newUser != TempData.user) {
-                    TempData.user = user
-                    setUpProfileUI(user, profileRef)
-                }
-
+            val newUser = it.get("user", User::class.java)!!
+            if (newUser != TempData.user) {
+                TempData.user = newUser
+                setUpProfileUI(newUser, profileRef)
             }
+
         }
     }
 

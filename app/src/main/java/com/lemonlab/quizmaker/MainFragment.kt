@@ -45,13 +45,6 @@ class MainFragment : Fragment() {
     private fun setUp() {
         loginIfNoUser()
         getData()
-        createQuizButton.setOnClickListener {
-            it.animate().scaleX(.3f).scaleY(.3f).setDuration(50)
-                .withEndAction {
-                    Navigation.findNavController(it).navigate(R.id.createQuiz)
-                }
-        }
-
     }
 
     override fun onDestroyView() {

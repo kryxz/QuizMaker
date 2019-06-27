@@ -135,7 +135,7 @@ class CreateQuiz : Fragment() {
             if (TempData.multiChoiceCachedQuestions != null && TempData.quizType == QuizType.MultipleChoice ||
                 TempData.trueFalseCachedQuestions != null && TempData.quizType == QuizType.TrueFalse
             ) {
-                showYesNoDialog(
+                context!!.showYesNoDialog(
                     ::deleteCached,
                     ::navigateToEditingQuestions,
                     getString(R.string.existingQuestions),
@@ -161,14 +161,14 @@ class CreateQuiz : Fragment() {
 
 }
 
-fun Fragment.showYesNoDialog(
+fun Context.showYesNoDialog(
     functionToPerform: () -> Unit,
     functionIfCancel: () -> Unit,
     dialogTitle: String,
     dialogMessage: String
 ) {
-    val dialogBuilder = AlertDialog.Builder(context!!).create()
-    val dialogView = with(layoutInflater) {
+    val dialogBuilder = AlertDialog.Builder(this).create()
+    val dialogView = with(LayoutInflater.from(this)) {
         inflate(
             R.layout.yes_no_dialog,
             null

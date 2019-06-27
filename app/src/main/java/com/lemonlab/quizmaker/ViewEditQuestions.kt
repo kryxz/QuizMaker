@@ -54,6 +54,7 @@ class ViewEditQuestions : Fragment() {
         )
         super.onDestroyView()
     }
+
     private fun decideWhatToDo() {
         if (quizID == "empty")
             decideQuizType()
@@ -152,7 +153,7 @@ class ViewEditQuestions : Fragment() {
         dialogView.findViewById<AppCompatButton>(R.id.dialogDeleteCurrentQuestionButton).setOnClickListener {
 
             if (TempData.questionsCount > 1)
-                showYesNoDialog(
+                context!!.showYesNoDialog(
                     ::deleteCurrentQuestion,
                     fun() {},
                     getString(R.string.DeleteCurrentQuestion),
@@ -174,7 +175,7 @@ class ViewEditQuestions : Fragment() {
             if (quizQuestionsCount != TempData.questionsCount &&
                 quizQuestionsCount <= 30
             )
-                showYesNoDialog(
+                context!!.showYesNoDialog(
                     ::resizeQuiz, {},
                     getString(R.string.resizeQuiz),
                     getString(R.string.thisWillDeleteRemainingQuestions)
@@ -197,11 +198,13 @@ class ViewEditQuestions : Fragment() {
     }
 
     private fun viewQuizAnswers() {
+        (activity as AppCompatActivity).supportActionBar!!.title =
+            getString(R.string.viewAnswers)
         editQuestionsLayout.visibility = View.GONE
         val quizRef = FirebaseFirestore.getInstance().collection("Quizzes").document(quizID)
         quizRef.get().addOnSuccessListener {
             val quiz = it.get("quiz.quiz", Quiz::class.java)!!
-            if (quiz.quizType == QuizType.MultipleChoice)
+            if (quiz.quizType == QuizType.MultipleChoice && view != null)
                 with(questionsRecyclerView) {
                     visibility = View.VISIBLE
                     val quizQuestions = LinkedHashMap(it.get("quiz", MultipleChoiceQuiz::class.java)!!.questions!!)
@@ -215,7 +218,7 @@ class ViewEditQuestions : Fragment() {
                     layoutManager = LinearLayoutManager(context!!)
                     adapter = QuestionsAdapter(context!!, quizQuestions, null)
                 }
-            else
+            else if (view != null)
                 with(questionsRecyclerView) {
                     visibility = View.VISIBLE
                     TempData.quizType = quiz.quizType
@@ -315,7 +318,7 @@ class ViewEditQuestions : Fragment() {
             }
 
         }
-        showYesNoDialog(
+        context!!.showYesNoDialog(
             ::publishNow, fun() {},
             getString(R.string.publishQuizText),
             getString(R.string.publishQuizWithTitle, TempData.quizTitle)

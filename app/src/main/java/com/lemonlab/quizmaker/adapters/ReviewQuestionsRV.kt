@@ -58,11 +58,15 @@ class QuestionsAdapter(
     ) {
         reviewIsTrueCheckBox.visibility = View.VISIBLE
         reviewMultipleChoiceLayout.visibility = View.GONE
+        reviewIsTrueCheckBox.buttonDrawable = null
         questionsText.text = context.getString(
             R.string.questionsTextLabel,
             trueFalseQuestions!![(position + 1).toString()]!!.question
         )
-        reviewIsTrueCheckBox.isChecked = trueFalseQuestions[(position + 1).toString()]!!.answer
+        if (trueFalseQuestions[(position + 1).toString()]!!.answer)
+            reviewIsTrueCheckBox.text = context.getString(R.string.trueStatement)
+        else
+            reviewIsTrueCheckBox.text = context.getString(R.string.falseStatement)
 
     }
 

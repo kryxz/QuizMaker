@@ -21,6 +21,7 @@
     <androidx.appcompat.widget.AppCompatRatingBar android:layout_width="wrap_content"
                                                   android:layout_gravity="center"
                                                   android:rating="3"
+                                                  android:theme="@style/RatingBar"
                                                   android:id="@+id/quizFinishedRatingBar"
                                                   android:layout_height="wrap_content"/>
 

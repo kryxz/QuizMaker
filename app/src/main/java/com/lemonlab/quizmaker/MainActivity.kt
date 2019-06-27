@@ -11,8 +11,10 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
 import androidx.navigation.ui.setupActionBarWithNavController
 import com.google.firebase.FirebaseApp
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreSettings
+import com.google.firebase.messaging.FirebaseMessaging
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
@@ -23,13 +25,33 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         setUpNavigation()
         supportActionBar!!.setHomeAsUpIndicator(R.drawable.ic_drawer)
+        setUpFireBase()
+        getDataFromIntent()
+
+    }
+
+    private fun getDataFromIntent() {
+        if (intent.extras != null) {
+            val notificationType = (intent.extras!!.get("notificationType") as NotificationType)
+            if (notificationType == NotificationType.MESSAGE)
+                Navigation.findNavController(this, R.id.navigationHost).navigate(R.id.messagesFragment)
+            else
+                Navigation.findNavController(this, R.id.navigationHost).navigate(R.id.profileFragment)
+        }
+
+    }
+
+    private fun setUpFireBase() {
+        FirebaseApp.initializeApp(this)
         FirebaseFirestore.getInstance().firestoreSettings = with(FirebaseFirestoreSettings.Builder()) {
             setPersistenceEnabled(true)
             setCacheSizeBytes(FirebaseFirestoreSettings.CACHE_SIZE_UNLIMITED)
             build()
         }
-        FirebaseApp.initializeApp(this)
-
+        FirebaseMessaging.getInstance().isAutoInitEnabled = true
+        if (FirebaseAuth.getInstance().currentUser != null)
+            FirebaseMessaging.getInstance()
+                .subscribeToTopic(FirebaseAuth.getInstance().currentUser!!.displayName)
     }
 
     override fun onBackPressed() {

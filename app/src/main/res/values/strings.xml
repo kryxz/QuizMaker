@@ -9,7 +9,7 @@
     <string name="not_email">أدخل بريدًا صالحًا!</string>
     <string name="mainPage">الرئيسيّة</string>
     <string name="messages">الرسائل</string>
-    <string name="settingsLabel">الإعدادات</string>
+    <string name="settingsLabel">الضبط</string>
     <string name="createNewQuiz">اختبار جديد</string>
 
     <string name="categoryAcademic">أكاديمي</string>
@@ -18,7 +18,7 @@
     <string name="isQuizPasswordProtected">يتطلب كلمة مرور</string>
     <string name="quizPassword">رمز الدخول للاختبار</string>
     <string name="quizQuestionsCount">عدد أسئلة الاختبار</string>
-    <string name="writeQuestionsButton">بدأ كتابة الأسئلة</string>
+    <string name="writeQuestionsButton">ابدأ بكتابة الأسئلة</string>
     <string name="cannotBeEmpty">لا يجب أن يكون فارغًا</string>
     <string name="cannotBeGreaterThan30">أكثر عدد هو 30!</string>
     <string name="quizTitleText">عنوان الاختبار</string>
@@ -28,6 +28,7 @@
     <string name="wrongPassword">كلمة المرور غير صحيحة!</string>
 
     <string name="trueStatement">عبارة صحيحة</string>
+    <string name="falseStatement">عبارة خاطئة</string>
     <string name="aChoice">اكتب خيارًا</string>
     <string name="edit">تحرير</string>
     <string name="publishQuizText">نشر الاختبار</string>
@@ -115,7 +116,13 @@
     <string name="clearCache">حذف البيانات المؤقتة</string>
     <string name="FAQTitle">أسئلة شائعة</string>
     <string name="logout">تسجيل الخروج</string>
+    <string name="confirmLogout">هل أنت متأكد من رغبتك في تسجيل الخروج؟</string>
     <string name="moreApps">المزيد من التطبيقات</string>
+    <string name="newMessage">رسالة جديدة</string>
+    <string name="newMessageFrom">لديك رسالة من %1$s</string>
+    <string name="newPoints">نقاط لك، %1$s</string>
+    <string name="newPointsForYou">أنهى أحدهم اختبار لك وزادت نقاطك!</string>
+    <string name="app_notifications_description">تنبيهات جديدة مثل الرسائل والتقييمات، وأحيانًا من الاختبارات التي قمت بنشرها</string>
 
     <string-array name="quizQuestionsTypes">
         <item>متعدد الاختيار</item>

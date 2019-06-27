@@ -38,7 +38,6 @@ class LoginFragment : Fragment() {
         setUpUI()
         super.onViewCreated(view, savedInstanceState)
     }
-
     private fun fieldsOK(userEmail: CharSequence, userPassword: String): Boolean {
         //returns true if userEmail is an Email, and password is 6+ chars.
 

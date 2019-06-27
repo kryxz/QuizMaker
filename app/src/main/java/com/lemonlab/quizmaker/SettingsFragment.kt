@@ -16,6 +16,7 @@ import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.messaging.FirebaseMessaging
 import kotlinx.android.synthetic.main.fragment_settings.*
 
 
@@ -156,13 +157,11 @@ class TextViewAdapter(
                     dialogBuilder.dismiss()
                 }
 
-                dialogBuilder.setView(dialogView)
+                with(dialogBuilder) {
+                    setView(dialogView)
+                    show()
+                }
 
-                animate().scaleX(0f).scaleY(0f).setDuration(50)
-                    .withEndAction {
-                        animate().scaleX(1f).scaleY(1f).duration = 50
-                        dialogBuilder.show()
-                    }
             }
         }
     }
@@ -172,12 +171,14 @@ class TextViewAdapter(
             setCompoundDrawablesWithIntrinsicBounds(listOfSettings!![position].icon, 0, 0, 0)
             text = listOfSettings[position].text
             setOnClickListener {
-                animate().scaleX(0f).scaleY(0f).setDuration(100)
-                    .withEndAction {
-                        animate().scaleX(1f).scaleY(1f).duration = 100
-                        FirebaseAuth.getInstance().signOut()
-                        Navigation.findNavController(it).navigate(R.id.loginFragment)
-                    }
+                context.showYesNoDialog({
+                    FirebaseMessaging.getInstance()
+                        .unsubscribeFromTopic(FirebaseAuth.getInstance().currentUser!!.displayName)
+                    FirebaseAuth.getInstance().signOut()
+                    Navigation.findNavController(it).navigate(R.id.loginFragment)
+                }, {}, context.getString(R.string.logout), context.getString(R.string.confirmLogout))
+
+
             }
         }
     }
@@ -225,11 +226,8 @@ class TextViewAdapter(
             setCompoundDrawablesWithIntrinsicBounds(listOfSettings!![position].icon, 0, 0, 0)
             text = listOfSettings[position].text
             setOnClickListener {
-                animate().scaleX(0f).scaleY(0f).setDuration(50)
-                    .withEndAction {
-                        animate().scaleX(1f).scaleY(1f).duration = 50
-                        dialog.show()
-                    }
+                dialog.show()
+
             }
         }
 
@@ -267,11 +265,8 @@ class TextViewAdapter(
             setCompoundDrawablesWithIntrinsicBounds(listOfSettings!![position].icon, 0, 0, 0)
             text = listOfSettings[position].text
             setOnClickListener {
-                animate().scaleX(0f).scaleY(0f).setDuration(50)
-                    .withEndAction {
-                        animate().scaleX(1f).scaleY(1f).duration = 50
-                        dialog.show()
-                    }
+                dialog.show()
+
             }
         }
 
