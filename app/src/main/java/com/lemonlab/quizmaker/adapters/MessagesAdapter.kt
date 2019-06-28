@@ -16,9 +16,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
-import com.lemonlab.quizmaker.Message
-import com.lemonlab.quizmaker.R
-import com.lemonlab.quizmaker.showToast
+import com.lemonlab.quizmaker.*
 import java.util.*
 import kotlin.collections.HashMap
 
@@ -68,6 +66,7 @@ class MessagesAdapter(
             FirebaseFirestore.getInstance().collection("users")
                 .document(messageAuthor)
                 .collection("messages").add(msg).addOnSuccessListener {
+                    NotificationSender().sendNotification(context, messageAuthor, NotificationType.MESSAGE)
                     showToast(context, context.getString(R.string.messageSent))
                 }
             dialogBuilder.dismiss()

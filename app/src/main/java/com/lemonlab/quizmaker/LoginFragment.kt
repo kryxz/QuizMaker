@@ -74,6 +74,7 @@ class LoginFragment : Fragment() {
             Navigation.findNavController(it).navigate(R.id.createAccount)
         }
         loginButton.setOnClickListener {
+            loginButton.isEnabled = false
             val userEmail = loginEmailEditText.text.toString()
             val userPassword = loginPasswordEditText.text.toString()
             if (fieldsOK(userEmail, userPassword)) {
@@ -81,6 +82,7 @@ class LoginFragment : Fragment() {
                 fireBaseAuth.signInWithEmailAndPassword(userEmail, userPassword).addOnSuccessListener {
                     loginNow()
                 }.addOnFailureListener {
+                    loginButton.isEnabled = true
                     loggingInBar.visibility = View.GONE
                     if (it.localizedMessage!!.contains("no user"))
                         showToast(context!!, getString(R.string.noUser))

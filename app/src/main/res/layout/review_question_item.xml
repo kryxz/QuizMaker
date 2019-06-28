@@ -2,7 +2,9 @@
 <androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
                                               android:orientation="vertical"
                                               android:layout_width="match_parent"
-                                              android:background="@color/colorPrimary"
+                                              android:background="@drawable/item_borders"
+                                              android:layout_marginBottom="8dp"
+                                              android:padding="8dp"
                                               android:layout_height="wrap_content">
 
     <androidx.appcompat.widget.AppCompatTextView android:layout_width="wrap_content"
@@ -20,15 +22,11 @@
             android:layout_gravity="center_horizontal"
             android:layout_width="wrap_content"
             android:visibility="gone"
-            android:textColor="@color/textColorPrimary"
+            android:textColor="?attr/textColor"
             android:enabled="false"
             android:id="@+id/reviewIsTrueCheckBox"
             android:layout_height="wrap_content"/>
 
-    <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@android:color/black"/>
 
 
     <LinearLayout android:layout_width="match_parent"

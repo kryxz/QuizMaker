@@ -2,7 +2,7 @@
 <androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
                                               android:orientation="vertical"
                                               android:layout_width="match_parent"
-                                              android:background="@color/colorPrimary"
+                                              android:background="@drawable/item_borders"
                                               android:layout_height="wrap_content">
 
     <androidx.appcompat.widget.AppCompatTextView android:layout_width="match_parent"
@@ -17,7 +17,7 @@
             android:id="@+id/userBioEditText"
             android:padding="8dp"
             android:maxLength="100"
-            android:textColorHint="@color/textColorSecondary"
+            android:textColorHint="?attr/textColorHint"
             style="@style/loginEditTextStyle"/>
 
     <androidx.appcompat.widget.LinearLayoutCompat android:layout_width="match_parent"

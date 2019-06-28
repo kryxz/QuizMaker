@@ -1,16 +1,21 @@
 package com.lemonlab.quizmaker
 
 
+import android.app.Activity
 import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
+import android.text.SpannableString
+import android.text.style.ForegroundColorSpan
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.AppCompatButton
 import androidx.appcompat.widget.AppCompatTextView
+import androidx.core.app.TaskStackBuilder
 import androidx.fragment.app.Fragment
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -41,6 +46,11 @@ class SettingsFragment : Fragment() {
                 ),
 
                 OptionsItem(
+                    R.drawable.ic_color_lens,
+                    getString(R.string.changeTheme), Option.THEME
+                ),
+
+                OptionsItem(
                     R.drawable.ic_question_answer,
                     getString(R.string.FAQTitle), Option.FAQ
                 ),
@@ -66,7 +76,7 @@ class SettingsFragment : Fragment() {
                 )
 
             )
-            adapter = TextViewAdapter(context!!, listOfSettings, null)
+            adapter = TextViewAdapter(activity!!, listOfSettings, null)
         }
         super.onViewCreated(view, savedInstanceState)
     }
@@ -75,7 +85,7 @@ class SettingsFragment : Fragment() {
 
 
 class TextViewAdapter(
-    private val context: Context,
+    private val activity: Activity,
     private val listOfSettings: List<OptionsItem>?,
     private val listOfFaqs: List<String>?
 ) :
@@ -93,18 +103,15 @@ class TextViewAdapter(
             text = listOfFaqs!![position]
             val listOfAnswers = resources.getStringArray(R.array.faqsAnswers)
             setOnClickListener {
-                animate().scaleX(.3f).scaleY(.3f).setDuration(50)
-                    .withEndAction {
-                        animate().scaleX(1f).scaleY(1f).duration = 50
-                        showInfoDialog(listOfFaqs[position], listOfAnswers[position])
-                    }
+                showInfoDialog(listOfFaqs[position], listOfAnswers[position])
+
             }
         }
     }
 
     private fun showInfoDialog(dialogTitle: String, dialogMessage: String) {
-        val dialogBuilder = AlertDialog.Builder(context).create()
-        val dialogView = with(LayoutInflater.from(context)) {
+        val dialogBuilder = AlertDialog.Builder(activity).create()
+        val dialogView = with(LayoutInflater.from(activity)) {
             inflate(
                 R.layout.info_dialog,
                 null
@@ -127,12 +134,59 @@ class TextViewAdapter(
     private fun setUp(textView: AppCompatTextView, position: Int) {
         when (listOfSettings!![position].type) {
             Option.CACHE -> deleteCache(textView, position)
+            Option.THEME -> changeTheme(textView, position)
             Option.APPS -> moreApps(textView, position)
             Option.LOGOUT -> logout(textView, position)
             Option.ABOUT -> aboutUs(textView, position)
             Option.PRIVACY -> privacyPolicy(textView, position)
             Option.FAQ -> fAQ(textView, position)
         }
+    }
+
+    private fun changeTheme(textView: AppCompatTextView, position: Int) {
+        val sharedPrefs = activity.getSharedPreferences("userPrefs", 0)
+        val isLightModeOn = sharedPrefs.getBoolean("lightMode", false)
+
+        fun saveToSharedPrefs(key: String, value: Boolean) {
+            with(sharedPrefs.edit()) {
+                remove(key)
+                putBoolean(key, value)
+                apply()
+            }
+        }
+
+        fun applyChanges() {
+            if (isLightModeOn)
+                saveToSharedPrefs("lightMode", false)
+            else
+                saveToSharedPrefs("lightMode", true)
+            TaskStackBuilder.create(activity)
+                .addNextIntent(Intent(activity, MainActivity::class.java))
+                .addNextIntent(activity.intent)
+                .startActivities()
+        }
+
+        fun invertMode(context: Context, isTheLightModeOn: Boolean) {
+            if (isTheLightModeOn)
+                context.setTheme(R.style.AppTheme)
+            else
+                context.setTheme(R.style.LightTheme)
+        }
+        with(textView) {
+            setCompoundDrawablesWithIntrinsicBounds(listOfSettings!![position].icon, 0, 0, 0)
+            text = listOfSettings[position].text
+            setOnClickListener {
+                invertMode(it.context, isLightModeOn)
+                context.showYesNoDialog(
+                    {
+                        applyChanges()
+                    }, {
+                        invertMode(it.context, !isLightModeOn)
+                    }, context.getString(R.string.changeTheme), context.getString(R.string.confirmChangeTheme)
+                )
+            }
+        }
+
     }
 
     private fun fAQ(textView: AppCompatTextView, position: Int) {
@@ -149,8 +203,8 @@ class TextViewAdapter(
                     )
                 }
                 with(dialogView.findViewById<RecyclerView>(R.id.faqRecyclerView)) {
-                    layoutManager = LinearLayoutManager(context)
-                    adapter = TextViewAdapter(context, null, resources.getStringArray(R.array.faqs).toList())
+                    layoutManager = LinearLayoutManager(activity)
+                    adapter = TextViewAdapter(activity, null, resources.getStringArray(R.array.faqs).toList())
                 }
 
                 dialogView.findViewById<AppCompatButton>(R.id.faqOKButton).setOnClickListener {
@@ -214,19 +268,15 @@ class TextViewAdapter(
     }
 
     private fun aboutUs(textView: AppCompatTextView, position: Int) {
-        val dialog = AlertDialog.Builder(context, 4)
-        with(dialog) {
-            setPositiveButton(context.getString(R.string.ok)) { firstDialog, _ ->
-                firstDialog.dismiss()
-            }
-            setTitle(context.getString(R.string.aboutLemonLabTitle))
-            setMessage(context.getString(R.string.aboutLemonLabAr))
-        }
+
         with(textView) {
             setCompoundDrawablesWithIntrinsicBounds(listOfSettings!![position].icon, 0, 0, 0)
             text = listOfSettings[position].text
             setOnClickListener {
-                dialog.show()
+                showInfoDialog(
+                    context.getString(R.string.aboutLemonLabTitle),
+                    context.getString(R.string.aboutLemonLabAr)
+                )
 
             }
         }
@@ -234,32 +284,38 @@ class TextViewAdapter(
     }
 
     private fun privacyPolicy(textView: AppCompatTextView, position: Int) {
-        val privacyPolicyText = context.getString(R.string.privacyPolicyText)
-        val privacyPolicyTextAr = context.getString(R.string.privacyPolicyTextAr)
+        val privacyPolicyText = activity.getString(R.string.privacyPolicyText)
+        val privacyPolicyTextAr = activity.getString(R.string.privacyPolicyTextAr)
+        fun changeColorToWhite(string: String): SpannableString {
+            val newString = SpannableString(string)
+            newString.setSpan(ForegroundColorSpan(Color.WHITE), 0, newString.length, 0)
+            return newString
+        }
 
-        val dialog = AlertDialog.Builder(context, 4)
+        val dialog = AlertDialog.Builder(activity, 4)
 
         with(dialog) {
-            setPositiveButton(context.getString(R.string.okEn)) { firstDialog, _ ->
+            setPositiveButton(changeColorToWhite(context.getString(R.string.okEn))) { firstDialog, _ ->
                 firstDialog.dismiss()
             }
 
-            dialog.setNegativeButton(context.getString(R.string.changeLanguage)) { firstDialog, _ ->
+            dialog.setNegativeButton(changeColorToWhite(context.getString(R.string.changeLanguage))) { firstDialog, _ ->
                 val anotherDialog =
-                    AlertDialog.Builder(context, 4)
+                    AlertDialog.Builder(activity, 4)
                 with(anotherDialog) {
-                    setPositiveButton(context.getString(R.string.ok)) { secondDialog, _ ->
+                    setPositiveButton(changeColorToWhite(context.getString(R.string.ok))) { secondDialog, _ ->
                         secondDialog.dismiss()
+
                     }
-                    setTitle(context.getString(R.string.privacyPolicyAr))
-                    setMessage(privacyPolicyTextAr)
+                    setTitle(changeColorToWhite(context.getString(R.string.privacyPolicyAr)))
+                    setMessage(changeColorToWhite(privacyPolicyTextAr))
                     show()
                     firstDialog.dismiss()
                 }
 
             }
-            setTitle(context.getString(R.string.privacyPolicyAr))
-            setMessage(privacyPolicyText)
+            setTitle(changeColorToWhite(context.getString(R.string.privacyPolicyEn)))
+            setMessage(changeColorToWhite(privacyPolicyText))
         }
         with(textView) {
             setCompoundDrawablesWithIntrinsicBounds(listOfSettings!![position].icon, 0, 0, 0)
@@ -275,7 +331,7 @@ class TextViewAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SettingsRV {
         return SettingsRV(
-            LayoutInflater.from(context).inflate(
+            LayoutInflater.from(activity).inflate(
                 R.layout.text_item,
                 parent,
                 false

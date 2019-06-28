@@ -191,7 +191,7 @@ data class Report(
 }
 
 enum class Option {
-    CACHE, FAQ, APPS, LOGOUT, ABOUT, PRIVACY
+    CACHE, FAQ, APPS, LOGOUT, ABOUT, PRIVACY, THEME
 }
 
 data class OptionsItem(

@@ -47,6 +47,19 @@ class MainFragment : Fragment() {
         getData()
     }
 
+    private fun getDataFromIntent() {
+        if (activity!!.intent != null && activity!!.intent.extras != null) {
+            val notificationType = (activity!!.intent.extras!!.get("notificationType") as NotificationType)
+            if (notificationType == NotificationType.MESSAGE)
+                Navigation.findNavController(view!!).navigate(R.id.messagesFragment)
+            else
+                Navigation.findNavController(view!!).navigate(R.id.profileFragment)
+            activity!!.intent.data = null
+            activity!!.intent = null
+        }
+
+    }
+
     override fun onDestroyView() {
         with(QuizzesRecyclerView) {
             layoutManager = null
@@ -65,6 +78,7 @@ class MainFragment : Fragment() {
                 adapter = QuizAdapter(context!!, TempData.currentQuizzes!!, ViewType.TakeQuiz)
                 MainFragmentProgressBar.visibility = View.GONE
             }
+        getDataFromIntent()
     }
 
     private fun setUpAdapter() {

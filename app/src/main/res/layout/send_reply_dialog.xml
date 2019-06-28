@@ -2,7 +2,7 @@
 <androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
                                               android:orientation="vertical"
                                               android:layout_width="match_parent"
-                                              android:background="@color/colorPrimary"
+                                              android:background="@drawable/item_borders"
                                               android:layout_height="wrap_content">
 
     <androidx.appcompat.widget.AppCompatTextView android:layout_width="match_parent"
@@ -17,7 +17,7 @@
                                                  android:textSize="20sp"
                                                  android:padding="8dp"
                                                  android:id="@+id/messageContentReplyDialog"
-                                                 android:background="@color/colorAccent"
+                                                 android:background="?attr/colorAccent"
                                                  android:layout_height="wrap_content"/>
 
     <com.google.android.material.textfield.TextInputEditText
@@ -25,7 +25,7 @@
             android:id="@+id/messageTextReplyDialog"
             android:padding="8dp"
             android:maxLength="200"
-            android:textColorHint="@color/textColorSecondary"
+            android:textColorHint="?attr/textColorHint"
             android:hint="@string/messageText" style="@style/loginEditTextStyle"/>
 
     <androidx.appcompat.widget.LinearLayoutCompat android:layout_width="match_parent"

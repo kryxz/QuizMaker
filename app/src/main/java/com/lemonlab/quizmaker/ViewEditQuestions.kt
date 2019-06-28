@@ -15,7 +15,6 @@ import androidx.appcompat.widget.AppCompatEditText
 import androidx.fragment.app.Fragment
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.dingmouren.layoutmanagergroup.viewpager.ViewPagerLayoutManager
 import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -217,6 +216,8 @@ class ViewEditQuestions : Fragment() {
 
                     layoutManager = LinearLayoutManager(context!!)
                     adapter = QuestionsAdapter(context!!, quizQuestions, null)
+                    (activity as AppCompatActivity).supportActionBar!!.setHomeAsUpIndicator(R.drawable.ic_cancel)
+
                 }
             else if (view != null)
                 with(questionsRecyclerView) {
@@ -230,6 +231,8 @@ class ViewEditQuestions : Fragment() {
                     (activity as AppCompatActivity).supportActionBar!!.title = quiz.quizTitle
                     layoutManager = LinearLayoutManager(context!!)
                     adapter = QuestionsAdapter(context!!, null, quizQuestions)
+                    (activity as AppCompatActivity).supportActionBar!!.setHomeAsUpIndicator(R.drawable.ic_cancel)
+
                 }
         }
     }
@@ -247,9 +250,9 @@ class ViewEditQuestions : Fragment() {
                 onFlingListener = null
 
                 visibility = View.VISIBLE
-                layoutManager = ViewPagerLayoutManager(context!!, 0)
-                showToast(context!!, getString(R.string.swipeLeftRight))
+                layoutManager = LinearLayoutManager(context!!)
                 adapter = QuestionsAdapter(context!!, multipleChoiceQuestions, null)
+                (activity as AppCompatActivity).supportActionBar!!.setHomeAsUpIndicator(R.drawable.ic_cancel)
             }
         else
             with(questionsRecyclerView) {
@@ -261,6 +264,7 @@ class ViewEditQuestions : Fragment() {
                 visibility = View.VISIBLE
                 layoutManager = LinearLayoutManager(context!!)
                 adapter = QuestionsAdapter(context!!, null, trueFalseQuestions)
+                (activity as AppCompatActivity).supportActionBar!!.setHomeAsUpIndicator(R.drawable.ic_cancel)
             }
 
         publishQuizButton.setOnClickListener {

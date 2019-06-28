@@ -46,7 +46,6 @@
     <string name="reviewTemplate">هذا مجرد مثال لنص يمكنه الإستبدال لاحقا بالنص الأصلي</string>
     <string name="reviewQuestions">مراجعة الأسئلة</string>
     <string name="finishQuiz">انهاء وعرض النتيجة</string>
-    <string name="swipeLeftRight">المس يمينًا أو يسارًا للتنقل بين الأسئلة</string>
 
     <string name="startQuiz">بدأ الاختبار</string>
     <string name="DeleteCurrentQuestion">حذف السؤال الحالي</string>d
@@ -114,6 +113,8 @@
 
     <string name="cannotEdit">لا يمكنك التعديل من هنا</string>
     <string name="clearCache">حذف البيانات المؤقتة</string>
+    <string name="changeTheme">تغيير الألوان</string>
+    <string name="confirmChangeTheme">هل ترغب في التغيير إلى هذه الألوان؟</string>
     <string name="FAQTitle">أسئلة شائعة</string>
     <string name="logout">تسجيل الخروج</string>
     <string name="confirmLogout">هل أنت متأكد من رغبتك في تسجيل الخروج؟</string>
@@ -122,7 +123,9 @@
     <string name="newMessageFrom">لديك رسالة من %1$s</string>
     <string name="newPoints">نقاط لك، %1$s</string>
     <string name="newPointsForYou">أنهى أحدهم اختبار لك وزادت نقاطك!</string>
-    <string name="app_notifications_description">تنبيهات جديدة مثل الرسائل والتقييمات، وأحيانًا من الاختبارات التي قمت بنشرها</string>
+    <string name="app_notifications_description">تنبيهات جديدة مثل الرسائل والتقييمات، وأحيانًا من الاختبارات التي قمت
+        بنشرها
+    </string>
 
     <string-array name="quizQuestionsTypes">
         <item>متعدد الاختيار</item>

@@ -106,12 +106,13 @@ class QuizAdapter(
         quizQuestionCount.text = context.getString(R.string.questionsCountText, userQuiz[position].questionsCount)
         quizRatingBar.rating = userQuiz[position].rating
         quizDateTextView.text = getDateFromMilliSeconds(userQuiz[position].milliSeconds)
-        quizAuthorText.setOnClickListener {
-            val action = MainFragmentDirections.viewProfile()
-            action.isViewer = true
-            action.username = userQuiz[position].quizAuthor
-            Navigation.findNavController(it).navigate(action)
-        }
+        if (viewType != ViewType.ViewAnswers)
+            quizAuthorText.setOnClickListener {
+                val action = MainFragmentDirections.viewProfile()
+                action.isViewer = true
+                action.username = userQuiz[position].quizAuthor
+                Navigation.findNavController(it).navigate(action)
+            }
         fun showReportDialog() {
             val dialogBuilder = android.app.AlertDialog.Builder(context).create()
             val dialogView = with(LayoutInflater.from(context)) {

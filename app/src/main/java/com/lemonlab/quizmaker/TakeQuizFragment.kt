@@ -153,7 +153,6 @@ class TakeQuizFragment : Fragment() {
 
         dialogView.findViewById<AppCompatButton>(R.id.messageQuizAuthorButton).setOnClickListener {
             sendMessageToAuthorDialog(quizAuthor)
-            dialogBuilder.dismiss()
         }
         val ratingBar: AppCompatRatingBar = dialogView.findViewById(R.id.quizFinishedRatingBar)
 

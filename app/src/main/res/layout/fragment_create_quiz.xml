@@ -4,7 +4,7 @@
                                                    xmlns:tools="http://schemas.android.com/tools"
                                                    android:layout_width="match_parent"
                                                    android:layout_height="match_parent"
-                                                   android:background="@color/colorPrimary"
+                                                   android:background="?attr/colorPrimary"
                                                    tools:context=".CreateQuiz">
 
     <com.google.android.material.textfield.TextInputLayout
@@ -30,7 +30,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="8dp"
-            android:textColor="@color/textColorPrimary"
+            android:textColor="?attr/textColor"
             android:layout_marginStart="8dp"
             app:layout_constraintStart_toStartOf="parent" android:layout_marginEnd="8dp"
             app:layout_constraintEnd_toEndOf="parent" android:layout_marginTop="8dp"
@@ -74,7 +74,7 @@
             android:id="@+id/questionsTypeSpinner"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:popupBackground="@color/colorPrimaryDark"
+            android:popupBackground="?attr/colorPrimaryDark"
             app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="8dp"
             app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="8dp"
             android:layout_marginTop="8dp" app:layout_constraintTop_toBottomOf="@+id/textInputLayout2">
@@ -82,8 +82,8 @@
     </androidx.appcompat.widget.AppCompatSpinner>
     <androidx.appcompat.widget.AppCompatButton
             android:text="@string/writeQuestionsButton"
-            android:textColor="@color/textColorPrimary"
-            android:background="@drawable/button_selector"
+            android:textColor="?attr/textColor"
+            android:background="?attr/selector"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="8dp"

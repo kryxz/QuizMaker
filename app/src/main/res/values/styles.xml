@@ -1,22 +1,49 @@
-<resources>
+<resources xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools">
 
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorPrimaryLight">@color/colorPrimaryLight</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:fontFamily">@font/mada</item>
+        <item name="titleTextColor">@color/textColorPrimary</item>
+        <item name="textColor">@color/textColorPrimary</item>
         <item name="android:textColor">@color/textColorPrimary</item>
         <item name="android:textSize">19sp</item>
-        <item name="android:textColorHint">@color/textColorSecondary</item>
+        <item name="textColorHint">@color/textColorSecondary</item>
+        <item name="dividerColor">@color/dividerColor</item>
+        <item name="iconColor">@color/colorSilver</item>
+        <item name="colorGreen">@color/baseColorGreen</item>
+        <item name="selector">@drawable/button_selector</item>
     </style>
-    <style name="DefaultTheme" parent="ThemeOverlay.AppCompat.Dialog.Alert">
+
+    <style name="AppTheme.StatusBar" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="colorPrimaryDark">@color/colorPrimaryLight</item>
+    </style>
+
+    <!-- Light application theme. -->
+    <style name="LightTheme" parent="Theme.AppCompat.DayNight">
+        <item name="colorPrimary">@color/lightColorPrimary</item>
+        <item name="colorPrimaryDark">@color/lightColorPrimaryDark</item>
+        <item name="colorPrimaryLight">@color/lightColorPrimaryLight</item>
+        <item name="colorAccent">@color/lightColorAccent</item>
+        <item name="android:fontFamily">@font/mada</item>
+        <item name="textColor">@color/lightTextColorPrimary</item>
+        <item name="android:textSize">19sp</item>
+        <item name="titleTextColor">@color/lightTextColorPrimary</item>
+        <item name="textColorHint">@color/lightTextColorSecondary</item>
+        <item name="dividerColor">@color/lightDividerColor</item>
+        <item name="iconColor">@color/colorGold</item>
+        <item name="android:textColor">@color/lightTextColorPrimary</item>
+        <item name="colorGreen">@color/baseColorGreen</item>
+        <item name="selector">@drawable/button_selector_light</item>
     </style>
 
     <style name="RatingBar" parent="ThemeOverlay.AppCompat">
-        <item name="colorControlNormal">@color/colorAccent</item>
-        <item name="colorControlActivated">@color/colorSilver</item>
+        <item name="colorControlNormal">?attr/colorAccent</item>
+        <item name="colorControlActivated">?attr/iconColor</item>
     </style>
 
     <style name="loginEditTextStyle">
@@ -25,15 +52,15 @@
         <item name="android:padding">16dp</item>
         <item name="android:layout_marginTop">8dp</item>
         <item name="android:layout_marginBottom">8dp</item>
-        <item name="android:textColor">@color/textColorPrimary</item>
+        <item name="android:textColor">?attr/textColor</item>
         <item name="android:fontFamily">@font/mada</item>
     </style>
 
     <style name="QuestionFormButtonStyle">
-        <item name="android:background">@drawable/button_selector</item>
+        <item name="android:background">?attr/selector</item>
         <item name="android:padding">8dp</item>
         <item name="android:textSize">20sp</item>
-        <item name="android:textColor">@color/textColorPrimary</item>
+        <item name="textColor">?attr/textColor</item>
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
     </style>

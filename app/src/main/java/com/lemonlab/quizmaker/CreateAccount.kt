@@ -123,31 +123,31 @@ class CreateAccount : Fragment() {
         signUpPasswordEditText.transformationMethod = PasswordTransformationMethod()
         val fireStoreDatabaseUsers = FirebaseFirestore.getInstance().collection("users")
         signUpButton.setOnClickListener {
+            signUpButton.isEnabled = false
             val username = removeSpecialChars(signUpDisplayName.text.toString())
             val userEmail = signUpEmailEditText.text.toString()
             val userPassword = signUpPasswordEditText.text.toString()
             if (fieldsOK(userEmail, userPassword)) {
-                var isUserNameOK = false
-                var isEmailOK = false
+                var isUserNameOK = true
+                var isEmailOK = true
                 fireStoreDatabaseUsers.get().addOnSuccessListener {
 
                     for (doc in it) {
-                        isEmailOK = if (it != null)
-                            !doc.get("user.email", String::class.java).toString().equals(userEmail, ignoreCase = true)
-                        else
-                            true
-                        isUserNameOK = if (it != null)
-                            !doc.get("user.username", String::class.java).toString().equals(
-                                username,
-                                ignoreCase = true
-                            )
-                        else
-                            true
+                        isEmailOK = !doc.get("user.email", String::class.java).toString().equals(
+                            userEmail,
+                            ignoreCase = true
+                        )
+                        isUserNameOK = !doc.get("user.username", String::class.java).toString().equals(
+                            username,
+                            ignoreCase = true
+                        )
+                        if (!isEmailOK || !isUserNameOK)
+                            break
+
                     }
                     when {
                         isUserNameOK && isEmailOK -> createAccountAndSignIn(username, userEmail, userPassword)
-                        !isEmailOK && !isUserNameOK -> invalidUserNameAndEmail()
-                        !isEmailOK -> signUpEmailEditText.error = getString(R.string.accountExists)
+                        !isEmailOK -> emailExists()
                         else -> userNameExists()
                     }
                 }
@@ -155,8 +155,13 @@ class CreateAccount : Fragment() {
                 showErrors()
         }
     }
+    private fun emailExists() {
+        signUpButton.isEnabled = true
+        signUpEmailEditText.error = getString(R.string.accountExists)
 
+    }
     private fun userNameExists() {
+        signUpButton.isEnabled = true
         signUpDisplayName.error = getString(R.string.userNameExists)
         val userName = signUpEmailEditText.text.toString().substringBefore('@')
         val suggestions = listOf(
@@ -171,12 +176,9 @@ class CreateAccount : Fragment() {
         }
     }
 
-    private fun invalidUserNameAndEmail() {
-        signUpEmailEditText.error = getString(R.string.accountExists)
-
-    }
 
     private fun showErrors() {
+        signUpButton.isEnabled = true
         showToast(context!!, getString(R.string.checkFields))
         if (!Patterns.EMAIL_ADDRESS.matcher(signUpEmailEditText.text.toString()).matches())
             signUpEmailEditText.error = getString(R.string.invalidEmail)

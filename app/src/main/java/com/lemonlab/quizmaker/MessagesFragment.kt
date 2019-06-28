@@ -43,6 +43,8 @@ class MessagesFragment : Fragment() {
     }
 
     private fun getMessages() {
+        if (view == null)
+            return
         MessagesProgressBar.visibility = View.VISIBLE
         FirebaseFirestore.getInstance().collection("users")
             .document(FirebaseAuth.getInstance().currentUser?.displayName!!)
@@ -63,7 +65,7 @@ class MessagesFragment : Fragment() {
                             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                                 val adapter = MessagesRecyclerView.adapter as MessagesAdapter
                                 adapter.deleteMessage(viewHolder.adapterPosition)
-                                Handler().postDelayed(::getMessages, 2000)
+                                Handler().postDelayed(::getMessages, 1000)
 
                             }
 

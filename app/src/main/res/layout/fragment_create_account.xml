@@ -4,7 +4,7 @@
                                                    xmlns:tools="http://schemas.android.com/tools"
                                                    android:layout_width="match_parent"
                                                    android:layout_height="match_parent"
-                                                   android:background="@color/colorPrimary"
+                                                   android:background="?attr/colorPrimary"
                                                    tools:context=".LoginFragment">
 
     <ProgressBar android:layout_width="match_parent"
@@ -17,10 +17,10 @@
             android:text="@string/app_name"
             android:layout_width="wrap_content"
             android:textSize="42sp"
-            android:textColor="@color/textColorPrimary"
             android:layout_height="wrap_content"
             app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="8dp"
             app:layout_constraintEnd_toEndOf="parent"
+            android:textColor="?attr/textColor"
             android:layout_marginEnd="8dp" android:layout_marginTop="8dp"
             app:layout_constraintTop_toTopOf="parent" android:id="@+id/appCompatTextView"
             android:layout_marginBottom="8dp" app:layout_constraintBottom_toTopOf="@+id/linearLayoutCompat"/>
@@ -44,6 +44,7 @@
             <com.google.android.material.textfield.TextInputEditText
                     android:drawableEnd="@drawable/ic_email_white"
                     android:id="@+id/signUpEmailEditText"
+                    android:inputType="textEmailAddress"
                     android:hint="@string/login_email" style="@style/loginEditTextStyle"/>
 
         </com.google.android.material.textfield.TextInputLayout>
@@ -54,13 +55,15 @@
             <com.google.android.material.textfield.TextInputEditText
                     android:drawableEnd="@drawable/ic_account_box"
                     android:id="@+id/signUpDisplayName"
+                    android:textColorHint="?attr/textColorHint"
                     android:hint="@string/signUp_displayName" style="@style/loginEditTextStyle"/>
             <androidx.appcompat.widget.AppCompatTextView android:layout_width="match_parent"
                                                          android:text="@string/userNameExists"
                                                          android:visibility="gone"
+                                                         android:textColorHint="?attr/textColorHint"
                                                          android:id="@+id/suggestedNamesTextView"
                                                          style="@style/loginEditTextStyle"
-                                                         android:textColor="@color/colorGreen"
+                                                         android:textColor="?attr/colorGreen"
                                                          android:layout_height="wrap_content"/>
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -72,11 +75,12 @@
                     android:drawableEnd="@drawable/ic_lock"
                     android:id="@+id/signUpPasswordEditText"
                     android:fontFamily="@font/mada"
+                    android:textColorHint="?attr/textColorHint"
                     android:hint="@string/signUp_password" style="@style/loginEditTextStyle"/>
 
             <androidx.appcompat.widget.AppCompatCheckBox android:layout_width="match_parent"
-                                                         android:textColor="@color/textColorPrimary"
                                                          android:text="@string/showPassword"
+                                                         android:textColor="?attr/textColor"
                                                          android:id="@+id/showPasswordCheckBox"
                                                          android:layout_height="wrap_content"/>
         </com.google.android.material.textfield.TextInputLayout>
@@ -85,7 +89,7 @@
     <androidx.appcompat.widget.AppCompatButton
             android:text="@string/create_account"
             android:textColor="@color/textColorPrimary"
-            android:background="@drawable/button_selector"
+            android:background="?attr/selector"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="8dp"

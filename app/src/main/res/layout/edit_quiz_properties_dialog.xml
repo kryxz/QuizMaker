@@ -2,7 +2,7 @@
 <androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
                                               android:orientation="vertical"
                                               android:layout_width="match_parent"
-                                              android:background="@color/colorPrimary"
+                                              android:background="@drawable/item_borders"
                                               android:layout_height="match_parent">
 
     <androidx.appcompat.widget.AppCompatTextView android:layout_width="match_parent"
@@ -17,7 +17,7 @@
                 android:drawableEnd="@drawable/ic_title"
                 android:id="@+id/dialogPropertiesQuizTitleEditText"
                 android:padding="8dp"
-                android:textColorHint="@color/textColorSecondary"
+                android:textColorHint="?attr/textColorHint"
                 android:hint="@string/quizTitleText" style="@style/loginEditTextStyle"/>
 
     <com.google.android.material.textfield.TextInputLayout
@@ -30,7 +30,7 @@
                 android:id="@+id/dialogPropertiesQuizQuestionsCount"
                 android:inputType="number"
                 android:maxLength="2"
-                android:textColorHint="@color/textColorSecondary"
+                android:textColorHint="?attr/textColorHint"
                 android:hint="@string/quizQuestionsCount" style="@style/loginEditTextStyle"/>
 
     </com.google.android.material.textfield.TextInputLayout>

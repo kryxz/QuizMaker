@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="themes">
+        <attr name="colorPrimary" format="color"/>
+        <attr name="colorPrimaryDark" format="color"/>
+        <attr name="colorPrimaryLight" format="color"/>
+        <attr name="colorAccent" format="color"/>
+        <attr name="textColor" format="color"/>
+        <attr name="textColorHint" format="color"/>
+        <attr name="iconColor" format="color"/>
+        <attr name="colorGreen" format="color"/>
+        <attr name="dividerColor" format="color"/>
+        <attr name="selector" format="color"/>
+
+    </declare-styleable>
+</resources>

@@ -2,7 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
                                                    xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:tools="http://schemas.android.com/tools"
              android:layout_width="match_parent"
-             android:layout_height="match_parent" android:background="@color/colorPrimary"
+             android:layout_height="match_parent" android:background="?attr/colorPrimary"
              tools:context=".LoginFragment">
     <ProgressBar android:layout_width="match_parent"
                  android:alpha=".3"
@@ -14,7 +14,7 @@
             android:text="@string/app_name"
             android:layout_width="wrap_content"
             android:textSize="42sp"
-            android:textColor="@color/textColorPrimary"
+            android:textColor="?attr/textColor"
             android:layout_height="wrap_content"
             app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="8dp"
             app:layout_constraintEnd_toEndOf="parent"
@@ -41,6 +41,7 @@
             <com.google.android.material.textfield.TextInputEditText
                     android:drawableEnd="@drawable/ic_email_white"
                     android:id="@+id/loginEmailEditText"
+                    android:textColorHint="?attr/textColorHint"
                     android:hint="@string/login_email" style="@style/loginEditTextStyle"/>
 
         </com.google.android.material.textfield.TextInputLayout>
@@ -52,9 +53,10 @@
             <com.google.android.material.textfield.TextInputEditText
                     android:drawableEnd="@drawable/ic_lock"
                     android:id="@+id/loginPasswordEditText"
+                    android:textColorHint="?attr/textColorHint"
                     android:hint="@string/login_password" style="@style/loginEditTextStyle"/>
             <androidx.appcompat.widget.AppCompatCheckBox android:layout_width="match_parent"
-                                                         android:textColor="@color/textColorPrimary"
+                                                         android:textColor="?attr/textColor"
                                                          android:text="@string/showPassword"
                                                          android:id="@+id/showLoginPasswordCheckBox"
                                                          android:layout_height="wrap_content"/>
@@ -64,7 +66,7 @@
     <androidx.appcompat.widget.AppCompatTextView
             android:text="@string/create_account"
             android:textSize="28sp"
-            android:textColor="@color/textColorPrimary"
+            android:textColor="?attr/textColor"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp" app:layout_constraintEnd_toEndOf="parent"
@@ -73,8 +75,8 @@
             app:layout_constraintTop_toBottomOf="@+id/linearLayoutCompat" android:id="@+id/newAcctButton"/>
     <androidx.appcompat.widget.AppCompatButton
             android:text="@string/login_label"
-            android:textColor="@color/textColorPrimary"
-            android:background="@drawable/button_selector"
+            android:textColor="?attr/textColor"
+            android:background="?attr/selector"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="8dp"

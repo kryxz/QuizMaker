@@ -1,9 +1,11 @@
 package com.lemonlab.quizmaker
 
+import android.os.Build
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.Navigation
@@ -22,23 +24,27 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         window.decorView.layoutDirection = View.LAYOUT_DIRECTION_RTL
+        chooseTheme()
         setContentView(R.layout.activity_main)
         setUpNavigation()
         supportActionBar!!.setHomeAsUpIndicator(R.drawable.ic_drawer)
         setUpFireBase()
-        getDataFromIntent()
 
     }
 
-    private fun getDataFromIntent() {
-        if (intent.extras != null) {
-            val notificationType = (intent.extras!!.get("notificationType") as NotificationType)
-            if (notificationType == NotificationType.MESSAGE)
-                Navigation.findNavController(this, R.id.navigationHost).navigate(R.id.messagesFragment)
-            else
-                Navigation.findNavController(this, R.id.navigationHost).navigate(R.id.profileFragment)
-        }
+    private fun chooseTheme() {
+        if (getSharedPreferences("userPrefs", 0).getBoolean("lightMode", false))
+            setThisTheme(R.style.LightTheme, ContextCompat.getColor(this, R.color.lightColorPrimaryDark))
+        else
+            setThisTheme(R.style.AppTheme, ContextCompat.getColor(this, R.color.colorPrimaryDark))
 
+    }
+
+    private fun setThisTheme(theme: Int, statusBarColor: Int) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+            window.statusBarColor = statusBarColor
+
+        setTheme(theme)
     }
 
     private fun setUpFireBase() {
@@ -69,8 +75,8 @@ class MainActivity : AppCompatActivity() {
     private fun setUpNavigation() {
         val navController = Navigation.findNavController(this, R.id.navigationHost)
         NavigationUI.setupWithNavController(navView, navController)
+        setupActionBarWithNavController(navController, drawer_layout)
 
-        //setupActionBarWithNavController(navController, drawer_layout)
         setupActionBarWithNavController(navController, AppBarConfiguration.Builder(R.id.loginFragment).build())
 
         navController.addOnDestinationChangedListener { controller, destination, _ ->
