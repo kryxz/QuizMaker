@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                                                   xmlns:tools="http://schemas.android.com/tools"
+                                                   android:layout_width="match_parent"
+                                                   android:background="?attr/colorPrimary"
+                                                   android:layout_height="match_parent"
+                                                   tools:context=".QuizResult">
+
+    <androidx.appcompat.widget.LinearLayoutCompat android:layout_width="match_parent"
+                                                  android:orientation="vertical"
+                                                  android:layout_height="match_parent">
+        <androidx.core.widget.NestedScrollView android:layout_width="match_parent"
+                                               android:layout_height="match_parent">
+            <androidx.appcompat.widget.LinearLayoutCompat android:layout_width="match_parent"
+                                                          android:orientation="vertical"
+                                                          android:layout_height="match_parent">
+
+                <androidx.appcompat.widget.AppCompatTextView android:layout_width="match_parent"
+                                                             android:text="@string/reviewTemplate"
+                                                             android:textSize="22sp"
+                                                             android:padding="8dp"
+                                                             android:lineSpacingMultiplier="1.5"
+                                                             android:background="@drawable/item_borders"
+                                                             android:id="@+id/quizScoreText"
+                                                             android:gravity="center_horizontal"
+                                                             android:layout_height="wrap_content"/>
+
+
+                <androidx.appcompat.widget.LinearLayoutCompat android:layout_width="match_parent"
+                                                              android:orientation="vertical"
+                                                              android:background="@drawable/item_borders"
+                                                              android:layout_height="wrap_content">
+
+                    <androidx.appcompat.widget.AppCompatTextView android:layout_width="match_parent"
+                                                                 android:text="@string/rateQuiz"
+                                                                 android:textSize="20sp"
+                                                                 android:padding="16dp"
+                                                                 android:gravity="center_horizontal"
+                                                                 android:layout_height="wrap_content"/>
+
+                    <androidx.appcompat.widget.AppCompatRatingBar android:layout_width="wrap_content"
+                                                                  android:layout_gravity="center"
+                                                                  android:rating="3"
+                                                                  android:layout_marginTop="8dp"
+                                                                  android:padding="2dp"
+                                                                  android:theme="@style/RatingBar"
+                                                                  android:id="@+id/quizFinishedRatingBar"
+                                                                  android:layout_height="wrap_content"/>
+                </androidx.appcompat.widget.LinearLayoutCompat>
+
+
+                <androidx.appcompat.widget.AppCompatButton android:layout_width="match_parent"
+                                                           android:text="@string/sendRating"
+                                                           android:layout_marginStart="4dp"
+                                                           android:layout_marginEnd="4dp"
+                                                           android:padding="8dp"
+                                                           android:layout_marginTop="8dp"
+                                                           style="@style/QuestionFormButtonStyle"
+                                                           android:id="@+id/sendRatingButton"
+                                                           android:layout_height="wrap_content"/>
+
+                <androidx.appcompat.widget.AppCompatButton android:layout_width="match_parent"
+                                                           android:text="@string/sendMessage"
+                                                           android:layout_marginStart="4dp"
+                                                           android:layout_marginEnd="4dp"
+                                                           android:padding="8dp"
+                                                           android:layout_marginTop="8dp"
+                                                           style="@style/QuestionFormButtonStyle"
+                                                           android:id="@+id/messageQuizAuthorButton"
+                                                           android:layout_height="wrap_content"/>
+
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
+        </androidx.core.widget.NestedScrollView>
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+    <com.google.android.gms.ads.AdView
+            xmlns:ads="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/resultAdBanner"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            ads:adSize="BANNER"
+            ads:adUnitId="ca-app-pub-9769401692194876/7591633187"
+            android:layout_marginStart="8dp" ads:layout_constraintStart_toStartOf="parent"
+            ads:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginEnd="8dp" ads:layout_constraintEnd_toEndOf="parent"/>
+</androidx.constraintlayout.widget.ConstraintLayout>

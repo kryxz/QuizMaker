@@ -71,15 +71,10 @@ class ProfileFragment : Fragment() {
                     visibility = View.VISIBLE
                     text = getString(R.string.cannotViewLog)
                 }
-                profileRef.collection("userLog").document("takenQuizzes").get().addOnSuccessListener { document ->
-                    if (view != null) {
-                        val log = document.get("log", QuizLog::class.java)
-                        if (log != null) {
-                            quizzesTakenTextView.text = log.userLog.size.toString()
-                        } else {
-                            quizzesTakenTextView.text = getString(R.string.placeHolderZero)
-                        }
-
+                profileRef.collection("userData").document("taken").get().addOnSuccessListener { document ->
+                    val log = document.get("log", QuizLog::class.java)
+                    if (log != null && view != null) {
+                        quizzesTakenTextView.text = log.userLog.size.toString()
                     }
                 }
 
@@ -162,7 +157,7 @@ class ProfileFragment : Fragment() {
             }
         }
         FirebaseFirestore.getInstance().collection("users").document(username)
-            .collection("userLog").document("takenQuizzes")
+            .collection("userData").document("taken")
             .get()
             .addOnSuccessListener { document ->
                 if (view != null) {

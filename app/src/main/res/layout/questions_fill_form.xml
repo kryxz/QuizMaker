@@ -46,7 +46,7 @@
             <androidx.appcompat.widget.AppCompatSpinner
                     android:layout_gravity="center_horizontal"
                     android:id="@+id/correctAnswerSpinner"
-                    android:popupBackground="@color/colorPrimaryDark"
+                    android:popupBackground="?attr/colorPrimaryDark"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content">
 

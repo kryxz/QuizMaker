@@ -13,6 +13,7 @@ import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.messaging.FirebaseMessaging
 import com.lemonlab.quizmaker.adapters.QuizAdapter
 import kotlinx.android.synthetic.main.fragment_main.*
 
@@ -29,7 +30,6 @@ class MainFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         setUp()
-        (activity as AppCompatActivity).supportActionBar!!.setHomeAsUpIndicator(R.drawable.ic_drawer)
         super.onViewCreated(view, savedInstanceState)
     }
 
@@ -45,18 +45,24 @@ class MainFragment : Fragment() {
     private fun setUp() {
         loginIfNoUser()
         getData()
+        if (FirebaseAuth.getInstance().currentUser != null)
+            FirebaseMessaging.getInstance()
+                .subscribeToTopic(FirebaseAuth.getInstance().currentUser!!.displayName)
     }
 
     private fun getDataFromIntent() {
         if (activity!!.intent != null && activity!!.intent.extras != null) {
             val notificationType = (activity!!.intent.extras!!.get("notificationType") as NotificationType)
-            if (notificationType == NotificationType.MESSAGE)
+            if (notificationType == NotificationType.MESSAGE) {
                 Navigation.findNavController(view!!).navigate(R.id.messagesFragment)
-            else
+
+            } else {
                 Navigation.findNavController(view!!).navigate(R.id.profileFragment)
+            }
             activity!!.intent.data = null
             activity!!.intent = null
-        }
+        } else
+            (activity as AppCompatActivity).supportActionBar!!.setHomeAsUpIndicator(R.drawable.ic_drawer)
 
     }
 

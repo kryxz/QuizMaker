@@ -114,7 +114,14 @@ data class TrueFalseQuiz(
 data class QuizLog(
     val userLog: MutableList<String>
 ) {
-    fun addQuiz(quizUUID: String, userName: String, pointsToGet: Int, quizAuthor: String, context: Context) {
+    fun addQuiz(
+        quizUUID: String,
+        userName: String,
+        pointsToGet: Int,
+        quizAuthor: String,
+        total: Int,
+        context: Context
+    ) {
         if (!userLog.contains(quizUUID)) {
             userLog.add(quizUUID)
             val usersRef = FirebaseFirestore.getInstance().collection("users")
@@ -123,10 +130,10 @@ data class QuizLog(
                 points += pointsToGet
                 usersRef.document(userName).update("user.points", points)
                 usersRef.document(quizAuthor).get().addOnSuccessListener { doc ->
-                    var authorPoints = doc.get("user.points", Int::class.java)!!
-                    authorPoints += pointsToGet
+                    val authorPoints = doc.get("user.points", Int::class.java)!! + total
                     usersRef.document(quizAuthor).update("user.points", authorPoints)
-                    NotificationSender().sendNotification(context, quizAuthor, NotificationType.QUIZ)
+                    if (userName != quizAuthor)
+                        NotificationSender().sendNotification(context, quizAuthor, NotificationType.QUIZ)
                 }
             }
 
@@ -164,9 +171,10 @@ data class Quiz(
 data class Message(
     val sender: String,
     val message: String,
-    val milliSeconds: Long
+    val milliSeconds: Long,
+    val id:String
 ) {
-    constructor() : this("", "", 0)
+    constructor() : this("", "", 0, "")
 }
 
 data class Report(
@@ -191,7 +199,7 @@ data class Report(
 }
 
 enum class Option {
-    CACHE, FAQ, APPS, LOGOUT, ABOUT, PRIVACY, THEME
+    CACHE, FAQ, APPS, LOGOUT, ABOUT, PRIVACY, THEME, FEEDBACK
 }
 
 data class OptionsItem(

@@ -32,6 +32,9 @@
     <fragment android:id="@+id/takeQuizFragment" android:name="com.lemonlab.quizmaker.TakeQuizFragment"
               android:label="@string/app_name" tools:layout="@layout/fragment_take_quiz">
         <argument android:name="quizID" app:argType="string"/>
+        <action android:id="@+id/viewResult" app:destination="@id/quizResult"
+                app:enterAnim="@anim/nav_default_enter_anim" app:exitAnim="@anim/nav_default_exit_anim"
+                app:popEnterAnim="@anim/nav_default_pop_enter_anim" app:popExitAnim="@anim/nav_default_pop_exit_anim"/>
     </fragment>
     <fragment android:id="@+id/messagesFragment" android:name="com.lemonlab.quizmaker.MessagesFragment"
               android:label="@string/messages" tools:layout="@layout/fragment_messages"/>
@@ -41,5 +44,13 @@
                 app:launchSingleTop="true" app:popUpToInclusive="false"/>
         <argument android:name="isViewer" app:argType="boolean" android:defaultValue="false"/>
         <argument android:name="username" app:argType="string" android:defaultValue="empty"/>
+    </fragment>
+    <fragment android:id="@+id/quizResult" android:name="com.lemonlab.quizmaker.QuizResult"
+              android:label="@string/scoreTitle" tools:layout="@layout/fragment_quiz_result">
+        <argument android:name="quizID" app:argType="string"/>
+        <argument android:name="totalQuestions" app:argType="integer"/>
+        <argument android:name="score" app:argType="integer"/>
+        <argument android:name="quizAuthor" app:argType="string"/>
+        <argument android:name="quizTitle" app:argType="string"/>
     </fragment>
 </navigation>

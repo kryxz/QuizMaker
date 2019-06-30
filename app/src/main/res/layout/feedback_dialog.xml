@@ -7,49 +7,46 @@
                                               android:layout_height="wrap_content">
 
     <androidx.appcompat.widget.AppCompatTextView android:layout_width="match_parent"
-                                                 android:text="@string/sendTo"
+                                                 android:text="@string/suggestIdea"
                                                  android:textSize="26sp"
-                                                 android:id="@+id/sendToReplyDialog"
                                                  android:gravity="center_horizontal"
                                                  android:layout_height="wrap_content"/>
 
-    <androidx.appcompat.widget.AppCompatTextView android:layout_width="match_parent"
-                                                 android:text="@string/messageText"
-                                                 android:textSize="20sp"
-                                                 android:padding="8dp"
-                                                 android:id="@+id/messageContentReplyDialog"
-                                                 android:background="?attr/colorAccent"
-                                                 android:layout_height="wrap_content"/>
 
     <com.google.android.material.textfield.TextInputEditText
             android:drawableEnd="@drawable/ic_message"
-            android:id="@+id/messageTextReplyDialog"
+            android:id="@+id/feedbackText"
             android:padding="8dp"
+            android:minLines="2"
             android:maxLength="200"
             android:textColorHint="?attr/textColorHint"
-            android:hint="@string/messageText" style="@style/loginEditTextStyle"/>
+            android:hint="@string/writeAnything" style="@style/loginEditTextStyle"/>
 
     <androidx.appcompat.widget.LinearLayoutCompat android:layout_width="match_parent"
                                                   android:layout_margin="8dp"
+                                                  android:padding="8dp"
                                                   android:layout_height="wrap_content">
 
         <androidx.appcompat.widget.AppCompatButton android:layout_width="wrap_content"
                                                    android:layout_weight="1"
                                                    android:text="@string/send"
                                                    style="@style/QuestionFormButtonStyle"
-                                                   android:id="@+id/sendNowButtonReplyDialog"
+                                                   android:id="@+id/sendFeedbackButton"
                                                    android:layout_marginStart="4dp"
+                                                   android:layout_marginEnd="4dp"
+                                                   android:padding="8dp"
                                                    android:layout_marginBottom="16dp"
-                                                   android:layout_marginEnd="4dp"                                                   android:layout_height="wrap_content"/>
+                                                   android:layout_height="wrap_content"/>
 
         <androidx.appcompat.widget.AppCompatButton android:layout_width="wrap_content"
                                                    android:layout_weight="1"
                                                    android:text="@string/cancel"
                                                    android:layout_marginStart="4dp"
                                                    android:layout_marginEnd="4dp"
+                                                   android:padding="8dp"
                                                    android:layout_marginBottom="16dp"
                                                    style="@style/QuestionFormButtonStyle"
-                                                   android:id="@+id/cancelSendButtonReplyDialog"
+                                                   android:id="@+id/cancelFeedbackButton"
                                                    android:layout_height="wrap_content"/>
 
     </androidx.appcompat.widget.LinearLayoutCompat>

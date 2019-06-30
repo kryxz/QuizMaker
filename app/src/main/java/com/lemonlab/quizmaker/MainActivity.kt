@@ -12,6 +12,7 @@ import androidx.navigation.Navigation
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
 import androidx.navigation.ui.setupActionBarWithNavController
+import com.google.android.gms.ads.MobileAds
 import com.google.firebase.FirebaseApp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -27,6 +28,7 @@ class MainActivity : AppCompatActivity() {
         chooseTheme()
         setContentView(R.layout.activity_main)
         setUpNavigation()
+        MobileAds.initialize(this)
         supportActionBar!!.setHomeAsUpIndicator(R.drawable.ic_drawer)
         setUpFireBase()
 
@@ -55,9 +57,6 @@ class MainActivity : AppCompatActivity() {
             build()
         }
         FirebaseMessaging.getInstance().isAutoInitEnabled = true
-        if (FirebaseAuth.getInstance().currentUser != null)
-            FirebaseMessaging.getInstance()
-                .subscribeToTopic(FirebaseAuth.getInstance().currentUser!!.displayName)
     }
 
     override fun onBackPressed() {
@@ -78,7 +77,6 @@ class MainActivity : AppCompatActivity() {
         setupActionBarWithNavController(navController, drawer_layout)
 
         setupActionBarWithNavController(navController, AppBarConfiguration.Builder(R.id.loginFragment).build())
-
         navController.addOnDestinationChangedListener { controller, destination, _ ->
             if (destination.id == controller.graph.startDestination) //Users only use the drawer in main fragment.
                 drawer_layout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED)

@@ -80,7 +80,7 @@ class QuizAdapter(
         else
             FirebaseFirestore.getInstance().collection("users")
                 .document(FirebaseAuth.getInstance().currentUser!!.displayName.toString())
-                .collection("userLog").document("takenQuizzes")
+                .collection("userData").document("taken")
                 .get().addOnSuccessListener {
                     if (it != null) {
                         val quizzesLog = if (it.get("log", QuizLog::class.java) != null)
@@ -178,7 +178,7 @@ class QuizAdapter(
                             userQuiz[position].quizUUID
                         )
                     )
-                else if (passwordField.text!!.isNotBlank())
+                else
                     showToast(context, context.getString(R.string.wrongPassword))
                 dialogBuilder.dismiss()
             }

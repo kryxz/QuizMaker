@@ -17,11 +17,16 @@ import com.google.firebase.auth.FirebaseAuth
 import org.json.JSONException
 import org.json.JSONObject
 
+
 class NotificationSender {
     fun createNotificationChannel(context: Context) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
 
-            val channel = NotificationChannel("quizzer", context.getString(R.string.app_name), NotificationManager.IMPORTANCE_DEFAULT)
+            val channel = NotificationChannel(
+                "quizzer",
+                context.getString(R.string.app_name),
+                NotificationManager.IMPORTANCE_DEFAULT
+            )
             channel.description = context.getString(R.string.app_notifications_description)
             val notificationManager = context.getSystemService(NotificationManager::class.java)
             notificationManager.createNotificationChannel(channel)
@@ -34,12 +39,15 @@ class NotificationSender {
     ) {
         val intent = Intent(context, activity)
         intent.putExtra("notificationType", notificationType)
-        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-
+        intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_CLEAR_TOP
         val pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT)
-
+        val icon =
+            if (notificationType == NotificationType.MESSAGE)
+                R.drawable.ic_message
+            else
+                R.drawable.ic_person
         val builder = NotificationCompat.Builder(context, "quizzer")
-            .setSmallIcon(R.drawable.ic_question_answer)
+            .setSmallIcon(icon)
             .setContentTitle(title)
             .setContentText(content)
             .setStyle(NotificationCompat.BigTextStyle().bigText(content))
@@ -47,32 +55,31 @@ class NotificationSender {
             .setContentIntent(pendingIntent)
             .setAutoCancel(true)
             .build()
-
         val notificationManager = NotificationManagerCompat.from(context)
         notificationManager.notify(100, builder)
     }
-     fun sendNotification(context: Context, quizAuthor: String, notificationType: NotificationType) {
+
+    fun sendNotification(context: Context, quizAuthor: String, notificationType: NotificationType) {
 
         val username = FirebaseAuth.getInstance().currentUser!!.displayName
 
         val json = JSONObject()
-         val body = if(notificationType==NotificationType.MESSAGE)
-             context.getString(R.string.newMessageFrom, username)
-         else
-             context.getString(R.string.newPointsForYou)
-         val title = if(notificationType==NotificationType.MESSAGE)
-             notificationType.toString() + context.getString(R.string.newMessage)
-         else
-             notificationType.toString() + context.getString(R.string.newPoints, quizAuthor)
+        val body = if (notificationType == NotificationType.MESSAGE)
+            context.getString(R.string.newMessageFrom, username)
+        else
+            context.getString(R.string.newPointsForYou)
 
+        val title = if (notificationType == NotificationType.MESSAGE)
+            context.getString(R.string.newMessage)
+        else
+            context.getString(R.string.newPoints, quizAuthor)
         val requestQueue = Volley.newRequestQueue(context.applicationContext)
-
         try {
             val notificationObj = JSONObject()
             notificationObj.put("title", title)
             notificationObj.put("body", body)
             json.put("to", "/topics/$quizAuthor")
-            json.put("notification", notificationObj)
+            json.put("data", notificationObj)
 
             val request = object : JsonObjectRequest(
                 Method.POST, "https://fcm.googleapis.com/fcm/send",

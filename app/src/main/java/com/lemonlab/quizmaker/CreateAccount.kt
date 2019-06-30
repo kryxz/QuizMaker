@@ -139,7 +139,7 @@ class CreateAccount : Fragment() {
                         )
                         isUserNameOK = !doc.get("user.username", String::class.java).toString().equals(
                             username,
-                            ignoreCase = true
+                            ignoreCase = false
                         )
                         if (!isEmailOK || !isUserNameOK)
                             break

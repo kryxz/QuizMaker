@@ -61,11 +61,13 @@ class MessagesAdapter(
             msg["message"] = Message(
                 FirebaseAuth.getInstance().currentUser?.displayName!!,
                 dialogView.findViewById<TextInputEditText>(R.id.messageTextReplyDialog).text.toString(),
-                Calendar.getInstance().timeInMillis
+                Calendar.getInstance().timeInMillis,
+                ""
             )
             FirebaseFirestore.getInstance().collection("users")
                 .document(messageAuthor)
                 .collection("messages").add(msg).addOnSuccessListener {
+                    it.update("message.id", it.id)
                     NotificationSender().sendNotification(context, messageAuthor, NotificationType.MESSAGE)
                     showToast(context, context.getString(R.string.messageSent))
                 }
@@ -117,12 +119,9 @@ class MessagesAdapter(
             .collection("messages")
 
         messagesRef.get().addOnSuccessListener {
-            for (item in it) {
-                if (item.get("message", Message::class.java)!!.message == messages[i].message)
-                    messagesRef.document(item.id).delete().addOnSuccessListener {
-                        messages.removeAt(i)
-                        notifyItemRemoved(i)
-                    }
+            messagesRef.document(messages[i].id).delete().addOnSuccessListener {
+                messages.removeAt(i)
+                notifyItemRemoved(i)
             }
         }
 

@@ -11,6 +11,7 @@
     <string name="messages">الرسائل</string>
     <string name="settingsLabel">الضبط</string>
     <string name="createNewQuiz">اختبار جديد</string>
+    <string name="usernameEmailLogin">اسم المستخدم أو البريد الإلكتروني</string>
 
     <string name="categoryAcademic">أكاديمي</string>
     <string name="categoryFun">للترفيه فقط!</string>
@@ -19,7 +20,7 @@
     <string name="quizPassword">رمز الدخول للاختبار</string>
     <string name="quizQuestionsCount">عدد أسئلة الاختبار</string>
     <string name="writeQuestionsButton">ابدأ بكتابة الأسئلة</string>
-    <string name="cannotBeEmpty">لا يجب أن يكون فارغًا</string>
+    <string name="cannotBeEmpty">لا يمكن أن يكون فارغًا</string>
     <string name="cannotBeGreaterThan30">أكثر عدد هو 30!</string>
     <string name="quizTitleText">عنوان الاختبار</string>
     <string name="questionsText">نص السؤال</string>
@@ -39,6 +40,7 @@
 
     <string name="cancel">إلغاء</string>
     <string name="confirm">تأكيد</string>
+    <string name="thanks">شكرًا لك!</string>
 
     <string name="previousQuestion">السؤال السابق</string>
     <string name="nextQuestion">السؤال التالي</string>
@@ -66,7 +68,9 @@
     <string name="score">الإجابات الصحيحة: %1$d من أصل %2$d</string>
     <string name="sendRating">ارسال التقييم</string>
     <string name="sendMessage">مراسلة المؤلف</string>
+    <string name="suggestIdea">اقتراح فكرة</string>
     <string name="ratingSent">تم ارسال التقييم!</string>
+    <string name="rateQuiz">قم بتقييم الاختبار</string>
     <string name="questionNumber">%1$d/%2$d</string>
     <string name="ok">حسنًا</string>
     <string name="okEn">حسنًا</string>
@@ -85,6 +89,15 @@
     <string name="loginFailed">فشل تسجيل الدخول، تحقق من معلومات حسابك</string>
     <string name="noUser">لم يتم العثور على حساب.</string>
     <string name="NoContent">تعذر العثور على أي اختبار</string>
+    <string name="quizScore">
+        نتيجتك لـ %1$s
+        \n
+        عدد الأسئلة: %2$d
+        \n
+        عدد الإجابات الصحيحة: %3$d
+        \n
+        النسبة المئوية: %4$s
+    </string>
 
     <string name="profileLabel">الملف الشخصي</string>
     <string name="joinDate">تاريخ الانضمام</string>
@@ -103,6 +116,7 @@
     <string name="cannotViewLog">لا يمكنك عرض السجل حاليًا</string>
     <string name="answerQuestions">أجب على جميع الأسئلة</string>
     <string name="showPassword">عرض كلمة المرور</string>
+    <string name="alreadyRated">سبق وقيّمت هذا الاختبار</string>
     <string name="suggestions">اسم المستخدم موجود، بعض الاقتراحات: \n
         %1$s
     </string>

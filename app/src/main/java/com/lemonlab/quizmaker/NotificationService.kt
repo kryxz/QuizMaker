@@ -6,23 +6,19 @@ import com.google.firebase.messaging.RemoteMessage
 
 class NotificationService : FirebaseMessagingService() {
     override fun onMessageReceived(p0: RemoteMessage?) {
-        var title = p0!!.notification!!.title.toString()
-        val message = p0.notification!!.body.toString()
+        val title = p0!!.data["title"].toString()
+        val message = p0.data["body"].toString()
+
         val notificationType =
-            if (title.contains("MESSAGE"))
+            if (title==getString(R.string.newMessage))
                 NotificationType.MESSAGE
             else
                 NotificationType.QUIZ
 
-        title = title.substringAfter("MESSAGE").substringAfter("QUIZ")
-        NotificationSender().createNotification(
-            this,
-            notificationType,
-            title,
-            message,
-            MainActivity::class.java
-        )
         NotificationSender().createNotificationChannel(this)
+
+        NotificationSender().createNotification(this, notificationType, title, message, MainActivity::class.java)
+
 
         super.onMessageReceived(p0)
 

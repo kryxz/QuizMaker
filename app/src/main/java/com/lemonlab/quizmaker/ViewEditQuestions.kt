@@ -274,6 +274,7 @@ class ViewEditQuestions : Fragment() {
             fragmentManager!!.beginTransaction().detach(this)
                 .attach(this)
                 .commit()
+            (activity as AppCompatActivity).supportActionBar!!.setHomeAsUpIndicator(R.drawable.ic_arrow)
         }
 
         (activity as AppCompatActivity).supportActionBar!!.title = getString(R.string.reviewQuestions)
@@ -307,7 +308,7 @@ class ViewEditQuestions : Fragment() {
                             Navigation.findNavController(view!!).navigate(R.id.mainFragment)
                         }
                 }
-                else -> {
+                TempData.quizType == QuizType.TrueFalse -> {
                     val quiz: HashMap<String, TrueFalseQuiz> = HashMap()
                     quiz["quiz"] = TrueFalseQuiz(quizData, trueFalseQuestions)
 
@@ -338,9 +339,9 @@ class ViewEditQuestions : Fragment() {
 
         fun addQuestion(key: String) {
             multipleChoiceQuestions[key] = MultipleChoiceQuestion(
-                questionsTextEditText.text.toString(),
-                firstChoice.text.toString(), secondChoice.text.toString(),
-                thirdChoice.text.toString(), fourthChoice.text.toString(),
+                questionsTextEditText.text.toString().removedWhitespace(),
+                firstChoice.text.toString().removedWhitespace(), secondChoice.text.toString().removedWhitespace(),
+                thirdChoice.text.toString().removedWhitespace(), fourthChoice.text.toString().removedWhitespace(),
                 correctAnswerSpinner.selectedItemPosition
             )
         }
@@ -432,7 +433,7 @@ class ViewEditQuestions : Fragment() {
         fun addQuestion(key: String) {
             if (questionsTextEditText.text!!.isNotBlank()) {
                 trueFalseQuestions[key] = TrueFalseQuestion(
-                    questionsTextEditText.text.toString(),
+                    questionsTextEditText.text.toString().removedWhitespace(),
                     isStatementTrueCheckBox.isChecked
                 )
                 TempData.trueFalseCachedQuestions = trueFalseQuestions

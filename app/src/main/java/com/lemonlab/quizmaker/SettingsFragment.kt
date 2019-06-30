@@ -20,7 +20,9 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.messaging.FirebaseMessaging
 import kotlinx.android.synthetic.main.fragment_settings.*
 
@@ -58,6 +60,11 @@ class SettingsFragment : Fragment() {
                 OptionsItem(
                     R.drawable.ic_exit,
                     getString(R.string.logout), Option.LOGOUT
+                ),
+
+                OptionsItem(
+                    R.drawable.ic_feedback,
+                    getString(R.string.suggestIdea), Option.FEEDBACK
                 ),
 
                 OptionsItem(
@@ -140,6 +147,41 @@ class TextViewAdapter(
             Option.ABOUT -> aboutUs(textView, position)
             Option.PRIVACY -> privacyPolicy(textView, position)
             Option.FAQ -> fAQ(textView, position)
+            Option.FEEDBACK -> feedbackDialog(textView, position)
+        }
+    }
+
+    private fun feedbackDialog(textView: AppCompatTextView, position: Int) {
+        val dialogBuilder = AlertDialog.Builder(activity).create()
+        val dialogView = with(LayoutInflater.from(activity)) {
+            inflate(
+                R.layout.feedback_dialog,
+                null
+            )
+        }
+        val fireStore = FirebaseFirestore.getInstance().collection("feedback")
+        val feedbackText = dialogView.findViewById<TextInputEditText>(R.id.feedbackText)
+        dialogView.findViewById<AppCompatButton>(R.id.sendFeedbackButton).setOnClickListener {
+            if (feedbackText.text!!.isEmpty())
+                return@setOnClickListener
+            val feedback = HashMap<String, Pair<String, String>>()
+            feedback["feedback"] = Pair(feedbackText.text.toString().removedWhitespace(), FirebaseAuth.getInstance().currentUser!!.displayName!!)
+            fireStore.add(feedback).addOnSuccessListener {
+                showToast(activity, activity.getString(R.string.thanks))
+            }
+            dialogBuilder.dismiss()
+        }
+
+        dialogView.findViewById<AppCompatButton>(R.id.cancelFeedbackButton).setOnClickListener {
+            dialogBuilder.dismiss()
+        }
+        dialogBuilder.setView(dialogView)
+        with(textView) {
+            setCompoundDrawablesWithIntrinsicBounds(listOfSettings!![position].icon, 0, 0, 0)
+            text = listOfSettings[position].text
+            setOnClickListener {
+                dialogBuilder.show()
+            }
         }
     }
 

@@ -17,7 +17,6 @@ import androidx.appcompat.widget.AppCompatTextView
 import androidx.fragment.app.Fragment
 import androidx.navigation.Navigation
 import kotlinx.android.synthetic.main.fragment_create_quiz.*
-import kotlin.collections.LinkedHashMap
 
 class CreateQuiz : Fragment() {
 
@@ -30,6 +29,7 @@ class CreateQuiz : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        //createQuizBanner.loadAd(AdRequest.Builder().build())
         setUp()
         super.onViewCreated(view, savedInstanceState)
     }
@@ -125,6 +125,8 @@ class CreateQuiz : Fragment() {
             else
                 "notRequired"
         }
+        if(TempData.isPasswordProtected)
+            quizPasswordEditText.visibility = View.VISIBLE
 
         writeQuestionsButton.setOnClickListener {
             TempData.quizType = if (questionsTypeSpinner.selectedItemPosition == 0)
@@ -191,7 +193,8 @@ fun Context.showYesNoDialog(
         setView(dialogView)
         show()
     }
-
+    if (dialogTitle == getString(R.string.changeTheme))
+        dialogBuilder.setOnDismissListener { functionIfCancel() }
 }
 
 fun showToast(context: Context, message: String) {
@@ -214,4 +217,19 @@ fun LinkedHashMap<String, TrueFalseQuestion>.areQuestionsOK(): Boolean {
         isOK = it.value.question.isNotEmpty()
     }
     return isOK
+}
+
+fun String.removedWhitespace(): String {
+    var isFirstSpace = false
+    var result = ""
+    for (char in this) {
+        if (char != ' ' && char != '\n') {
+            isFirstSpace = true
+            result += char
+        } else if (isFirstSpace) {
+            result += " "
+            isFirstSpace = false
+        }
+    }
+    return result
 }

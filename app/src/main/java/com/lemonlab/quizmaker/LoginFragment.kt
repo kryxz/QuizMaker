@@ -13,6 +13,7 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.NavOptions
 import androidx.navigation.Navigation
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.android.synthetic.main.fragment_login.*
 
 
@@ -34,20 +35,28 @@ class LoginFragment : Fragment() {
         )
         super.onDestroyView()
     }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         setUpUI()
         super.onViewCreated(view, savedInstanceState)
     }
+
     private fun fieldsOK(userEmail: CharSequence, userPassword: String): Boolean {
         //returns true if userEmail is an Email, and password is 6+ chars.
 
-        if (!Patterns.EMAIL_ADDRESS.matcher(userEmail).matches())
+        val emailOK = if (userEmail.contains('@'))
+            Patterns.EMAIL_ADDRESS.matcher(userEmail).matches()
+        else
+            true
+        val passwordOK = userPassword.length >= 6
+        if (!emailOK)
             loginEmailEditText.error = getString(R.string.invalidEmail)
-        if (userPassword.length < 6)
+        if (!passwordOK)
             loginPasswordEditText.error = getString(R.string.passwordTooShort)
 
-        return (Patterns.EMAIL_ADDRESS.matcher(userEmail).matches() && userPassword.length >= 6)
+        return (emailOK && passwordOK)
     }
+
     private fun showHidePassword() {
         showLoginPasswordCheckBox.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked)
@@ -57,6 +66,7 @@ class LoginFragment : Fragment() {
 
         }
     }
+
     private fun setUpUI() {
         val fireBaseAuth = FirebaseAuth.getInstance()
         loginPasswordEditText.transformationMethod = PasswordTransformationMethod()
@@ -73,22 +83,43 @@ class LoginFragment : Fragment() {
         newAcctButton.setOnClickListener {
             Navigation.findNavController(it).navigate(R.id.createAccount)
         }
-        loginButton.setOnClickListener {
-            loginButton.isEnabled = false
-            val userEmail = loginEmailEditText.text.toString()
-            val userPassword = loginPasswordEditText.text.toString()
-            if (fieldsOK(userEmail, userPassword)) {
-                loggingInBar.visibility = View.VISIBLE
-                fireBaseAuth.signInWithEmailAndPassword(userEmail, userPassword).addOnSuccessListener {
-                    loginNow()
-                }.addOnFailureListener {
+
+        fun emailLogin(userEmail: String, userPassword: String) {
+            fireBaseAuth.signInWithEmailAndPassword(userEmail, userPassword).addOnSuccessListener {
+                loginNow()
+            }.addOnFailureListener {
+                loginButton.isEnabled = true
+                loggingInBar.visibility = View.GONE
+                if (it.localizedMessage!!.contains("no user"))
+                    showToast(context!!, getString(R.string.noUser))
+                else
+                    showToast(context!!, getString(R.string.loginFailed))
+            }
+        }
+
+        fun userNameLogin(userLogin: String, userPassword: String) {
+            FirebaseFirestore.getInstance().collection("users").document(userLogin).get().addOnSuccessListener {
+                if (it.get("user.email", String::class.java) != null) {
+                    val email = it.get("user.email", String::class.java)!!
+                    emailLogin(email, userPassword)
+                } else {
                     loginButton.isEnabled = true
                     loggingInBar.visibility = View.GONE
-                    if (it.localizedMessage!!.contains("no user"))
-                        showToast(context!!, getString(R.string.noUser))
-                    else
-                        showToast(context!!, getString(R.string.loginFailed))
+                    showToast(context!!, getString(R.string.noUser))
                 }
+            }
+        }
+        loginButton.setOnClickListener {
+            val userLogin = loginEmailEditText.text.toString()
+            val userPassword = loginPasswordEditText.text.toString()
+            if (fieldsOK(userLogin, userPassword)) {
+                loginButton.isEnabled = false
+                loggingInBar.visibility = View.VISIBLE
+                if (userLogin.contains('@'))
+                    emailLogin(userLogin, userPassword)
+                else
+                    userNameLogin(userLogin, userPassword)
+
             }
         }
     }
