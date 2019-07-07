@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.messaging.FirebaseMessaging
 import com.lemonlab.quizmaker.adapters.QuestionsAdapter
 import kotlinx.android.synthetic.main.questions_fill_form.*
 import java.util.*
@@ -304,7 +305,8 @@ class ViewEditQuestions : Fragment() {
                         .addOnSuccessListener {
                             //resets all temp data to their default values.
                             TempData.resetData()
-
+                            FirebaseMessaging.getInstance()
+                                .subscribeToTopic(FirebaseAuth.getInstance().currentUser!!.displayName)
                             Navigation.findNavController(view!!).navigate(R.id.mainFragment)
                         }
                 }

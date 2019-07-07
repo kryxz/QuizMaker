@@ -13,7 +13,6 @@ import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.messaging.FirebaseMessaging
 import com.lemonlab.quizmaker.adapters.QuizAdapter
 import kotlinx.android.synthetic.main.fragment_main.*
 
@@ -45,9 +44,6 @@ class MainFragment : Fragment() {
     private fun setUp() {
         loginIfNoUser()
         getData()
-        if (FirebaseAuth.getInstance().currentUser != null)
-            FirebaseMessaging.getInstance()
-                .subscribeToTopic(FirebaseAuth.getInstance().currentUser!!.displayName)
     }
 
     private fun getDataFromIntent() {

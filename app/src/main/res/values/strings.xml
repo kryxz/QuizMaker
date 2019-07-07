@@ -83,7 +83,8 @@
 
     <string name="userNameExists">اسم المستخدم موجود</string>
     <string name="checkFields">بعض الحقول غير صالحة!</string>
-    <string name="invalidEmail">بريد غير صالح</string>
+    <string name="invalidEmail">البريد غير صالح</string>
+    <string name="containsArChars">لا يجب أن يحتوي حروفًا عربيّة!</string>
     <string name="passwordTooShort">كلمة المرور قصيرة جدًا</string>
     <string name="accountExists">الحساب موجود</string>
     <string name="loginFailed">فشل تسجيل الدخول، تحقق من معلومات حسابك</string>
@@ -117,7 +118,7 @@
     <string name="answerQuestions">أجب على جميع الأسئلة</string>
     <string name="showPassword">عرض كلمة المرور</string>
     <string name="alreadyRated">سبق وقيّمت هذا الاختبار</string>
-    <string name="suggestions">اسم المستخدم موجود، بعض الاقتراحات: \n
+    <string name="suggestions">اسم المستخدم غير صالح، بعض الاقتراحات: \n
         %1$s
     </string>
 
@@ -266,6 +267,8 @@
         changes. We will notify you of any changes by posting the new Privacy Policy on this page. These changes are
         effective immediately، after they are posted on this page.\n
         \n
+        Icon Credits \n
+        icons8.com
         Contact Us\n
         \n
         If you have any questions or suggestions about our Privacy Policy، do not hesitate to contact us at

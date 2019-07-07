@@ -45,9 +45,17 @@ class CreateAccount : Fragment() {
         super.onDestroyView()
     }
 
-    private fun fieldsOK(userEmail: CharSequence, userPassword: String): Boolean {
+    private fun fieldsOK(userEmail: CharSequence, userPassword: String, username: String): Boolean {
+        val arabicChars = "ضشئءسصثيؤربقفلأىاغةتعهنوزظمخجدطكح"
+        var allEnglish = true
+        for (char in arabicChars)
+            if (char in username) {
+                allEnglish = false
+                break
+            }
+
         //returns true if userEmail is an Email, and password is 6+ chars.
-        return (Patterns.EMAIL_ADDRESS.matcher(userEmail).matches() && userPassword.length >= 6)
+        return (Patterns.EMAIL_ADDRESS.matcher(userEmail).matches() && allEnglish && userPassword.length >= 6)
     }
 
     private fun createAccountAndSignIn(username: String, userEmail: String, userPassword: String) {
@@ -59,29 +67,29 @@ class CreateAccount : Fragment() {
 
         fireBaseAuth.createUserWithEmailAndPassword(userEmail, userPassword).addOnSuccessListener {
             creatingAccountBar.alpha = 0.5f
+            fireBaseAuth.currentUser!!.updateProfile(
+                UserProfileChangeRequest.Builder()
+                    .setDisplayName(username).build()
+            ).addOnSuccessListener {
+                fireBaseAuth.signInWithEmailAndPassword(userEmail, userPassword).addOnSuccessListener {
+                    creatingAccountBar.alpha = 0.7f
+                    val randomBios = resources.getStringArray(R.array.randomBios)
+                    newUser["user"] =
+                        User(
+                            username,
+                            userEmail,
+                            FirebaseAuth.getInstance().currentUser!!.uid,
+                            randomBios[Random.nextInt(0, randomBios.size)],
+                            0,
+                            Calendar.getInstance().timeInMillis
+                        )
 
-            fireBaseAuth.signInWithEmailAndPassword(userEmail, userPassword).addOnSuccessListener {
-                creatingAccountBar.alpha = 0.7f
-                fireBaseAuth.currentUser!!.updateProfile(
-                    UserProfileChangeRequest.Builder()
-                        .setDisplayName(username).build()
-                )
-                val randomBios = resources.getStringArray(R.array.randomBios)
-                newUser["user"] =
-                    User(
-                        username,
-                        userEmail,
-                        FirebaseAuth.getInstance().currentUser!!.uid,
-                        randomBios[Random.nextInt(0, randomBios.size)],
-                        0,
-                        Calendar.getInstance().timeInMillis
-                    )
-
-                fireStoreDatabase.collection("users").document(username).set(newUser).addOnSuccessListener {
-                    Navigation.findNavController(view!!).navigate(
-                        CreateAccountDirections.createToMain(),
-                        NavOptions.Builder().setPopUpTo(R.id.loginFragment, true).build()
-                    )
+                    fireStoreDatabase.collection("users").document(username).set(newUser).addOnSuccessListener {
+                        Navigation.findNavController(view!!).navigate(
+                            CreateAccountDirections.createToMain(),
+                            NavOptions.Builder().setPopUpTo(R.id.loginFragment, true).build()
+                        )
+                    }
                 }
             }
 
@@ -127,7 +135,7 @@ class CreateAccount : Fragment() {
             val username = removeSpecialChars(signUpDisplayName.text.toString())
             val userEmail = signUpEmailEditText.text.toString()
             val userPassword = signUpPasswordEditText.text.toString()
-            if (fieldsOK(userEmail, userPassword)) {
+            if (fieldsOK(userEmail, userPassword, signUpDisplayName.text.toString())) {
                 var isUserNameOK = true
                 var isEmailOK = true
                 fireStoreDatabaseUsers.get().addOnSuccessListener {
@@ -155,14 +163,20 @@ class CreateAccount : Fragment() {
                 showErrors()
         }
     }
+
     private fun emailExists() {
         signUpButton.isEnabled = true
         signUpEmailEditText.error = getString(R.string.accountExists)
 
     }
+
     private fun userNameExists() {
         signUpButton.isEnabled = true
         signUpDisplayName.error = getString(R.string.userNameExists)
+        showSuggestions()
+    }
+
+    private fun showSuggestions() {
         val userName = signUpEmailEditText.text.toString().substringBefore('@')
         val suggestions = listOf(
             "$userName${Random.nextInt(100, 1000)}",
@@ -176,13 +190,21 @@ class CreateAccount : Fragment() {
         }
     }
 
-
     private fun showErrors() {
         signUpButton.isEnabled = true
-        showToast(context!!, getString(R.string.checkFields))
-        if (!Patterns.EMAIL_ADDRESS.matcher(signUpEmailEditText.text.toString()).matches())
+        val arabicChars = "ضشئءسصثيؤربقفلأىاغةتعهنوزظمخجدطكح"
+        var allEnglish = true
+        for (char in arabicChars)
+            if (char in signUpDisplayName.text.toString()) {
+                allEnglish = false
+                break
+            }
+        if (!allEnglish) {
+            signUpDisplayName.error = getString(R.string.containsArChars)
+            showSuggestions()
+        } else if (!Patterns.EMAIL_ADDRESS.matcher(signUpEmailEditText.text.toString()).matches())
             signUpEmailEditText.error = getString(R.string.invalidEmail)
-        if (signUpPasswordEditText.text!!.length < 6)
+        else if (signUpPasswordEditText.text!!.length < 6)
             signUpPasswordEditText.error = getString(R.string.passwordTooShort)
     }
 }

@@ -57,6 +57,9 @@ class MainActivity : AppCompatActivity() {
             build()
         }
         FirebaseMessaging.getInstance().isAutoInitEnabled = true
+        if (FirebaseAuth.getInstance().currentUser != null)
+            FirebaseMessaging.getInstance()
+                .subscribeToTopic(FirebaseAuth.getInstance().currentUser!!.displayName)
     }
 
     override fun onBackPressed() {

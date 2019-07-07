@@ -271,6 +271,8 @@ class TextViewAdapter(
                     FirebaseMessaging.getInstance()
                         .unsubscribeFromTopic(FirebaseAuth.getInstance().currentUser!!.displayName)
                     FirebaseAuth.getInstance().signOut()
+                    TempData.deleteCached()
+                    TempData.resetData()
                     Navigation.findNavController(it).navigate(R.id.loginFragment)
                 }, {}, context.getString(R.string.logout), context.getString(R.string.confirmLogout))
 

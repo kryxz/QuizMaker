@@ -3,24 +3,24 @@
     <item
             android:title="@string/mainPage"
             android:icon="@drawable/ic_home"
-            android:id="@+id/mainFragment" />
+            android:id="@+id/mainFragment"/>
     <item
             android:title="@string/profileLabel"
             android:icon="@drawable/ic_person"
-            android:id="@+id/profileFragment" />
+            android:id="@+id/profileFragment"/>
+    <item
+            android:title="@string/createNewQuiz"
+            android:icon="@drawable/ic_note_add"
+            android:id="@+id/createQuiz"/>
 
     <item
             android:title="@string/messages"
             android:icon="@drawable/ic_message"
-            android:id="@+id/messagesFragment" />
+            android:id="@+id/messagesFragment"/>
 
-    <item
-            android:title="@string/createNewQuiz"
-            android:icon="@drawable/ic_note_add"
-            android:id="@+id/createQuiz" />
     <item
             android:title="@string/settingsLabel"
             android:icon="@drawable/ic_settings"
-            android:id="@+id/settingsFragment" />
+            android:id="@+id/settingsFragment"/>
 
 </menu>

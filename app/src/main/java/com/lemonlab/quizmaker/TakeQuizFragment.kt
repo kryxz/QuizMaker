@@ -89,6 +89,7 @@ class TakeQuizFragment : Fragment() {
 
             fun calculateScore() {
                 var score = 0
+                answersArray[position] = answerCheckBox.isChecked
                 answersArray.forEach { key, value ->
                     if (userQuiz.questions!![key.toString()]!!.answer == value)
                         score = score.inc()
@@ -115,10 +116,11 @@ class TakeQuizFragment : Fragment() {
 
             }
             submitAnswers.setOnClickListener {
-                if (answersArray.size() == userQuiz.quiz.questionsCount)
-                    calculateScore()
-                else
-                    showToast(context!!, getString(R.string.answerQuestions))
+                when {
+                    answersArray.size() == userQuiz.quiz.questionsCount ||
+                            position == userQuiz.quiz.questionsCount -> calculateScore()
+                    else -> showToast(context!!, getString(R.string.answerQuestions))
+                }
             }
             answersArray.put(position, answerCheckBox.isChecked)
             updateView()
