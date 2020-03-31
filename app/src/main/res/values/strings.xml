@@ -24,7 +24,7 @@
     <string name="cannotBeGreaterThan30">أكثر عدد هو 30!</string>
     <string name="quizTitleText">عنوان الاختبار</string>
     <string name="questionsText">نص السؤال</string>
-    <string name="questionsTextLabel">نص السؤال \n %1$s</string>
+    <string name="questionsTextLabel">%1$s</string>
     <string name="quizProtected">يتطلب هذا الاختبار كلمة مرور</string>
     <string name="wrongPassword">كلمة المرور غير صحيحة!</string>
 
@@ -166,6 +166,7 @@
         <item>من يمكنه رؤية الاختبار الذي أنشره؟</item>
         <item>هل سيتم تحديث التطبيق؟</item>
         <item>وصلني رسالة مسيئة، كيف أتصرف؟</item>
+        <item>مامعنى أن الاختبار يتطلب كلمة مرور؟</item>
     </string-array>
 
     <string-array name="faqsAnswers">
@@ -174,6 +175,7 @@
         <item>يمكن ﻷي مستخدم في التطبيق رؤية الاختبار. قد نقوم بوضع خيار للخصوصيّة في المستقبل.</item>
         <item>فريقنا لديه مشاغل أخرى دائمًا، مع ذلك، إذا رأينا أن التطبيق قد حقق نجاحًا، فسنعمل على ذلك.</item>
         <item>نعتذر عن ذلك. في الوقت الراهن يمكنك حذفها بسحبها من اليمين إلى اليسار.</item>
+        <item>يمكن لمن يضع اختبارًا أن يحدد كلمة المرور عند إنشاء الاختبار.</item>
     </string-array>
 
     <string-array name="multipleChoices">

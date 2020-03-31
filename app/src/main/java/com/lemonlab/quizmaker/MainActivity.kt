@@ -52,14 +52,14 @@ class MainActivity : AppCompatActivity() {
     private fun setUpFireBase() {
         FirebaseApp.initializeApp(this)
         FirebaseFirestore.getInstance().firestoreSettings = with(FirebaseFirestoreSettings.Builder()) {
-            setPersistenceEnabled(true)
-            setCacheSizeBytes(FirebaseFirestoreSettings.CACHE_SIZE_UNLIMITED)
+            isPersistenceEnabled = true
+            cacheSizeBytes = FirebaseFirestoreSettings.CACHE_SIZE_UNLIMITED
             build()
         }
         FirebaseMessaging.getInstance().isAutoInitEnabled = true
         if (FirebaseAuth.getInstance().currentUser != null)
             FirebaseMessaging.getInstance()
-                .subscribeToTopic(FirebaseAuth.getInstance().currentUser!!.displayName)
+                .subscribeToTopic(FirebaseAuth.getInstance().currentUser!!.displayName!!)
     }
 
     override fun onBackPressed() {

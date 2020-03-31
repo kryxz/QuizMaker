@@ -4,25 +4,26 @@
     <color name="baseColorGreen">#00e640</color>
 
     <!-- base theme Colors -->
-    <color name="colorPrimary">#303f9f</color>
-    <color name="colorPrimaryDark">#1a237e</color>
-    <color name="colorPrimaryLight">#5c6bc0</color>
-    <color name="colorAccent">#000051</color>
+    <color name="colorPrimary">#f1f2f6</color>
+    <color name="colorPrimaryDark">#dfe4ea</color>
+    <color name="colorPrimaryLight">#f1f2f6</color>
+    <color name="colorAccent">#ced6e0</color>
 
-    <color name="textColorPrimary">#FFFFFF</color>
-    <color name="textColorSecondary">#9fa8da</color>
-    <color name="dividerColor">#90caf9</color>
+    <color name="textColorPrimary">#000000</color>
+    <color name="textColorSecondary">#80000000</color>
+    <color name="dividerColor">#a4b0be</color>
 
 
     <!-- Light theme Colors -->
-    <color name="lightColorPrimary">#dfe6e9</color>
-    <color name="lightColorPrimaryDark">#b2bec3</color>
-    <color name="lightColorPrimaryLight">#ecf0f1</color>
-    <color name="lightColorAccent">#636e72</color>
+    <color name="lightColorPrimary">#34495e</color>
+    <color name="lightColorPrimaryDark">#2c3e50</color>
+    <color name="lightColorPrimaryLight">#95a5a6</color>
+    <color name="lightColorAccent">#7f8c8d</color>
 
-    <color name="lightTextColorPrimary">#2d3436</color>
-    <color name="lightTextColorSecondary">#455a64</color>
-    <color name="lightDividerColor">#2d3436</color>
+    <color name="lightTextColorPrimary">#FFFFFF</color>
+    <color name="lightTextColorSecondary">#C5BFBF</color>
+    <color name="lightDividerColor">#bdc3c7</color>
+
     <color name="colorGold">#e1b12c</color>
     <color name="lightColorGreen">#44bd32</color>
 

@@ -2,12 +2,10 @@ package com.lemonlab.quizmaker
 
 
 import android.app.AlertDialog
-import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatButton
 import androidx.fragment.app.Fragment
@@ -36,11 +34,7 @@ class ProfileFragment : Fragment() {
     }
 
     override fun onDestroyView() {
-        //Hides keypad
-        (activity!!.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager).hideSoftInputFromWindow(
-            view!!.windowToken,
-            0
-        )
+        activity!!.hideKeypad()
         super.onDestroyView()
     }
 
@@ -71,12 +65,13 @@ class ProfileFragment : Fragment() {
                     visibility = View.VISIBLE
                     text = getString(R.string.cannotViewLog)
                 }
-                profileRef.collection("userData").document("taken").get().addOnSuccessListener { document ->
-                    val log = document.get("log", QuizLog::class.java)
-                    if (log != null && view != null) {
-                        quizzesTakenTextView.text = log.userLog.size.toString()
+                profileRef.collection("userData").document("taken").get()
+                    .addOnSuccessListener { document ->
+                        val log = document.get("log", QuizLog::class.java)
+                        if (log != null && view != null) {
+                            quizzesTakenTextView.text = log.userLog.size.toString()
+                        }
                     }
-                }
 
             }
         }
@@ -138,23 +133,24 @@ class ProfileFragment : Fragment() {
         fun loadLog(log: MutableList<String>) {
             profileLogProgressBar.visibility = View.VISIBLE
             val listOfQuizzes = mutableListOf<Quiz>()
-            FirebaseFirestore.getInstance().collection("Quizzes").get().addOnSuccessListener { documents ->
-                for (item in documents) {
-                    val quiz = item.get("quiz.quiz", Quiz::class.java)!!
-                    if (log.contains(quiz.quizUUID))
-                        listOfQuizzes.add(quiz)
-                }
-                with(listOfQuizzes) {
-                    sortWith(compareBy { it.milliSeconds })
-                    reverse()
-                }
-                if (view != null)
-                    with(userLogRecyclerView) {
-                        layoutManager = LinearLayoutManager(context!!)
-                        adapter = QuizAdapter(context!!, listOfQuizzes, ViewType.ViewAnswers)
-                        profileLogProgressBar.visibility = View.GONE
+            FirebaseFirestore.getInstance().collection("Quizzes").get()
+                .addOnSuccessListener { documents ->
+                    for (item in documents) {
+                        val quiz = item.get("quiz.quiz", Quiz::class.java)!!
+                        if (log.contains(quiz.quizUUID))
+                            listOfQuizzes.add(quiz)
                     }
-            }
+                    with(listOfQuizzes) {
+                        sortWith(compareBy { it.milliSeconds })
+                        reverse()
+                    }
+                    if (view != null)
+                        with(userLogRecyclerView) {
+                            layoutManager = LinearLayoutManager(context!!)
+                            adapter = QuizAdapter(context!!, listOfQuizzes, ViewType.ViewAnswers)
+                            profileLogProgressBar.visibility = View.GONE
+                        }
+                }
         }
         FirebaseFirestore.getInstance().collection("users").document(username)
             .collection("userData").document("taken")

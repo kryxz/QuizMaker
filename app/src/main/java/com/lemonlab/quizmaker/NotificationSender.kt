@@ -29,7 +29,7 @@ class NotificationSender {
             )
             channel.description = context.getString(R.string.app_notifications_description)
             val notificationManager = context.getSystemService(NotificationManager::class.java)
-            notificationManager.createNotificationChannel(channel)
+            notificationManager!!.createNotificationChannel(channel)
         }
     }
 
@@ -40,7 +40,8 @@ class NotificationSender {
         val intent = Intent(context, activity)
         intent.putExtra("notificationType", notificationType)
         intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_CLEAR_TOP
-        val pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT)
+        val pendingIntent =
+            PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT)
         val icon =
             if (notificationType == NotificationType.MESSAGE)
                 R.drawable.ic_message

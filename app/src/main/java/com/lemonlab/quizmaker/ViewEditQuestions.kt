@@ -2,12 +2,10 @@ package com.lemonlab.quizmaker
 
 
 import android.app.AlertDialog
-import android.content.Context
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.*
-import android.view.inputmethod.InputMethodManager
 import android.widget.ArrayAdapter
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatButton
@@ -47,11 +45,7 @@ class ViewEditQuestions : Fragment() {
     }
 
     override fun onDestroyView() {
-        //Hides keypad
-        (activity!!.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager).hideSoftInputFromWindow(
-            view!!.windowToken,
-            0
-        )
+        activity!!.hideKeypad()
         super.onDestroyView()
     }
 
@@ -62,11 +56,11 @@ class ViewEditQuestions : Fragment() {
             viewQuizAnswers()
     }
 
-
-    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
-        inflater!!.inflate(R.menu.view_edit_menu, menu)
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.view_edit_menu, menu)
         super.onCreateOptionsMenu(menu, inflater)
     }
+
 
     private fun setTextsMultipleChoice() {
         if (TempData.quizType != QuizType.MultipleChoice)
@@ -92,14 +86,13 @@ class ViewEditQuestions : Fragment() {
 
     }
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        if (item!!.itemId == R.id.editQuiz && questionsRecyclerView.layoutManager == null)
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == R.id.editQuiz && questionsRecyclerView.layoutManager == null)
             showEditDialog()
         else if (item.itemId == R.id.editQuiz)
             showToast(context!!, getString(R.string.cannotEdit))
         return super.onOptionsItemSelected(item)
     }
-
 
     private fun showEditDialog() {
         val dialogBuilder = AlertDialog.Builder(context!!).create()
@@ -272,7 +265,7 @@ class ViewEditQuestions : Fragment() {
             publishQuiz()
         }
         backToEditingButton.setOnClickListener {
-            fragmentManager!!.beginTransaction().detach(this)
+            parentFragmentManager.beginTransaction().detach(this)
                 .attach(this)
                 .commit()
             (activity as AppCompatActivity).supportActionBar!!.setHomeAsUpIndicator(R.drawable.ic_arrow)
@@ -296,8 +289,8 @@ class ViewEditQuestions : Fragment() {
 
                 quizID, 0f, 0, Calendar.getInstance().timeInMillis
             )
-            when {
-                TempData.quizType == QuizType.MultipleChoice -> {
+            when (TempData.quizType) {
+                QuizType.MultipleChoice -> {
                     val quiz: HashMap<String, MultipleChoiceQuiz> = HashMap()
                     quiz["quiz"] = MultipleChoiceQuiz(quizData, multipleChoiceQuestions)
 
@@ -306,11 +299,11 @@ class ViewEditQuestions : Fragment() {
                             //resets all temp data to their default values.
                             TempData.resetData()
                             FirebaseMessaging.getInstance()
-                                .subscribeToTopic(FirebaseAuth.getInstance().currentUser!!.displayName)
+                                .subscribeToTopic(FirebaseAuth.getInstance().currentUser!!.displayName!!)
                             Navigation.findNavController(view!!).navigate(R.id.mainFragment)
                         }
                 }
-                TempData.quizType == QuizType.TrueFalse -> {
+                QuizType.TrueFalse -> {
                     val quiz: HashMap<String, TrueFalseQuiz> = HashMap()
                     quiz["quiz"] = TrueFalseQuiz(quizData, trueFalseQuestions)
 

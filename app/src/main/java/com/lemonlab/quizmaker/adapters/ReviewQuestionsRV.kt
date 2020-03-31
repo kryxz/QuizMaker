@@ -17,7 +17,8 @@ class ReviewQuestionsRV(itemView: View) : RecyclerView.ViewHolder(itemView) {
     val secondChoice = itemView.findViewById(R.id.reviewSecondChoice) as AppCompatTextView
     val thirdChoice = itemView.findViewById(R.id.reviewThirdChoice) as AppCompatTextView
     val fourthChoice = itemView.findViewById(R.id.reviewFourthChoice) as AppCompatTextView
-    val reviewMultipleChoiceLayout = itemView.findViewById(R.id.reviewMultipleChoiceLayout) as LinearLayout
+    val reviewMultipleChoiceLayout =
+        itemView.findViewById(R.id.reviewMultipleChoiceLayout) as LinearLayout
     val reviewIsTrueCheckBox = itemView.findViewById(R.id.reviewIsTrueCheckBox) as AppCompatCheckBox
 
 
@@ -71,9 +72,13 @@ class QuestionsAdapter(
     }
 
     private fun setUpMultipleChoice(
-        questionsText: AppCompatTextView, firstChoice: AppCompatTextView,
-        secondChoice: AppCompatTextView, thirdChoice: AppCompatTextView, fourthChoice: AppCompatTextView,
-        position: Int, reviewIsTrueCheckBox: AppCompatCheckBox
+        questionsText: AppCompatTextView,
+        firstChoice: AppCompatTextView,
+        secondChoice: AppCompatTextView,
+        thirdChoice: AppCompatTextView,
+        fourthChoice: AppCompatTextView,
+        position: Int,
+        reviewIsTrueCheckBox: AppCompatCheckBox
     ) {
         reviewIsTrueCheckBox.visibility = View.GONE
         questionsText.text =
@@ -86,7 +91,9 @@ class QuestionsAdapter(
         secondChoice.text = multipleChoiceQuestions[(position + 1).toString()]!!.second
         thirdChoice.text = multipleChoiceQuestions[(position + 1).toString()]!!.third
         fourthChoice.text = multipleChoiceQuestions[(position + 1).toString()]!!.fourth
-        listOfTextAnswers[multipleChoiceQuestions[(position + 1).toString()]!!.correctAnswer].setTextColor(Color.GREEN)
+        listOfTextAnswers[multipleChoiceQuestions[(position + 1).toString()]!!.correctAnswer].setTextColor(
+            Color.GREEN
+        )
 
     }
 

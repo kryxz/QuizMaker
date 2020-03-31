@@ -1,14 +1,12 @@
 package com.lemonlab.quizmaker
 
 
-import android.content.Context
 import android.os.Bundle
 import android.text.method.PasswordTransformationMethod
 import android.util.Patterns
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.inputmethod.InputMethodManager
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavOptions
 import androidx.navigation.Navigation
@@ -37,11 +35,7 @@ class CreateAccount : Fragment() {
     }
 
     override fun onDestroyView() {
-        //Hides keypad
-        (activity!!.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager).hideSoftInputFromWindow(
-            view!!.windowToken,
-            0
-        )
+        activity!!.hideKeypad()
         super.onDestroyView()
     }
 
@@ -55,7 +49,8 @@ class CreateAccount : Fragment() {
             }
 
         //returns true if userEmail is an Email, and password is 6+ chars.
-        return (Patterns.EMAIL_ADDRESS.matcher(userEmail).matches() && allEnglish && userPassword.length >= 6)
+        return (Patterns.EMAIL_ADDRESS.matcher(userEmail)
+            .matches() && allEnglish && userPassword.length >= 6)
     }
 
     private fun createAccountAndSignIn(username: String, userEmail: String, userPassword: String) {
@@ -71,26 +66,29 @@ class CreateAccount : Fragment() {
                 UserProfileChangeRequest.Builder()
                     .setDisplayName(username).build()
             ).addOnSuccessListener {
-                fireBaseAuth.signInWithEmailAndPassword(userEmail, userPassword).addOnSuccessListener {
-                    creatingAccountBar.alpha = 0.7f
-                    val randomBios = resources.getStringArray(R.array.randomBios)
-                    newUser["user"] =
-                        User(
-                            username,
-                            userEmail,
-                            FirebaseAuth.getInstance().currentUser!!.uid,
-                            randomBios[Random.nextInt(0, randomBios.size)],
-                            0,
-                            Calendar.getInstance().timeInMillis
-                        )
+                fireBaseAuth.signInWithEmailAndPassword(userEmail, userPassword)
+                    .addOnSuccessListener {
+                        creatingAccountBar.alpha = 0.7f
+                        val randomBios = resources.getStringArray(R.array.randomBios)
+                        newUser["user"] =
+                            User(
+                                username,
+                                userEmail,
+                                FirebaseAuth.getInstance().currentUser!!.uid,
+                                randomBios[Random.nextInt(0, randomBios.size)],
+                                0,
+                                Calendar.getInstance().timeInMillis
+                            )
 
-                    fireStoreDatabase.collection("users").document(username).set(newUser).addOnSuccessListener {
-                        Navigation.findNavController(view!!).navigate(
-                            CreateAccountDirections.createToMain(),
-                            NavOptions.Builder().setPopUpTo(R.id.loginFragment, true).build()
-                        )
+                        fireStoreDatabase.collection("users").document(username).set(newUser)
+                            .addOnSuccessListener {
+                                Navigation.findNavController(view!!).navigate(
+                                    CreateAccountDirections.createToMain(),
+                                    NavOptions.Builder().setPopUpTo(R.id.loginFragment, true)
+                                        .build()
+                                )
+                            }
                     }
-                }
             }
 
 
@@ -145,16 +143,21 @@ class CreateAccount : Fragment() {
                             userEmail,
                             ignoreCase = true
                         )
-                        isUserNameOK = !doc.get("user.username", String::class.java).toString().equals(
-                            username,
-                            ignoreCase = false
-                        )
+                        isUserNameOK =
+                            !doc.get("user.username", String::class.java).toString().equals(
+                                username,
+                                ignoreCase = false
+                            )
                         if (!isEmailOK || !isUserNameOK)
                             break
 
                     }
                     when {
-                        isUserNameOK && isEmailOK -> createAccountAndSignIn(username, userEmail, userPassword)
+                        isUserNameOK && isEmailOK -> createAccountAndSignIn(
+                            username,
+                            userEmail,
+                            userPassword
+                        )
                         !isEmailOK -> emailExists()
                         else -> userNameExists()
                     }

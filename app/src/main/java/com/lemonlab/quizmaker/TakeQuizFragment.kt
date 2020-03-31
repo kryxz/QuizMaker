@@ -1,14 +1,12 @@
 package com.lemonlab.quizmaker
 
 
-import android.content.Context
 import android.os.Bundle
 import android.util.SparseBooleanArray
 import android.util.SparseIntArray
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.inputmethod.InputMethodManager
 import android.widget.RadioButton
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.util.forEach
@@ -31,16 +29,11 @@ class TakeQuizFragment : Fragment() {
     }
 
     override fun onDestroyView() {
-        //Hides keypad
-        (activity!!.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager).hideSoftInputFromWindow(
-            view!!.windowToken,
-            0
-        )
+        activity!!.hideKeypad()
         super.onDestroyView()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        //takeQuizAdBanner.loadAd(AdRequest.Builder().build())
         decideQuizType()
         super.onViewCreated(view, savedInstanceState)
     }
@@ -51,7 +44,10 @@ class TakeQuizFragment : Fragment() {
             .addOnSuccessListener { document ->
                 val quiz = document.get("quiz.quiz", Quiz::class.java)!!
                 if (quiz.quizType == QuizType.MultipleChoice && view != null)
-                    setUpMultipleChoiceQuiz(document.get("quiz", MultipleChoiceQuiz::class.java)!!, quizID)
+                    setUpMultipleChoiceQuiz(
+                        document.get("quiz", MultipleChoiceQuiz::class.java)!!,
+                        quizID
+                    )
                 else if (view != null)
                     setUpTrueFalse(document.get("quiz", TrueFalseQuiz::class.java)!!, quizID)
             }
@@ -97,7 +93,10 @@ class TakeQuizFragment : Fragment() {
                 Navigation.findNavController(view!!).navigate(
                     TakeQuizFragmentDirections.viewResult(
                         quizID,
-                        userQuiz.quiz.questionsCount, score, userQuiz.quiz.quizAuthor, userQuiz.quiz.quizTitle
+                        userQuiz.quiz.questionsCount,
+                        score,
+                        userQuiz.quiz.quizAuthor,
+                        userQuiz.quiz.quizTitle
                     ),
                     NavOptions.Builder().setPopUpTo(R.id.takeQuizFragment, true).build()
                 )
@@ -147,7 +146,8 @@ class TakeQuizFragment : Fragment() {
                 fourthAnswer.text = userQuiz.questions[(position).toString()]!!.fourth
                 questionNumberTextView.text =
                     getString(R.string.questionNumber, position, userQuiz.quiz.questionsCount)
-                (quizChoicesGroup.getChildAt(answersArray[position]) as RadioButton).isChecked = true
+                (quizChoicesGroup.getChildAt(answersArray[position]) as RadioButton).isChecked =
+                    true
             }
 
             fun nextQuestion() {
@@ -180,7 +180,10 @@ class TakeQuizFragment : Fragment() {
                 Navigation.findNavController(view!!).navigate(
                     TakeQuizFragmentDirections.viewResult(
                         quizID,
-                        userQuiz.quiz.questionsCount, score, userQuiz.quiz.quizAuthor, userQuiz.quiz.quizTitle
+                        userQuiz.quiz.questionsCount,
+                        score,
+                        userQuiz.quiz.quizAuthor,
+                        userQuiz.quiz.quizTitle
                     ),
                     NavOptions.Builder().setPopUpTo(R.id.takeQuizFragment, true).build()
                 )
@@ -195,7 +198,8 @@ class TakeQuizFragment : Fragment() {
             }
             quizChoicesGroup.setOnCheckedChangeListener { group, _ ->
                 if (group.indexOfChild(view!!.findViewById(group.checkedRadioButtonId)) != -1)
-                    answersArray[position] = group.indexOfChild(view!!.findViewById(group.checkedRadioButtonId))
+                    answersArray[position] =
+                        group.indexOfChild(view!!.findViewById(group.checkedRadioButtonId))
             }
             submitAnswers.setOnClickListener {
                 when {

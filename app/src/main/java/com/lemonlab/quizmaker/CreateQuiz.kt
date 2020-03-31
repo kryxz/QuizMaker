@@ -9,7 +9,6 @@ import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.inputmethod.InputMethodManager
 import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.appcompat.widget.AppCompatButton
@@ -125,7 +124,7 @@ class CreateQuiz : Fragment() {
             else
                 "notRequired"
         }
-        if(TempData.isPasswordProtected)
+        if (TempData.isPasswordProtected)
             quizPasswordEditText.visibility = View.VISIBLE
 
         writeQuestionsButton.setOnClickListener {
@@ -152,14 +151,10 @@ class CreateQuiz : Fragment() {
     }
 
     override fun onDestroyView() {
-        hideKeypad()
+        activity!!.hideKeypad()
         super.onDestroyView()
     }
 
-    private fun hideKeypad() =
-        (activity!!.getSystemService(Context.INPUT_METHOD_SERVICE)
-                as InputMethodManager)
-            .hideSoftInputFromWindow(view!!.windowToken, 0)
 
 }
 

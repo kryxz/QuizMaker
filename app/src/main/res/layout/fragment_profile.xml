@@ -1,156 +1,183 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
-                                              xmlns:app="http://schemas.android.com/apk/res-auto"
-                                              xmlns:tools="http://schemas.android.com/tools"
-                                              android:layout_width="match_parent"
-                                              android:layout_height="match_parent"
-                                              android:background="@drawable/main_gradient"
-                                              tools:context=".ProfileFragment">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="?attr/colorPrimary"
+    tools:context=".ProfileFragment">
 
-    <ProgressBar android:layout_width="match_parent" android:layout_height="match_parent"
-                 android:id="@+id/profileFragmentProgressBar"
-                 android:visibility="gone"
-                 android:alpha=".5"
-    />
-    <androidx.appcompat.widget.LinearLayoutCompat android:layout_width="match_parent"
-                                                  android:orientation="vertical"
-                                                  android:layout_height="match_parent">
+    <ProgressBar
+        android:id="@+id/profileFragmentProgressBar"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:alpha=".5"
+        android:visibility="gone" />
 
-        <androidx.constraintlayout.widget.ConstraintLayout android:layout_width="match_parent"
-                                                           android:layout_weight="1"
-                                                           android:layout_height="match_parent">
-            <androidx.appcompat.widget.AppCompatTextView android:layout_width="wrap_content"
-                                                         android:text="@string/profileLabel"
-                                                         android:layout_height="wrap_content"
-                                                         app:layout_constraintStart_toStartOf="parent"
-                                                         android:layout_marginStart="8dp"
-                                                         android:textSize="32sp"
-                                                         app:layout_goneMarginTop="32dp"
-                                                         app:layout_constraintEnd_toEndOf="parent"
-                                                         android:layout_marginEnd="8dp"
-                                                         android:layout_marginTop="32dp"
-                                                         app:layout_constraintTop_toTopOf="parent"
-                                                         android:id="@+id/userNameTextView"/>
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-            <androidx.appcompat.widget.AppCompatTextView android:layout_width="wrap_content"
-                                                         android:textSize="28sp"
-                                                         android:text="@string/profileLabel"
-                                                         android:layout_height="wrap_content"
-                                                         app:layout_constraintStart_toStartOf="parent"
-                                                         android:layout_marginStart="8dp"
-                                                         app:layout_constraintEnd_toEndOf="parent"
-                                                         android:layout_marginEnd="8dp"
-                                                         android:layout_marginTop="32dp"
-                                                         android:drawableEnd="@drawable/ic_edit"
-                                                         app:layout_constraintTop_toBottomOf="@+id/userNameTextView"
-                                                         android:id="@+id/userBioTextView"/>
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
 
-            <androidx.appcompat.widget.LinearLayoutCompat android:layout_width="match_parent"
-                                                          android:layout_height="wrap_content"
-                                                          android:layout_marginTop="64dp"
-                                                          app:layout_constraintTop_toBottomOf="@+id/userBioTextView"
-                                                          app:layout_constraintStart_toStartOf="parent"
-                                                          android:layout_marginStart="8dp"
-                                                          app:layout_constraintEnd_toEndOf="parent"
-                                                          android:layout_marginEnd="8dp"
-                                                          android:id="@+id/linearLayoutCompat2">
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/userNameTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="32dp"
+                android:layout_marginEnd="8dp"
+                android:text="@string/profileLabel"
+                android:textSize="32sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_goneMarginTop="32dp" />
 
-                <androidx.appcompat.widget.AppCompatTextView android:layout_width="match_parent"
-                                                             android:text="@string/joinDate"
-                                                             android:layout_weight="1"
-                                                             android:gravity="center"
-                                                             android:layout_height="wrap_content"/>
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/userBioTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="32dp"
+                android:layout_marginEnd="8dp"
+                android:drawableEnd="@drawable/ic_edit"
+                android:text="@string/profileLabel"
+                android:textSize="28sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/userNameTextView" />
 
-                <androidx.appcompat.widget.AppCompatTextView android:layout_width="match_parent"
-                                                             android:layout_weight="1"
-                                                             android:gravity="center"
-                                                             android:text="@string/quizzesTaken"
-                                                             android:layout_height="wrap_content"/>
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:id="@+id/linearLayoutCompat2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="64dp"
+                android:layout_marginEnd="8dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/userBioTextView">
 
-                <androidx.appcompat.widget.AppCompatTextView android:layout_width="match_parent"
-                                                             android:layout_weight="1"
-                                                             android:gravity="center"
-                                                             android:text="@string/currentPoints"
-                                                             android:layout_height="wrap_content"/>
-
-            </androidx.appcompat.widget.LinearLayoutCompat>
-
-            <androidx.appcompat.widget.LinearLayoutCompat android:layout_width="match_parent"
-                                                          android:layout_height="wrap_content"
-                                                          app:layout_constraintStart_toStartOf="parent"
-                                                          android:layout_marginStart="8dp"
-                                                          app:layout_constraintEnd_toEndOf="parent"
-                                                          android:layout_marginEnd="8dp"
-                                                          app:layout_constraintHorizontal_bias="0.0"
-                                                          app:layout_constraintTop_toBottomOf="@+id/linearLayoutCompat2"
-                                                          android:id="@+id/linearLayoutCompat3">
-
-                <androidx.appcompat.widget.AppCompatTextView android:layout_width="match_parent"
-                                                             android:text="@string/joinDate"
-                                                             android:layout_weight="1"
-                                                             android:gravity="center"
-                                                             android:id="@+id/joinDateTextView"
-                                                             android:layout_height="wrap_content"/>
-
-                <androidx.appcompat.widget.AppCompatTextView android:layout_width="match_parent"
-                                                             android:layout_weight="1"
-                                                             android:gravity="center"
-                                                             android:id="@+id/quizzesTakenTextView"
-                                                             android:text="@string/placeHolderZero"
-                                                             android:layout_height="wrap_content"/>
-
-                <androidx.appcompat.widget.AppCompatTextView android:layout_width="match_parent"
-                                                             android:layout_weight="1"
-                                                             android:gravity="center"
-                                                             android:id="@+id/currentPointsTextView"
-                                                             android:text="@string/currentPoints"
-                                                             android:layout_height="wrap_content"/>
-
-            </androidx.appcompat.widget.LinearLayoutCompat>
-            <androidx.appcompat.widget.AppCompatTextView android:layout_width="match_parent"
-                                                         android:layout_weight="1"
-                                                         android:gravity="center"
-                                                         android:text="@string/checkQuizzes"
-                                                         android:layout_height="wrap_content"
-                                                         app:layout_constraintStart_toStartOf="parent"
-                                                         android:layout_marginStart="8dp"
-                                                         app:layout_constraintEnd_toEndOf="parent"
-                                                         android:layout_marginEnd="8dp"
-                                                         app:layout_constraintTop_toBottomOf="@+id/linearLayoutCompat3"
-                                                         android:layout_marginTop="16dp"
-                                                         android:id="@+id/tapAQuizTextView"/>
-            <View
+                <androidx.appcompat.widget.AppCompatTextView
                     android:layout_width="match_parent"
-                    android:layout_height="2dp"
-                    android:background="?attr/colorPrimaryDark"
-                    app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="2dp"
-                    app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="2dp"
-                    app:layout_constraintTop_toBottomOf="@+id/tapAQuizTextView" android:layout_marginTop="16dp"
-                    android:id="@+id/view"/>
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="@string/joinDate" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="@string/quizzesTaken" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="@string/currentPoints" />
+
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:id="@+id/linearLayoutCompat3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/linearLayoutCompat2">
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/joinDateTextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="@string/joinDate" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/quizzesTakenTextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="@string/placeHolderZero" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/currentPointsTextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="@string/currentPoints" />
+
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tapAQuizTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="8dp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="@string/checkQuizzes"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/linearLayoutCompat3" />
+
+            <View
+                android:id="@+id/view"
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:layout_marginStart="2dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="2dp"
+                android:background="?attr/colorPrimaryDark"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tapAQuizTextView" />
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>
-        <androidx.appcompat.widget.LinearLayoutCompat android:layout_width="match_parent"
-                                                      android:layout_weight="1"
-                                                      android:layout_height="match_parent">
 
-            <ProgressBar android:layout_width="match_parent" android:layout_height="match_parent"
-                         android:id="@+id/profileLogProgressBar"
-                         android:visibility="gone"
-                         android:alpha=".3"
-            />
-            <androidx.appcompat.widget.AppCompatTextView android:layout_width="match_parent"
-                                                         android:gravity="center"
-                                                         android:textSize="32sp"
-                                                         android:visibility="gone"
-                                                         android:id="@+id/logEmptyTextView"
-                                                         android:text="@string/emptyLog"
-                                                         android:layout_height="match_parent"/>
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
 
-            <androidx.recyclerview.widget.RecyclerView android:layout_width="match_parent"
-                                                       android:id="@+id/userLogRecyclerView"
-                                                       android:background="?attr/colorPrimary"
-                                                       android:layout_height="match_parent">
+            <ProgressBar
+                android:id="@+id/profileLogProgressBar"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:alpha=".3"
+                android:visibility="gone" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/logEmptyTextView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:text="@string/emptyLog"
+                android:textSize="32sp"
+                android:visibility="gone" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/userLogRecyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="?attr/colorPrimary">
             </androidx.recyclerview.widget.RecyclerView>
 
         </androidx.appcompat.widget.LinearLayoutCompat>

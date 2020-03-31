@@ -165,7 +165,10 @@ class TextViewAdapter(
             if (feedbackText.text!!.isEmpty())
                 return@setOnClickListener
             val feedback = HashMap<String, Pair<String, String>>()
-            feedback["feedback"] = Pair(feedbackText.text.toString().removedWhitespace(), FirebaseAuth.getInstance().currentUser!!.displayName!!)
+            feedback["feedback"] = Pair(
+                feedbackText.text.toString().removedWhitespace(),
+                FirebaseAuth.getInstance().currentUser!!.displayName!!
+            )
             fireStore.add(feedback).addOnSuccessListener {
                 showToast(activity, activity.getString(R.string.thanks))
             }
@@ -222,9 +225,12 @@ class TextViewAdapter(
                 context.showYesNoDialog(
                     {
                         applyChanges()
-                    }, {
+                    },
+                    {
                         invertMode(it.context, !isLightModeOn)
-                    }, context.getString(R.string.changeTheme), context.getString(R.string.confirmChangeTheme)
+                    },
+                    context.getString(R.string.changeTheme),
+                    context.getString(R.string.confirmChangeTheme)
                 )
             }
         }
@@ -246,7 +252,11 @@ class TextViewAdapter(
                 }
                 with(dialogView.findViewById<RecyclerView>(R.id.faqRecyclerView)) {
                     layoutManager = LinearLayoutManager(activity)
-                    adapter = TextViewAdapter(activity, null, resources.getStringArray(R.array.faqs).toList())
+                    adapter = TextViewAdapter(
+                        activity,
+                        null,
+                        resources.getStringArray(R.array.faqs).toList()
+                    )
                 }
 
                 dialogView.findViewById<AppCompatButton>(R.id.faqOKButton).setOnClickListener {
@@ -267,14 +277,19 @@ class TextViewAdapter(
             setCompoundDrawablesWithIntrinsicBounds(listOfSettings!![position].icon, 0, 0, 0)
             text = listOfSettings[position].text
             setOnClickListener {
-                context.showYesNoDialog({
-                    FirebaseMessaging.getInstance()
-                        .unsubscribeFromTopic(FirebaseAuth.getInstance().currentUser!!.displayName)
-                    FirebaseAuth.getInstance().signOut()
-                    TempData.deleteCached()
-                    TempData.resetData()
-                    Navigation.findNavController(it).navigate(R.id.loginFragment)
-                }, {}, context.getString(R.string.logout), context.getString(R.string.confirmLogout))
+                context.showYesNoDialog(
+                    {
+                        FirebaseMessaging.getInstance()
+                            .unsubscribeFromTopic(FirebaseAuth.getInstance().currentUser!!.displayName!!)
+                        FirebaseAuth.getInstance().signOut()
+                        TempData.deleteCached()
+                        TempData.resetData()
+                        Navigation.findNavController(it).navigate(R.id.loginFragment)
+                    },
+                    {},
+                    context.getString(R.string.logout),
+                    context.getString(R.string.confirmLogout)
+                )
 
 
             }

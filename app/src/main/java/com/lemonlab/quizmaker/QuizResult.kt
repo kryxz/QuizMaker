@@ -27,7 +27,6 @@ class QuizResult : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        //resultAdBanner.loadAd(AdRequest.Builder().build())
         loadData()
         super.onViewCreated(view, savedInstanceState)
     }
@@ -35,7 +34,8 @@ class QuizResult : Fragment() {
     private fun loadData() {
         val args = QuizResultArgs.fromBundle(arguments!!)
         val avg = (args.score / args.totalQuestions * 100).toString() + "%"
-        quizScoreText.text = getString(R.string.quizScore, args.quizTitle, args.totalQuestions, args.score, avg)
+        quizScoreText.text =
+            getString(R.string.quizScore, args.quizTitle, args.totalQuestions, args.score, avg)
         shouldRate(args.quizID)
         if (canMessageAuthor())
             messageQuizAuthorButton.setOnClickListener {
@@ -63,7 +63,8 @@ class QuizResult : Fragment() {
             val msg = HashMap<String, Message>(1)
             msg["message"] = Message(
                 FirebaseAuth.getInstance().currentUser?.displayName!!,
-                dialogView.findViewById<TextInputEditText>(R.id.messageText).text.toString().removedWhitespace(),
+                dialogView.findViewById<TextInputEditText>(R.id.messageText).text.toString()
+                    .removedWhitespace(),
                 Calendar.getInstance().timeInMillis,
                 ""
             )
@@ -71,7 +72,11 @@ class QuizResult : Fragment() {
                 .document(quizAuthor)
                 .collection("messages").add(msg).addOnSuccessListener {
                     it.update("message.id", it.id)
-                    NotificationSender().sendNotification(context!!, quizAuthor, NotificationType.MESSAGE)
+                    NotificationSender().sendNotification(
+                        context!!,
+                        quizAuthor,
+                        NotificationType.MESSAGE
+                    )
                     showToast(context!!, getString(R.string.messageSent))
                 }
             dialogBuilder.dismiss()
@@ -105,7 +110,14 @@ class QuizResult : Fragment() {
                 else
                     QuizLog(mutableListOf())
             //Updates points for author and user, and sends a notification to the quiz author.
-            quizzesLog.addQuiz(args.quizID, userName, args.score, args.quizAuthor, args.totalQuestions, context!!)
+            quizzesLog.addQuiz(
+                args.quizID,
+                userName,
+                args.score,
+                args.quizAuthor,
+                args.totalQuestions,
+                context!!
+            )
             log["log"] = quizzesLog
             logRef.set(log)
         }

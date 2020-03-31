@@ -1,14 +1,12 @@
 package com.lemonlab.quizmaker
 
 
-import android.content.Context
 import android.os.Bundle
 import android.text.method.PasswordTransformationMethod
 import android.util.Patterns
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.inputmethod.InputMethodManager
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavOptions
 import androidx.navigation.Navigation
@@ -28,11 +26,7 @@ class LoginFragment : Fragment() {
     }
 
     override fun onDestroyView() {
-        //Hides keypad
-        (activity!!.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager).hideSoftInputFromWindow(
-            view!!.windowToken,
-            0
-        )
+        activity!!.hideKeypad()
         super.onDestroyView()
     }
 
@@ -48,6 +42,7 @@ class LoginFragment : Fragment() {
             Patterns.EMAIL_ADDRESS.matcher(userEmail).matches()
         else
             true
+
         val passwordOK = userPassword.length >= 6
         if (!emailOK)
             loginEmailEditText.error = getString(R.string.invalidEmail)
@@ -98,16 +93,17 @@ class LoginFragment : Fragment() {
         }
 
         fun userNameLogin(userLogin: String, userPassword: String) {
-            FirebaseFirestore.getInstance().collection("users").document(userLogin).get().addOnSuccessListener {
-                if (it.get("user.email", String::class.java) != null) {
-                    val email = it.get("user.email", String::class.java)!!
-                    emailLogin(email, userPassword)
-                } else {
-                    loginButton.isEnabled = true
-                    loggingInBar.visibility = View.GONE
-                    showToast(context!!, getString(R.string.noUser))
+            FirebaseFirestore.getInstance().collection("users").document(userLogin).get()
+                .addOnSuccessListener {
+                    if (it.get("user.email", String::class.java) != null) {
+                        val email = it.get("user.email", String::class.java)!!
+                        emailLogin(email, userPassword)
+                    } else {
+                        loginButton.isEnabled = true
+                        loggingInBar.visibility = View.GONE
+                        showToast(context!!, getString(R.string.noUser))
+                    }
                 }
-            }
         }
         loginButton.setOnClickListener {
             val userLogin = loginEmailEditText.text.toString()

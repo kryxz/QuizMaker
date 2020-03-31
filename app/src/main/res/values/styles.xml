@@ -1,4 +1,4 @@
-<resources xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools">
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
 
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
@@ -14,7 +14,7 @@
         <item name="android:textSize">19sp</item>
         <item name="textColorHint">@color/textColorSecondary</item>
         <item name="dividerColor">@color/dividerColor</item>
-        <item name="iconColor">@color/colorSilver</item>
+        <item name="iconColor">@color/colorGold</item>
         <item name="colorGreen">@color/baseColorGreen</item>
         <item name="selector">@drawable/button_selector</item>
     </style>
@@ -42,7 +42,7 @@
     </style>
 
     <style name="RatingBar" parent="ThemeOverlay.AppCompat">
-        <item name="colorControlNormal">?attr/colorAccent</item>
+        <item name="colorControlNormal">?attr/dividerColor</item>
         <item name="colorControlActivated">?attr/iconColor</item>
     </style>
 

@@ -24,7 +24,8 @@ import kotlin.collections.HashMap
 class MessagesVH(itemView: View) : RecyclerView.ViewHolder(itemView) {
     val senderTextView = itemView.findViewById(R.id.senderTextView) as AppCompatTextView
     val sendDateTextView = itemView.findViewById(R.id.sendDateTextView) as AppCompatTextView
-    val messagePreviewTextView = itemView.findViewById(R.id.messagePreviewTextView) as AppCompatTextView
+    val messagePreviewTextView =
+        itemView.findViewById(R.id.messagePreviewTextView) as AppCompatTextView
     val replyMessageButton = itemView.findViewById(R.id.replyMessageButton) as AppCompatImageView
 
 }
@@ -68,15 +69,20 @@ class MessagesAdapter(
                 .document(messageAuthor)
                 .collection("messages").add(msg).addOnSuccessListener {
                     it.update("message.id", it.id)
-                    NotificationSender().sendNotification(context, messageAuthor, NotificationType.MESSAGE)
+                    NotificationSender().sendNotification(
+                        context,
+                        messageAuthor,
+                        NotificationType.MESSAGE
+                    )
                     showToast(context, context.getString(R.string.messageSent))
                 }
             dialogBuilder.dismiss()
 
         }
-        dialogView.findViewById<AppCompatButton>(R.id.cancelSendButtonReplyDialog).setOnClickListener {
-            dialogBuilder.dismiss()
-        }
+        dialogView.findViewById<AppCompatButton>(R.id.cancelSendButtonReplyDialog)
+            .setOnClickListener {
+                dialogBuilder.dismiss()
+            }
 
 
         with(dialogBuilder) {
@@ -89,7 +95,9 @@ class MessagesAdapter(
     private fun getDateFromMilliSeconds(milliSeconds: Long): String {
         val calendar = Calendar.getInstance()
         calendar.timeInMillis = milliSeconds
-        return "${calendar.get(Calendar.DATE)}/${calendar.get(Calendar.MONTH) + 1}  ${calendar.get(Calendar.HOUR_OF_DAY)}:${calendar.get(
+        return "${calendar.get(Calendar.DATE)}/${calendar.get(Calendar.MONTH) + 1}  ${calendar.get(
+            Calendar.HOUR_OF_DAY
+        )}:${calendar.get(
             Calendar.MINUTE
         )}"
     }
@@ -140,7 +148,8 @@ class MessagesAdapter(
     }
 }
 
-abstract class SwipeToDeleteCallback(context: Context) : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
+abstract class SwipeToDeleteCallback(context: Context) :
+    ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
 
     private val deleteIcon = ContextCompat.getDrawable(context, R.drawable.ic_delete)
     private val intrinsicWidth = deleteIcon!!.intrinsicWidth
@@ -149,7 +158,10 @@ abstract class SwipeToDeleteCallback(context: Context) : ItemTouchHelper.SimpleC
     private val backgroundColor = Color.RED
     private val clearPaint = Paint().apply { xfermode = PorterDuffXfermode(PorterDuff.Mode.CLEAR) }
 
-    override fun getMovementFlags(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder): Int {
+    override fun getMovementFlags(
+        recyclerView: RecyclerView,
+        viewHolder: RecyclerView.ViewHolder
+    ): Int {
         if (viewHolder.adapterPosition == 10) return 0
         return super.getMovementFlags(recyclerView, viewHolder)
     }
@@ -189,7 +201,12 @@ abstract class SwipeToDeleteCallback(context: Context) : ItemTouchHelper.SimpleC
 
         // Draw the red delete background
         background.color = backgroundColor
-        background.setBounds(itemView.right + dX.toInt(), itemView.top, itemView.right, itemView.bottom)
+        background.setBounds(
+            itemView.right + dX.toInt(),
+            itemView.top,
+            itemView.right,
+            itemView.bottom
+        )
         background.draw(c)
 
         // Calculate position of delete icon

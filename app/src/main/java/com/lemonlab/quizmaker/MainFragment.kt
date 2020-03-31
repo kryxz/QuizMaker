@@ -48,7 +48,8 @@ class MainFragment : Fragment() {
 
     private fun getDataFromIntent() {
         if (activity!!.intent != null && activity!!.intent.extras != null) {
-            val notificationType = (activity!!.intent.extras!!.get("notificationType") as NotificationType)
+            val notificationType =
+                (activity!!.intent.extras!!.get("notificationType") as NotificationType)
             if (notificationType == NotificationType.MESSAGE) {
                 Navigation.findNavController(view!!).navigate(R.id.messagesFragment)
 
@@ -86,32 +87,33 @@ class MainFragment : Fragment() {
     private fun setUpAdapter() {
         val listOfQuizzes = mutableListOf<Quiz>()
         //This is how we retrieve data from the database
-        FirebaseFirestore.getInstance().collection("Quizzes").get().addOnSuccessListener { documents ->
+        FirebaseFirestore.getInstance().collection("Quizzes").get()
+            .addOnSuccessListener { documents ->
 
 
-            for (item in documents) {
-                listOfQuizzes.add(item.get("quiz.quiz", Quiz::class.java)!!)
-                val source = if (item.metadata.isFromCache)
-                    "local cache"
-                else
-                    "server"
-                Log.d("Data", "Data fetched from $source")
+                for (item in documents) {
+                    listOfQuizzes.add(item.get("quiz.quiz", Quiz::class.java)!!)
+                    val source = if (item.metadata.isFromCache)
+                        "local cache"
+                    else
+                        "server"
+                    Log.d("Data", "Data fetched from $source")
 
-            }
-            //to get questions, use item.get("quiz", MultipleChoiceQuiz::class.java)!!.questions
-            with(listOfQuizzes) {
-                sortWith(compareBy { it.milliSeconds })
-                reverse()
-            }
-            TempData.currentQuizzes = listOfQuizzes
-
-            if (view != null)
-                with(QuizzesRecyclerView) {
-                    layoutManager = LinearLayoutManager(context!!)
-                    adapter = QuizAdapter(context!!, listOfQuizzes, ViewType.TakeQuiz)
-                    MainFragmentProgressBar.visibility = View.GONE
                 }
-        }
+                //to get questions, use item.get("quiz", MultipleChoiceQuiz::class.java)!!.questions
+                with(listOfQuizzes) {
+                    sortWith(compareBy { it.milliSeconds })
+                    reverse()
+                }
+                TempData.currentQuizzes = listOfQuizzes
+
+                if (view != null)
+                    with(QuizzesRecyclerView) {
+                        layoutManager = LinearLayoutManager(context!!)
+                        adapter = QuizAdapter(context!!, listOfQuizzes, ViewType.TakeQuiz)
+                        MainFragmentProgressBar.visibility = View.GONE
+                    }
+            }
 
     }
 

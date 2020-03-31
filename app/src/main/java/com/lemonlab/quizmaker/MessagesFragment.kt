@@ -1,13 +1,11 @@
 package com.lemonlab.quizmaker
 
 
-import android.content.Context
 import android.os.Bundle
 import android.os.Handler
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.inputmethod.InputMethodManager
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -62,7 +60,10 @@ class MessagesFragment : Fragment() {
                         layoutManager = LinearLayoutManager(context!!)
                         adapter = MessagesAdapter(context!!, listOfMessages)
                         val swipeHandler = object : SwipeToDeleteCallback(context) {
-                            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                            override fun onSwiped(
+                                viewHolder: RecyclerView.ViewHolder,
+                                direction: Int
+                            ) {
                                 val adapter = MessagesRecyclerView.adapter as MessagesAdapter
                                 adapter.deleteMessage(viewHolder.adapterPosition)
                                 Handler().postDelayed(::getMessages, 1000)
@@ -86,11 +87,7 @@ class MessagesFragment : Fragment() {
             adapter = null
             onFlingListener = null
         }
-        //Hides keypad
-        (activity!!.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager).hideSoftInputFromWindow(
-            view!!.windowToken,
-            0
-        )
+        activity!!.hideKeypad()
         super.onDestroyView()
     }
 }

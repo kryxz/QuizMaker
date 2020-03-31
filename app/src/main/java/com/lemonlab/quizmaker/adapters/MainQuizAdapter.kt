@@ -114,7 +114,7 @@ class QuizAdapter(
                 Navigation.findNavController(it).navigate(action)
             }
         fun showReportDialog() {
-            val dialogBuilder = android.app.AlertDialog.Builder(context).create()
+            val dialogBuilder = AlertDialog.Builder(context).create()
             val dialogView = with(LayoutInflater.from(context)) {
                 inflate(
                     R.layout.yes_no_dialog,

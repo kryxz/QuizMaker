@@ -32,7 +32,9 @@ data class User(
     fun joinTimeAsAString(): String {
         val calendar = Calendar.getInstance()
         calendar.timeInMillis = joinDate
-        return "${calendar.get(Calendar.DATE)}/${calendar.get(Calendar.MONTH) + 1}/${calendar.get(Calendar.YEAR).toString().substring(
+        return "${calendar.get(Calendar.DATE)}/${calendar.get(Calendar.MONTH) + 1}/${calendar.get(
+            Calendar.YEAR
+        ).toString().substring(
             2,
             4
         )}"
@@ -133,7 +135,11 @@ data class QuizLog(
                     val authorPoints = doc.get("user.points", Int::class.java)!! + total
                     usersRef.document(quizAuthor).update("user.points", authorPoints)
                     if (userName != quizAuthor)
-                        NotificationSender().sendNotification(context, quizAuthor, NotificationType.QUIZ)
+                        NotificationSender().sendNotification(
+                            context,
+                            quizAuthor,
+                            NotificationType.QUIZ
+                        )
                 }
             }
 
@@ -172,7 +178,7 @@ data class Message(
     val sender: String,
     val message: String,
     val milliSeconds: Long,
-    val id:String
+    val id: String
 ) {
     constructor() : this("", "", 0, "")
 }
