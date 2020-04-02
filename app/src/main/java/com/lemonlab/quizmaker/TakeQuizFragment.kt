@@ -2,19 +2,17 @@ package com.lemonlab.quizmaker
 
 
 import android.os.Bundle
-import android.util.SparseBooleanArray
-import android.util.SparseIntArray
+import android.util.SparseArray
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.RadioButton
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.util.forEach
 import androidx.core.util.set
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.navigation.NavOptions
-import androidx.navigation.Navigation
-import com.google.firebase.firestore.FirebaseFirestore
+import androidx.navigation.findNavController
 import kotlinx.android.synthetic.main.fragment_take_quiz.*
 
 
@@ -34,189 +32,158 @@ class TakeQuizFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        decideQuizType()
         super.onViewCreated(view, savedInstanceState)
+        init()
     }
 
-    private fun decideQuizType() {
-        val quizID = TakeQuizFragmentArgs.fromBundle(arguments!!).quizID
-        FirebaseFirestore.getInstance().collection("Quizzes").document(quizID).get()
-            .addOnSuccessListener { document ->
-                val quiz = document.get("quiz.quiz", Quiz::class.java)!!
-                if (quiz.quizType == QuizType.MultipleChoice && view != null)
-                    setUpMultipleChoiceQuiz(
-                        document.get("quiz", MultipleChoiceQuiz::class.java)!!,
-                        quizID
-                    )
-                else if (view != null)
-                    setUpTrueFalse(document.get("quiz", TrueFalseQuiz::class.java)!!, quizID)
-            }
+    private fun init() {
+        val args = TakeQuizFragmentArgs.fromBundle(arguments!!)
+        val quizID = args.quizID
+
+        val isClass = args.isClass
+
+        val vm = (activity as MainActivity).vm
+
+        vm.getQuiz(quizID, isClass).observe(viewLifecycleOwner, Observer {
+            if (it != null)
+                setUp(it, isClass)
+        })
+
+
     }
 
-    private fun setUpTrueFalse(userQuiz: TrueFalseQuiz, quizID: String) {
+    private fun setUp(quiz: Quizzer, isClass: Boolean) {
         var position = 1
         questionNumberTextView.text = position.toString()
-        quizChoicesGroup.visibility = View.GONE
-        fun beginQuiz(userQuiz: TrueFalseQuiz) {
-            val answersArray = SparseBooleanArray(userQuiz.quiz!!.questionsCount)
-            fun updateView() {
-                quizQuestionText.text = userQuiz.questions!![(position).toString()]!!.question
-                questionNumberTextView.text =
-                    getString(R.string.questionNumber, position, userQuiz.quiz.questionsCount)
-                answerCheckBox.isChecked = answersArray[position]
-            }
 
-            fun nextQuestion() {
-                if (position == userQuiz.quiz.questionsCount)
-                    return
-                answersArray[position] = answerCheckBox.isChecked
-                position = position.inc()
-                updateView()
-            }
-
-            fun previousQuestion() {
-                if (position == 1)
-                    return
-                answersArray[position] = answerCheckBox.isChecked
-                position = position.dec()
-                updateView()
-
-            }
-
-            fun calculateScore() {
-                var score = 0
-                answersArray[position] = answerCheckBox.isChecked
-                answersArray.forEach { key, value ->
-                    if (userQuiz.questions!![key.toString()]!!.answer == value)
-                        score = score.inc()
-                }
-                Navigation.findNavController(view!!).navigate(
-                    TakeQuizFragmentDirections.viewResult(
-                        quizID,
-                        userQuiz.quiz.questionsCount,
-                        score,
-                        userQuiz.quiz.quizAuthor,
-                        userQuiz.quiz.quizTitle
-                    ),
-                    NavOptions.Builder().setPopUpTo(R.id.takeQuizFragment, true).build()
-                )
-
-            }
-            listOf(quizNextQuestionButton, quizPreviousQuestionButton).forEach { button ->
-                button.setOnClickListener {
-                    when (it) {
-                        quizNextQuestionButton -> nextQuestion()
-                        quizPreviousQuestionButton -> previousQuestion()
-                    }
-                }
-            }
-            answerCheckBox.setOnCheckedChangeListener { _, isChecked ->
-                answersArray[position] = isChecked
-
-            }
-            submitAnswers.setOnClickListener {
-                when {
-                    answersArray.size() == userQuiz.quiz.questionsCount ||
-                            position == userQuiz.quiz.questionsCount -> calculateScore()
-                    else -> showToast(context!!, getString(R.string.answerQuestions))
-                }
-            }
-            answersArray.put(position, answerCheckBox.isChecked)
-            updateView()
+        if (quiz is MultipleChoiceQuiz) {
+            quizChoicesGroup.visibility = View.VISIBLE
+            answerCheckBox.visibility = View.GONE
+        } else {
+            quizChoicesGroup.visibility = View.GONE
+            answerCheckBox.visibility = View.VISIBLE
         }
-        (activity as AppCompatActivity).supportActionBar!!.title = userQuiz.quiz?.quizTitle
-        beginQuiz(userQuiz)
-        takeQuizProgressBar.visibility = View.GONE
-        questionNumberTextView.text =
-            getString(R.string.questionNumber, position, userQuiz.quiz!!.questionsCount)
+        val answers = SparseArray<Any>()
+        fun updateTextMulti() {
+            quizQuestionText.text = (quiz as MultipleChoiceQuiz).getQuestion(position)
+            firstAnswer.text = quiz.getChoiceOne(position)
+            secondAnswer.text = quiz.getChoiceTwo(position)
+            thirdAnswer.text = quiz.getChoiceThree(position)
+            fourthAnswer.text = quiz.getChoiceFour(position)
 
-    }
-
-    private fun setUpMultipleChoiceQuiz(userQuiz: MultipleChoiceQuiz, quizID: String) {
-        var position = 1
-        questionNumberTextView.text = position.toString()
-        answerCheckBox.visibility = View.GONE
-        fun beginQuiz(userQuiz: MultipleChoiceQuiz) {
-            val answersArray = SparseIntArray(userQuiz.quiz!!.questionsCount)
-            fun updateTexts() {
-                quizQuestionText.text = userQuiz.questions!![(position).toString()]!!.question
-                firstAnswer.text = userQuiz.questions[(position).toString()]!!.first
-                secondAnswer.text = userQuiz.questions[(position).toString()]!!.second
-                thirdAnswer.text = userQuiz.questions[(position).toString()]!!.third
-                fourthAnswer.text = userQuiz.questions[(position).toString()]!!.fourth
-                questionNumberTextView.text =
-                    getString(R.string.questionNumber, position, userQuiz.quiz.questionsCount)
-                (quizChoicesGroup.getChildAt(answersArray[position]) as RadioButton).isChecked =
-                    true
+            if (answers[position] != null) {
+                val choice = quizChoicesGroup.getChildAt(
+                    answers[position].toString().toInt()
+                ) as RadioButton
+                choice.isChecked = true
             }
 
-            fun nextQuestion() {
-                if (position == userQuiz.quiz.questionsCount)
-                    return
-                answersArray[position] =
+        }
+
+
+        fun updateTextTF() {
+            quizQuestionText.text = quiz.getQuestion(position)
+            if (answers[position] != null)
+                answerCheckBox.isChecked = answers[position] as Boolean
+        }
+
+        fun next() {
+            if (position == quiz.getSize()) return
+
+            if (quiz is MultipleChoiceQuiz) {
+                answers[position] =
+                    quizChoicesGroup.indexOfChild(
+                        view!!.findViewById(quizChoicesGroup.checkedRadioButtonId)
+                    )
+                position++
+                updateTextMulti()
+            } else {
+                answers[position] = answerCheckBox.isChecked
+                position++
+                updateTextTF()
+            }
+            questionNumberTextView.text =
+                getString(R.string.questionNumber, position, quiz.getSize())
+
+        }
+
+        fun prev() {
+            if (position == 1) return
+            if (quiz is MultipleChoiceQuiz) {
+                answers[position] =
                     quizChoicesGroup.indexOfChild(view!!.findViewById(quizChoicesGroup.checkedRadioButtonId))
-                position = position.inc()
-                updateTexts()
+                position--
+                updateTextMulti()
 
+            } else {
+                answers[position] = answerCheckBox.isChecked
+                position--
+                updateTextTF()
             }
+            questionNumberTextView.text =
+                getString(R.string.questionNumber, position, quiz.getSize())
+        }
 
-            fun previousQuestion() {
-                if (position == 1)
-                    return
-                answersArray[position] =
-                    quizChoicesGroup.indexOfChild(view!!.findViewById(quizChoicesGroup.checkedRadioButtonId))
-                position = position.dec()
-                updateTexts()
-            }
+        fun finish() {
+            val action = TakeQuizFragmentDirections.viewResult(
+                quiz.getID(),
+                quiz.getSize(),
+                quiz.score(answers),
+                quiz.getAuthor(),
+                quiz.getTitle()
+            )
+            action.isClass = isClass
+            val navOptions = NavOptions.Builder().setPopUpTo(
+                R.id.takeQuizFragment,
+                true
+            ).build()
+            view!!.findNavController().navigate(action, navOptions)
+        }
 
-            fun calculateScore() {
-                var score = 0
-                answersArray[position] =
-                    quizChoicesGroup.indexOfChild(view!!.findViewById(quizChoicesGroup.checkedRadioButtonId))
-                answersArray.forEach { key, value ->
-                    if (userQuiz.questions!![key.toString()]!!.correctAnswer == value)
-                        score = score.inc()
-                }
-                Navigation.findNavController(view!!).navigate(
-                    TakeQuizFragmentDirections.viewResult(
-                        quizID,
-                        userQuiz.quiz.questionsCount,
-                        score,
-                        userQuiz.quiz.quizAuthor,
-                        userQuiz.quiz.quizTitle
-                    ),
-                    NavOptions.Builder().setPopUpTo(R.id.takeQuizFragment, true).build()
-                )
-            }
-            listOf(quizNextQuestionButton, quizPreviousQuestionButton).forEach { button ->
-                button.setOnClickListener {
-                    when (it) {
-                        quizNextQuestionButton -> nextQuestion()
-                        quizPreviousQuestionButton -> previousQuestion()
-                    }
-                }
-            }
+        if (quiz is MultipleChoiceQuiz) {
+
             quizChoicesGroup.setOnCheckedChangeListener { group, _ ->
                 if (group.indexOfChild(view!!.findViewById(group.checkedRadioButtonId)) != -1)
-                    answersArray[position] =
+                    answers[position] =
                         group.indexOfChild(view!!.findViewById(group.checkedRadioButtonId))
             }
-            submitAnswers.setOnClickListener {
-                when {
-                    answersArray.size() == userQuiz.quiz.questionsCount || position == userQuiz.quiz.questionsCount ->
-                        calculateScore()
-                    else -> showToast(context!!, getString(R.string.answerQuestions))
+            updateTextMulti()
+        } else {
+            answerCheckBox.setOnCheckedChangeListener { _, isChecked ->
+                answers[position] = isChecked
+            }
+
+            answers.put(position, answerCheckBox.isChecked)
+            updateTextTF()
+        }
+
+
+        fun submit() {
+            when {
+                answers.size() == quiz.getSize() ||
+                        position == quiz.getSize() -> finish()
+                else -> showToast(context!!, getString(R.string.answerQuestions))
+            }
+        }
+
+        listOf(quizNextQuestionButton, quizPreviousQuestionButton, submitAnswers)
+            .forEach { button ->
+                button.setOnClickListener {
+                    when (it) {
+                        quizNextQuestionButton -> next()
+                        quizPreviousQuestionButton -> prev()
+                        submitAnswers -> submit()
+                    }
                 }
             }
-            updateTexts()
-        }
-        (activity as AppCompatActivity).supportActionBar!!.title = userQuiz.quiz?.quizTitle
-        beginQuiz(userQuiz)
+
+        (activity as AppCompatActivity).supportActionBar!!.title = quiz.getTitle()
         takeQuizProgressBar.visibility = View.GONE
+
         questionNumberTextView.text =
-            getString(R.string.questionNumber, position, userQuiz.quiz!!.questionsCount)
+            getString(R.string.questionNumber, position, quiz.getSize())
+
 
     }
-
 
 }

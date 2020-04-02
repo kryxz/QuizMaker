@@ -23,11 +23,26 @@
     <fragment android:id="@+id/settingsFragment" android:name="com.lemonlab.quizmaker.SettingsFragment"
               android:label="@string/settingsLabel" tools:layout="@layout/fragment_settings"/>
     <fragment android:id="@+id/createQuiz" android:name="com.lemonlab.quizmaker.CreateQuiz"
-              android:label="@string/createNewQuiz" tools:layout="@layout/fragment_create_quiz"/>
+        android:label="@string/createNewQuiz"
+        tools:layout="@layout/fragment_create_quiz">
+        <argument
+            android:name="classCode"
+            app:argType="string" />
+        <action
+            android:id="@+id/reviewQuiz"
+            app:destination="@id/viewEditQuestions" />
+    </fragment>
     <fragment android:name="com.lemonlab.quizmaker.ViewEditQuestions"
               android:label="@string/createNewQuiz" tools:layout="@layout/questions_fill_form"
               android:id="@+id/viewEditQuestions">
         <argument android:name="quizID" app:argType="string" android:defaultValue="empty"/>
+        <argument
+            android:name="classCode"
+            android:defaultValue="empty"
+            app:argType="string" />
+        <action
+            android:id="@+id/goToClass"
+            app:destination="@id/teachFragment" />
     </fragment>
     <fragment android:id="@+id/takeQuizFragment" android:name="com.lemonlab.quizmaker.TakeQuizFragment"
               android:label="@string/app_name" tools:layout="@layout/fragment_take_quiz">
@@ -35,6 +50,10 @@
         <action android:id="@+id/viewResult" app:destination="@id/quizResult"
                 app:enterAnim="@anim/nav_default_enter_anim" app:exitAnim="@anim/nav_default_exit_anim"
                 app:popEnterAnim="@anim/nav_default_pop_enter_anim" app:popExitAnim="@anim/nav_default_pop_exit_anim"/>
+        <argument
+            android:name="isClass"
+            android:defaultValue="false"
+            app:argType="boolean" />
     </fragment>
     <fragment android:id="@+id/messagesFragment" android:name="com.lemonlab.quizmaker.MessagesFragment"
               android:label="@string/messages" tools:layout="@layout/fragment_messages"/>
@@ -52,5 +71,37 @@
         <argument android:name="score" app:argType="integer"/>
         <argument android:name="quizAuthor" app:argType="string"/>
         <argument android:name="quizTitle" app:argType="string"/>
+        <argument
+            android:name="isClass"
+            android:defaultValue="false"
+            app:argType="boolean" />
     </fragment>
+    <fragment
+        android:id="@+id/classFragment"
+        android:name="com.lemonlab.quizmaker.ClassFragment"
+        android:label="@string/class_label"
+        tools:layout="@layout/fragment_class">
+        <action
+            android:id="@+id/goToClass"
+            app:destination="@id/teachFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/teachFragment"
+        android:name="com.lemonlab.quizmaker.TeachFragment"
+        android:label="@string/className"
+        tools:layout="@layout/fragment_teach">
+        <argument
+            android:name="classCode"
+            app:argType="string" />
+        <action
+            android:id="@+id/createNewQuiz"
+            app:destination="@id/createQuiz" />
+        <action
+            android:id="@+id/takeClassQuiz"
+            app:destination="@id/takeQuizFragment" />
+    </fragment>
+
 </navigation>

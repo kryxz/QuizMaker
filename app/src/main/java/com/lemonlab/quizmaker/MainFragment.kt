@@ -2,18 +2,19 @@ package com.lemonlab.quizmaker
 
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.navigation.NavOptions
 import androidx.navigation.Navigation
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.FirebaseFirestore
-import com.lemonlab.quizmaker.adapters.QuizAdapter
+import com.lemonlab.quizmaker.items.QuizItem
+import com.xwray.groupie.GroupAdapter
+import com.xwray.groupie.ViewHolder
 import kotlinx.android.synthetic.main.fragment_main.*
 
 
@@ -28,23 +29,38 @@ class MainFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        setUp()
         super.onViewCreated(view, savedInstanceState)
+        init()
     }
 
-    private fun loginIfNoUser() {
-        //send user to Login fragment if need be.
-        if (FirebaseAuth.getInstance().currentUser == null)
-            Navigation.findNavController(view!!).navigate(
+
+    private fun init() {
+        val vm = (activity as MainActivity).vm
+
+        if (!vm.isLoggedIn())
+            view!!.findNavController().navigate(
                 MainFragmentDirections.MainToLogin(),
                 NavOptions.Builder().setPopUpTo(R.id.mainFragment, true).build()
             )
+
+        val adapter = GroupAdapter<ViewHolder>()
+
+        getDataFromIntent()
+        vm.getAllQuizzes().observe(viewLifecycleOwner, Observer {
+            if (it == null || it.isEmpty()) return@Observer
+            with(QuizzesRecyclerView) {
+                layoutManager = LinearLayoutManager(context!!)
+                MainFragmentProgressBar.visibility = View.GONE
+                removeAllViews()
+                adapter.clear()
+                for (item in it)
+                    adapter.add(QuizItem(item, vm, lifecycleOwner = viewLifecycleOwner))
+                this.adapter = adapter
+            }
+
+        })
     }
 
-    private fun setUp() {
-        loginIfNoUser()
-        getData()
-    }
 
     private fun getDataFromIntent() {
         if (activity!!.intent != null && activity!!.intent.extras != null) {
@@ -60,60 +76,6 @@ class MainFragment : Fragment() {
             activity!!.intent = null
         } else
             (activity as AppCompatActivity).supportActionBar!!.setHomeAsUpIndicator(R.drawable.ic_drawer)
-
-    }
-
-    override fun onDestroyView() {
-        with(QuizzesRecyclerView) {
-            layoutManager = null
-            adapter = null
-            onFlingListener = null
-        }
-        super.onDestroyView()
-    }
-
-    private fun getData() {
-        if (TempData.currentQuizzes.isNullOrEmpty())
-            setUpAdapter()
-        else
-            with(QuizzesRecyclerView) {
-                layoutManager = LinearLayoutManager(context!!)
-                adapter = QuizAdapter(context!!, TempData.currentQuizzes!!, ViewType.TakeQuiz)
-                MainFragmentProgressBar.visibility = View.GONE
-            }
-        getDataFromIntent()
-    }
-
-    private fun setUpAdapter() {
-        val listOfQuizzes = mutableListOf<Quiz>()
-        //This is how we retrieve data from the database
-        FirebaseFirestore.getInstance().collection("Quizzes").get()
-            .addOnSuccessListener { documents ->
-
-
-                for (item in documents) {
-                    listOfQuizzes.add(item.get("quiz.quiz", Quiz::class.java)!!)
-                    val source = if (item.metadata.isFromCache)
-                        "local cache"
-                    else
-                        "server"
-                    Log.d("Data", "Data fetched from $source")
-
-                }
-                //to get questions, use item.get("quiz", MultipleChoiceQuiz::class.java)!!.questions
-                with(listOfQuizzes) {
-                    sortWith(compareBy { it.milliSeconds })
-                    reverse()
-                }
-                TempData.currentQuizzes = listOfQuizzes
-
-                if (view != null)
-                    with(QuizzesRecyclerView) {
-                        layoutManager = LinearLayoutManager(context!!)
-                        adapter = QuizAdapter(context!!, listOfQuizzes, ViewType.TakeQuiz)
-                        MainFragmentProgressBar.visibility = View.GONE
-                    }
-            }
 
     }
 

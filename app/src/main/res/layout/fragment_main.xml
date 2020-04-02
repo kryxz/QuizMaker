@@ -1,27 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                                                   xmlns:tools="http://schemas.android.com/tools"
-                                                   android:layout_width="match_parent"
-                                                   android:layout_height="match_parent"
-                                                   android:background="?attr/colorPrimary"
-                                                   tools:context=".MainFragment">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="?attr/colorPrimary"
+    tools:context=".MainFragment">
 
-    <ProgressBar android:layout_width="match_parent" android:layout_height="match_parent"
-                 android:id="@+id/MainFragmentProgressBar"
-    />
-    <androidx.appcompat.widget.AppCompatTextView android:layout_width="match_parent"
-                                                 android:text="@string/NoContent"
-                                                 android:gravity="center"
-                                                 android:textSize="34sp"
-                                                 android:id="@+id/NoContentTextView"
-                                                 android:visibility="gone"
-                                                 android:layout_height="match_parent"/>
+    <ProgressBar
+        android:id="@+id/MainFragmentProgressBar"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/NoContentTextView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:text="@string/NoContent"
+        android:textSize="34sp"
+        android:visibility="gone" />
 
 
-    <androidx.recyclerview.widget.RecyclerView android:layout_width="match_parent"
-                                               android:id="@+id/QuizzesRecyclerView"
-                                               android:layout_height="match_parent">
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/QuizzesRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
-    </androidx.recyclerview.widget.RecyclerView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

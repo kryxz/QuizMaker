@@ -8,6 +8,12 @@
             android:title="@string/profileLabel"
             android:icon="@drawable/ic_person"
             android:id="@+id/profileFragment"/>
+
+    <item
+        android:id="@+id/classFragment"
+        android:icon="@drawable/ic_class"
+        android:title="@string/class_label" />
+
     <item
             android:title="@string/createNewQuiz"
             android:icon="@drawable/ic_note_add"

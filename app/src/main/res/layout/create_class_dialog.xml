@@ -9,17 +9,35 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
-        android:text="@string/writeAnything"
+        android:text="@string/CreateClass"
         android:textSize="26sp" />
 
 
     <com.google.android.material.textfield.TextInputEditText
-        android:id="@+id/userBioEditText"
+        android:id="@+id/classNameText"
         style="@style/loginEditTextStyle"
         android:drawableEnd="@drawable/ic_info"
+        android:hint="@string/className"
         android:maxLength="100"
         android:padding="8dp"
         android:textColorHint="?attr/textColorHint" />
+
+    <com.google.android.material.textfield.TextInputEditText
+        android:id="@+id/classInstructorText"
+        style="@style/loginEditTextStyle"
+        android:drawableEnd="@drawable/ic_person"
+        android:hint="@string/instructorName"
+        android:maxLength="100"
+        android:padding="8dp"
+        android:textColorHint="?attr/textColorHint" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        style="@style/loginEditTextStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/createClassInfo"
+        android:textSize="16sp" />
+
 
     <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="match_parent"
@@ -27,7 +45,7 @@
         android:layout_margin="8dp">
 
         <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/confirmUserBio"
+            android:id="@+id/confirmClass"
             style="@style/QuestionFormButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -37,7 +55,7 @@
             android:text="@string/confirm" />
 
         <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/cancelUserBio"
+            android:id="@+id/cancelClass"
             style="@style/QuestionFormButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

@@ -21,9 +21,6 @@ import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.textfield.TextInputEditText
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.messaging.FirebaseMessaging
 import kotlinx.android.synthetic.main.fragment_settings.*
 
 
@@ -83,7 +80,10 @@ class SettingsFragment : Fragment() {
                 )
 
             )
-            adapter = TextViewAdapter(activity!!, listOfSettings, null)
+            adapter = TextViewAdapter(
+                activity!!, listOfSettings, null,
+                (activity as MainActivity).vm
+            )
         }
         super.onViewCreated(view, savedInstanceState)
     }
@@ -94,11 +94,13 @@ class SettingsFragment : Fragment() {
 class TextViewAdapter(
     private val activity: Activity,
     private val listOfSettings: List<OptionsItem>?,
-    private val listOfFaqs: List<String>?
+    private val listOfFaqs: List<String>?,
+    private val viewModel: QuizzesVM
 ) :
     RecyclerView.Adapter<SettingsRV>() {
 
     override fun onBindViewHolder(holder: SettingsRV, position: Int) {
+
         if (listOfFaqs == null)
             setUp(holder.settingsItemText, position)
         else
@@ -159,19 +161,12 @@ class TextViewAdapter(
                 null
             )
         }
-        val fireStore = FirebaseFirestore.getInstance().collection("feedback")
         val feedbackText = dialogView.findViewById<TextInputEditText>(R.id.feedbackText)
         dialogView.findViewById<AppCompatButton>(R.id.sendFeedbackButton).setOnClickListener {
             if (feedbackText.text!!.isEmpty())
                 return@setOnClickListener
-            val feedback = HashMap<String, Pair<String, String>>()
-            feedback["feedback"] = Pair(
-                feedbackText.text.toString().removedWhitespace(),
-                FirebaseAuth.getInstance().currentUser!!.displayName!!
-            )
-            fireStore.add(feedback).addOnSuccessListener {
-                showToast(activity, activity.getString(R.string.thanks))
-            }
+            viewModel.sendFeedback(feedbackText.text.toString().removedWhitespace())
+            showToast(activity, activity.getString(R.string.thanks))
             dialogBuilder.dismiss()
         }
 
@@ -255,7 +250,7 @@ class TextViewAdapter(
                     adapter = TextViewAdapter(
                         activity,
                         null,
-                        resources.getStringArray(R.array.faqs).toList()
+                        resources.getStringArray(R.array.faqs).toList(), viewModel
                     )
                 }
 
@@ -279,9 +274,8 @@ class TextViewAdapter(
             setOnClickListener {
                 context.showYesNoDialog(
                     {
-                        FirebaseMessaging.getInstance()
-                            .unsubscribeFromTopic(FirebaseAuth.getInstance().currentUser!!.displayName!!)
-                        FirebaseAuth.getInstance().signOut()
+                        viewModel.cancelNotifications()
+                        viewModel.signOut()
                         TempData.deleteCached()
                         TempData.resetData()
                         Navigation.findNavController(it).navigate(R.id.loginFragment)

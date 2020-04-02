@@ -5,6 +5,7 @@
     <string name="signUp_password">كلمة المرور الجديدة</string>
     <string name="signUp_displayName">اسم المستخدم(بالانكليزية، بدون فراغات)</string>
     <string name="create_account">إنشاء حساب</string>
+    <string name="class_label">القاعات</string>
     <string name="login_label">تسجيل الدخول</string>
     <string name="not_email">أدخل بريدًا صالحًا!</string>
     <string name="mainPage">الرئيسيّة</string>
@@ -50,6 +51,13 @@
     <string name="finishQuiz">انهاء وعرض النتيجة</string>
 
     <string name="startQuiz">بدأ الاختبار</string>
+    <string name="seeQuizzes">عرض الاختبارات</string>
+
+    <string name="joinClass">الانضمام</string>
+    <string name="CreateClass">إنشاء قاعة</string>
+    <string name="createClassInfo">تمكنك القاعة من إنشاء اختبارات خاصة لمجموعة ما، ولا يمكن الدخول إلا عن طريق الرمز أو الرابط المخصص للقاعة.</string>
+
+    <string name="getQuizAsPDF">تنزيل الاختبار</string>
     <string name="DeleteCurrentQuestion">حذف السؤال الحالي</string>d
     <string name="thisWillDeleteCurrentQuestion">سيتم حذف السؤال الحالي مع الاجابة.</string>d
     <string name="questionsCountText">عدد الأسئلة: %1$d</string>
@@ -89,7 +97,7 @@
     <string name="accountExists">الحساب موجود</string>
     <string name="loginFailed">فشل تسجيل الدخول، تحقق من معلومات حسابك</string>
     <string name="noUser">لم يتم العثور على حساب.</string>
-    <string name="NoContent">تعذر العثور على أي اختبار</string>
+    <string name="NoContent">لا يوجد أي اختبار بعد!</string>
     <string name="quizScore">
         نتيجتك لـ %1$s
         \n
@@ -109,6 +117,8 @@
     <string name="viewAnswers">عرض الإجابات</string>
     <string name="userNameText">\@%1$s</string>
     <string name="writeAnything">اكتب أي شيء</string>
+    <string name="className">اسم القاعة/الصف</string>
+    <string name="instructorName">اسم المدرس</string>
     <string name="editedSuccessfully">تم التعديل</string>
     <string name="cacheDeleted">تم حذف البيانات المؤقتة</string>
     <string name="changeLanguage">تغيير اللغة</string>
@@ -141,11 +151,14 @@
     <string name="app_notifications_description">تنبيهات جديدة مثل الرسائل والتقييمات، وأحيانًا من الاختبارات التي قمت
         بنشرها
     </string>
+    <string name="mulChoice">متعدد الاختيار</string>
+    <string name="trueFalse">صح، خطأ</string>
 
     <string-array name="quizQuestionsTypes">
         <item>متعدد الاختيار</item>
         <item>صح، خطأ</item>
     </string-array>
+
     <string-array name="randomBios">
         <item>جاهز!</item>
         <item>أهلًَا، فلنختبر سويًا!</item>
@@ -346,5 +359,6 @@
         \n
         إذا كان لديك أي أسئلة أو اقتراحات أو استفسارات حول سياسة الخصوصية، لا تتردد في مراسلتنا على zaka7024@gmail.com\n
     </string>
+
 
 </resources>

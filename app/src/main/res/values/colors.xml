@@ -3,15 +3,15 @@
     <color name="colorSilver">#bfbfbf</color>
     <color name="baseColorGreen">#00e640</color>
 
-    <!-- base theme Colors -->
-    <color name="colorPrimary">#f1f2f6</color>
-    <color name="colorPrimaryDark">#dfe4ea</color>
-    <color name="colorPrimaryLight">#f1f2f6</color>
-    <color name="colorAccent">#ced6e0</color>
+    <!-- base theme Colors 2c2c54 -->
+    <color name="colorPrimary">#130f40</color>
+    <color name="colorPrimaryDark">#192a56</color>
+    <color name="colorPrimaryLight">#40407a</color>
+    <color name="colorAccent">#0c2461</color>
 
-    <color name="textColorPrimary">#000000</color>
-    <color name="textColorSecondary">#80000000</color>
-    <color name="dividerColor">#a4b0be</color>
+    <color name="textColorPrimary">#dfe6e9</color>
+    <color name="textColorSecondary">#b2bec3</color>
+    <color name="dividerColor">#40739e</color>
 
 
     <!-- Light theme Colors -->

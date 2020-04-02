@@ -9,16 +9,19 @@ import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatButton
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.textfield.TextInputEditText
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.DocumentReference
-import com.google.firebase.firestore.FirebaseFirestore
-import com.lemonlab.quizmaker.adapters.QuizAdapter
+import com.lemonlab.quizmaker.items.QuizHistory
+import com.xwray.groupie.GroupAdapter
+import com.xwray.groupie.ViewHolder
 import kotlinx.android.synthetic.main.fragment_profile.*
 
 
 class ProfileFragment : Fragment() {
+
+    private lateinit var vm: QuizzesVM
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -29,55 +32,57 @@ class ProfileFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        isUserOrViewer()
         super.onViewCreated(view, savedInstanceState)
+        init()
     }
 
     override fun onDestroyView() {
-        activity!!.hideKeypad()
         super.onDestroyView()
+        activity!!.hideKeypad()
     }
 
-    private fun isUserOrViewer() {
+
+    private fun init() {
+        vm = (activity as MainActivity).vm
+
         val args = ProfileFragmentArgs.fromBundle(arguments!!)
+
         if (args.isViewer)
             viewProfile(args.username)
         else
             getDataToSetupProfile()
+
     }
+
 
     private fun viewProfile(username: String) {
-        profileFragmentProgressBar.visibility = View.VISIBLE
-        val profileRef = FirebaseFirestore.getInstance().collection("users").document(username)
-        tapAQuizTextView.visibility = View.GONE
-        profileRef.get().addOnSuccessListener {
-            if (view != null) {
-                profileFragmentProgressBar.visibility = View.GONE
-                val user = it.get("user", User::class.java)!!
-                joinDateTextView.text = user.joinTimeAsAString()
-                currentPointsTextView.text = user.points.toString()
-                userBioTextView.text = user.userBio
-                userBioTextView.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null)
-                userNameTextView.text = getString(R.string.userNameText, username)
-                (activity as AppCompatActivity).supportActionBar!!.title =
-                    getString(R.string.userProfileLabel, username)
-                with(logEmptyTextView) {
-                    visibility = View.VISIBLE
-                    text = getString(R.string.cannotViewLog)
-                }
-                profileRef.collection("userData").document("taken").get()
-                    .addOnSuccessListener { document ->
-                        val log = document.get("log", QuizLog::class.java)
-                        if (log != null && view != null) {
-                            quizzesTakenTextView.text = log.userLog.size.toString()
-                        }
-                    }
+        vm.getUser(name = username).observe(viewLifecycleOwner, Observer { user ->
+            if (user == null) return@Observer
+            joinDateTextView.text = user.joinTimeAsAString()
+            currentPointsTextView.text = user.points.toString()
+            userBioTextView.text = user.userBio
 
+            userBioTextView.setCompoundDrawablesWithIntrinsicBounds(
+                null, null, null, null
+            )
+            userNameTextView.text = getString(R.string.userNameText, username)
+
+            (activity as AppCompatActivity).supportActionBar!!.title =
+                getString(R.string.userProfileLabel, username)
+
+            with(logEmptyTextView) {
+                visibility = View.VISIBLE
+                text = getString(R.string.cannotViewLog)
             }
-        }
+        })
+        //
+        vm.getLog(username).observe(viewLifecycleOwner, Observer { log ->
+            quizzesTakenTextView.text = log.userLog.size.toString()
+        })
+
     }
 
-    private fun showEditBioDialog(profileRef: DocumentReference) {
+    private fun showEditBioDialog() {
         val dialogBuilder = AlertDialog.Builder(context).create()
         val dialogView = with(LayoutInflater.from(context)) {
             inflate(
@@ -91,12 +96,11 @@ class ProfileFragment : Fragment() {
 
         fun saveBio() {
             val newBio = bioEditText.text.toString()
-            profileRef.update("user.userBio", newBio).addOnSuccessListener {
-                showToast(context!!, getString(R.string.editedSuccessfully))
-                userBioTextView.text = newBio
-            }
-
+            vm.updateBio(newBio)
+            showToast(context!!, getString(R.string.editedSuccessfully))
+            userBioTextView.text = newBio
         }
+
         bioEditText.hint = userBioTextView.text
         confirmButton.setOnClickListener {
             if (bioEditText.text.toString().isEmpty())
@@ -112,87 +116,66 @@ class ProfileFragment : Fragment() {
 
 
     private fun getDataToSetupProfile() {
-        val userName = FirebaseAuth.getInstance().currentUser!!.displayName!!
-        val profileRef = FirebaseFirestore.getInstance().collection("users").document(userName)
+        val userName = vm.getName()
         getLog(userName)
 
-        if (TempData.user != null)
-            setUpProfileUI(TempData.user!!, profileRef)
-        else
-            profileRef.get().addOnSuccessListener {
-                if (view != null) {
-                    val user = it.get("user", User::class.java)!!
-                    TempData.user = user
-                    setUpProfileUI(user, profileRef)
-                }
-            }
+        vm.getUser(userName).observe(viewLifecycleOwner, Observer { user ->
+            if (user == null) return@Observer
+            setUpProfileUI(user)
+        })
+
 
     }
 
     private fun getLog(username: String) {
         fun loadLog(log: MutableList<String>) {
+            if (log.isEmpty()) return
             profileLogProgressBar.visibility = View.VISIBLE
             val listOfQuizzes = mutableListOf<Quiz>()
-            FirebaseFirestore.getInstance().collection("Quizzes").get()
-                .addOnSuccessListener { documents ->
-                    for (item in documents) {
-                        val quiz = item.get("quiz.quiz", Quiz::class.java)!!
-                        if (log.contains(quiz.quizUUID))
-                            listOfQuizzes.add(quiz)
-                    }
-                    with(listOfQuizzes) {
-                        sortWith(compareBy { it.milliSeconds })
-                        reverse()
-                    }
-                    if (view != null)
-                        with(userLogRecyclerView) {
-                            layoutManager = LinearLayoutManager(context!!)
-                            adapter = QuizAdapter(context!!, listOfQuizzes, ViewType.ViewAnswers)
-                            profileLogProgressBar.visibility = View.GONE
-                        }
+
+            vm.getAllQuizzes().observe(viewLifecycleOwner, Observer { list ->
+                if (list == null || list.isEmpty()) return@Observer
+                for (item in list) {
+                    val id = item.quizUUID
+                    if (log.contains(id))
+                        listOfQuizzes.add(item)
                 }
+                with(userLogRecyclerView) {
+                    val adapter = GroupAdapter<ViewHolder>()
+                    for (item in listOfQuizzes)
+                        adapter.add(QuizHistory(item))
+                    layoutManager = LinearLayoutManager(context!!)
+                    this.adapter = adapter
+                    profileLogProgressBar.visibility = View.GONE
+                }
+            })
+
         }
-        FirebaseFirestore.getInstance().collection("users").document(username)
-            .collection("userData").document("taken")
-            .get()
-            .addOnSuccessListener { document ->
-                if (view != null) {
-                    val log = document.get("log", QuizLog::class.java)
-                    if (log != null) {
-                        quizzesTakenTextView.text = log.userLog.size.toString()
-                        loadLog(log.userLog)
-                    } else {
-                        quizzesTakenTextView.text = getString(R.string.placeHolderZero)
-                        logEmptyTextView.visibility = View.VISIBLE
-                    }
-
-                }
+        vm.getLog(username).observe(viewLifecycleOwner, Observer { log ->
+            if (log == null) {
+                quizzesTakenTextView.text = getString(R.string.placeHolderZero)
+                return@Observer
             }
-
+            quizzesTakenTextView.text = log.userLog.size.toString()
+            loadLog(log.userLog)
+        })
 
     }
 
 
-    private fun setUpProfileUI(user: User, profileRef: DocumentReference) {
-        if (view == null)
-            return
+    private fun setUpProfileUI(user: User) {
+
         profileFragmentProgressBar.visibility = View.GONE
         joinDateTextView.text = user.joinTimeAsAString()
         currentPointsTextView.text = user.points.toString()
         userBioTextView.text = user.userBio
+
         userBioTextView.setOnClickListener {
-            showEditBioDialog(profileRef)
+            showEditBioDialog()
         }
+
         userNameTextView.text = getString(R.string.userNameText, user.username)
 
-        profileRef.get().addOnSuccessListener {
-            val newUser = it.get("user", User::class.java)!!
-            if (newUser != TempData.user) {
-                TempData.user = newUser
-                setUpProfileUI(newUser, profileRef)
-            }
-
-        }
     }
 
 }

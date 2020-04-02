@@ -11,12 +11,14 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatButton
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.navigation.NavOptions
 import androidx.navigation.Navigation
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.messaging.FirebaseMessaging
 import com.lemonlab.quizmaker.adapters.QuestionsAdapter
 import kotlinx.android.synthetic.main.questions_fill_form.*
 import java.util.*
@@ -29,6 +31,10 @@ class ViewEditQuestions : Fragment() {
     private lateinit var multipleChoiceQuestions: LinkedHashMap<String, MultipleChoiceQuestion>
     private lateinit var trueFalseQuestions: LinkedHashMap<String, TrueFalseQuestion>
     private var quizID = "empty"
+
+
+    private val viewModel: QuestionsVM by viewModels()
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -40,14 +46,21 @@ class ViewEditQuestions : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        decideWhatToDo()
         super.onViewCreated(view, savedInstanceState)
+        decideWhatToDo()
+
+    }
+
+    private fun init() {
+
+
     }
 
     override fun onDestroyView() {
-        activity!!.hideKeypad()
         super.onDestroyView()
+        activity!!.hideKeypad()
     }
+
 
     private fun decideWhatToDo() {
         if (quizID == "empty")
@@ -119,11 +132,14 @@ class ViewEditQuestions : Fragment() {
             dialogBuilder.dismiss()
         }
 
-        val questionsCount = dialogView.findViewById<TextInputEditText>(R.id.dialogPropertiesQuizQuestionsCount)
-        val quizTitle = dialogView.findViewById<TextInputEditText>(R.id.dialogPropertiesQuizTitleEditText)
+        val questionsCount =
+            dialogView.findViewById<TextInputEditText>(R.id.dialogPropertiesQuizQuestionsCount)
+        val quizTitle =
+            dialogView.findViewById<TextInputEditText>(R.id.dialogPropertiesQuizTitleEditText)
 
         fun resizeQuiz() {
-            val quizQuestionsCount = questionsCount.text.toString().toIntOrNull() ?: TempData.questionsCount
+            val quizQuestionsCount =
+                questionsCount.text.toString().toIntOrNull() ?: TempData.questionsCount
             TempData.questionsCount = quizQuestionsCount
             position = 1
             updateTitle()
@@ -143,42 +159,46 @@ class ViewEditQuestions : Fragment() {
             }
         })
 
-        dialogView.findViewById<AppCompatButton>(R.id.dialogDeleteCurrentQuestionButton).setOnClickListener {
+        dialogView.findViewById<AppCompatButton>(R.id.dialogDeleteCurrentQuestionButton)
+            .setOnClickListener {
 
-            if (TempData.questionsCount > 1)
-                context!!.showYesNoDialog(
-                    ::deleteCurrentQuestion,
-                    fun() {},
-                    getString(R.string.DeleteCurrentQuestion),
-                    getString(R.string.thisWillDeleteCurrentQuestion)
+                if (TempData.questionsCount > 1)
+                    context!!.showYesNoDialog(
+                        ::deleteCurrentQuestion,
+                        fun() {},
+                        getString(R.string.DeleteCurrentQuestion),
+                        getString(R.string.thisWillDeleteCurrentQuestion)
+                    )
+            }
+
+        dialogView.findViewById<AppCompatButton>(R.id.dialogPropertiesConfirmButton)
+            .setOnClickListener {
+
+                //Updates title
+                TempData.quizTitle =
+                    if (quizTitle.text.toString().length > 1)
+                        quizTitle.text.toString()
+                    else
+                        TempData.quizTitle
+
+                //Updates questions count
+                val quizQuestionsCount =
+                    questionsCount.text.toString().toIntOrNull() ?: TempData.questionsCount
+                if (quizQuestionsCount != TempData.questionsCount &&
+                    quizQuestionsCount <= 30
                 )
-        }
+                    context!!.showYesNoDialog(
+                        ::resizeQuiz, {},
+                        getString(R.string.resizeQuiz),
+                        getString(R.string.thisWillDeleteRemainingQuestions)
+                    )
 
-        dialogView.findViewById<AppCompatButton>(R.id.dialogPropertiesConfirmButton).setOnClickListener {
-
-            //Updates title
-            TempData.quizTitle =
-                if (quizTitle.text.toString().length > 1)
-                    quizTitle.text.toString()
-                else
-                    TempData.quizTitle
-
-            //Updates questions count
-            val quizQuestionsCount = questionsCount.text.toString().toIntOrNull() ?: TempData.questionsCount
-            if (quizQuestionsCount != TempData.questionsCount &&
-                quizQuestionsCount <= 30
-            )
-                context!!.showYesNoDialog(
-                    ::resizeQuiz, {},
-                    getString(R.string.resizeQuiz),
-                    getString(R.string.thisWillDeleteRemainingQuestions)
-                )
-
-            dialogBuilder.dismiss()
-        }
-        dialogView.findViewById<AppCompatButton>(R.id.dialogPropertiesCancelButton).setOnClickListener {
-            dialogBuilder.dismiss()
-        }
+                dialogBuilder.dismiss()
+            }
+        dialogView.findViewById<AppCompatButton>(R.id.dialogPropertiesCancelButton)
+            .setOnClickListener {
+                dialogBuilder.dismiss()
+            }
 
         questionsCount.hint = TempData.questionsCount.toString()
         quizTitle.hint = TempData.quizTitle
@@ -200,7 +220,8 @@ class ViewEditQuestions : Fragment() {
             if (quiz.quizType == QuizType.MultipleChoice && view != null)
                 with(questionsRecyclerView) {
                     visibility = View.VISIBLE
-                    val quizQuestions = LinkedHashMap(it.get("quiz", MultipleChoiceQuiz::class.java)!!.questions!!)
+                    val quizQuestions =
+                        LinkedHashMap(it.get("quiz", MultipleChoiceQuiz::class.java)!!.questions!!)
                     TempData.quizType = quiz.quizType
                     TempData.questionsCount = quizQuestions.size
                     layoutManager = null
@@ -217,7 +238,8 @@ class ViewEditQuestions : Fragment() {
                 with(questionsRecyclerView) {
                     visibility = View.VISIBLE
                     TempData.quizType = quiz.quizType
-                    val quizQuestions = LinkedHashMap(it.get("quiz", TrueFalseQuiz::class.java)!!.questions)
+                    val quizQuestions =
+                        LinkedHashMap(it.get("quiz", TrueFalseQuiz::class.java)!!.questions)
                     TempData.questionsCount = quizQuestions.size
                     layoutManager = null
                     adapter = null
@@ -271,15 +293,14 @@ class ViewEditQuestions : Fragment() {
             (activity as AppCompatActivity).supportActionBar!!.setHomeAsUpIndicator(R.drawable.ic_arrow)
         }
 
-        (activity as AppCompatActivity).supportActionBar!!.title = getString(R.string.reviewQuestions)
+        (activity as AppCompatActivity).supportActionBar!!.title =
+            getString(R.string.reviewQuestions)
     }
 
     private fun publishQuiz() {
         fun publishNow() {
             val userName: String = FirebaseAuth.getInstance().currentUser!!.displayName.toString()
-            val quizID =
-                FirebaseAuth.getInstance().currentUser!!.displayName.toString() +
-                        UUID.randomUUID().toString().substring(0, 10)
+            val quizID = userName + UUID.randomUUID().toString().substring(0, 10)
             val quizData = Quiz(
                 TempData.quizTitle, TempData.isPasswordProtected,
 
@@ -289,32 +310,54 @@ class ViewEditQuestions : Fragment() {
 
                 quizID, 0f, 0, Calendar.getInstance().timeInMillis
             )
+
+            fun send(quiz: HashMap<String, Quizzer>) {
+                val code = ViewEditQuestionsArgs.fromBundle(arguments!!).classCode
+                val db = FirebaseFirestore.getInstance()
+
+                // a class quiz
+                db.collection("classQuizzes").document(code)
+                    .collection("quiz").add(quiz)
+                if (code != "empty") {
+                    db.collection("classQuizzes")
+                        .document(quizID).set(quiz)
+                    db.collection("class").document(code)
+                        .collection("Quizzes").add(hashMapOf("id" to quizID)).addOnSuccessListener {
+                            view!!.findNavController()
+                                .navigate(
+                                    ViewEditQuestionsDirections.goToClass(code),
+                                    NavOptions.Builder().setPopUpTo(R.id.mainFragment, false)
+                                        .build()
+                                )
+                        }
+                }
+                // a run of the mill quiz
+                else {
+                    db.collection("Quizzes")
+                        .document(quizID).set(quiz)
+                        .addOnSuccessListener {
+                            // resets all temp data to their default values.
+                            Navigation.findNavController(view!!).navigate(R.id.mainFragment)
+                        }
+                }
+                TempData.resetData()
+            }
+
             when (TempData.quizType) {
                 QuizType.MultipleChoice -> {
-                    val quiz: HashMap<String, MultipleChoiceQuiz> = HashMap()
-                    quiz["quiz"] = MultipleChoiceQuiz(quizData, multipleChoiceQuestions)
+                    HashMap<String, Quizzer>().apply {
+                        this["quiz"] = MultipleChoiceQuiz(quizData, multipleChoiceQuestions)
+                        send(this)
+                    }
 
-                    FirebaseFirestore.getInstance().collection("Quizzes").document(quizID).set(quiz)
-                        .addOnSuccessListener {
-                            //resets all temp data to their default values.
-                            TempData.resetData()
-                            FirebaseMessaging.getInstance()
-                                .subscribeToTopic(FirebaseAuth.getInstance().currentUser!!.displayName!!)
-                            Navigation.findNavController(view!!).navigate(R.id.mainFragment)
-                        }
                 }
                 QuizType.TrueFalse -> {
-                    val quiz: HashMap<String, TrueFalseQuiz> = HashMap()
-                    quiz["quiz"] = TrueFalseQuiz(quizData, trueFalseQuestions)
-
-                    FirebaseFirestore.getInstance().collection("Quizzes").document(quizID).set(quiz)
-                        .addOnSuccessListener {
-                            //resets all temp data to their default values.
-                            TempData.resetData()
-
-                            Navigation.findNavController(view!!).navigate(R.id.mainFragment)
-                        }
+                    HashMap<String, Quizzer>().apply {
+                        this["quiz"] = TrueFalseQuiz(quizData, trueFalseQuestions)
+                        send(this)
+                    }
                 }
+
             }
 
         }
@@ -335,8 +378,10 @@ class ViewEditQuestions : Fragment() {
         fun addQuestion(key: String) {
             multipleChoiceQuestions[key] = MultipleChoiceQuestion(
                 questionsTextEditText.text.toString().removedWhitespace(),
-                firstChoice.text.toString().removedWhitespace(), secondChoice.text.toString().removedWhitespace(),
-                thirdChoice.text.toString().removedWhitespace(), fourthChoice.text.toString().removedWhitespace(),
+                firstChoice.text.toString().removedWhitespace(),
+                secondChoice.text.toString().removedWhitespace(),
+                thirdChoice.text.toString().removedWhitespace(),
+                fourthChoice.text.toString().removedWhitespace(),
                 correctAnswerSpinner.selectedItemPosition
             )
         }
@@ -515,3 +560,5 @@ class ViewEditQuestions : Fragment() {
     }
 
 }
+
+

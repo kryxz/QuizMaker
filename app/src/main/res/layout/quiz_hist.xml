@@ -8,22 +8,14 @@
     android:padding="8dp">
 
     <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/quizTitleText"
+        android:id="@+id/histTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
-        android:padding="8dp"
+        android:layout_marginBottom="4dp"
+        android:padding="2dp"
         android:text="@string/reviewTemplate"
         android:textAlignment="center"
-        android:textSize="28sp" />
-
-    <androidx.appcompat.widget.AppCompatRatingBar
-        android:id="@+id/quizRatingBar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:isIndicator="true"
-        android:theme="@style/RatingBar" />
+        android:textSize="20sp" />
 
     <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="match_parent"
@@ -31,52 +23,54 @@
 
 
         <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/quizAuthorText"
+            android:id="@+id/histQuizAuthor"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
-            android:padding="8dp"
+            android:padding="4dp"
             android:text="@string/reviewQuestions"
-            android:textSize="20sp" />
+            android:textSize="18sp" />
 
         <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/quizTypeTextView"
+            android:id="@+id/histQuizType"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
-            android:padding="8dp"
+            android:padding="4dp"
             android:text="@string/reviewThenPost"
-            android:textSize="20sp" />
+            android:textSize="18sp" />
 
         <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/questionsCountText"
+            android:id="@+id/histQuizTotal"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
-            android:padding="8dp"
+            android:padding="4dp"
             android:text="@string/reviewThenPost"
-            android:textSize="20sp" />
+            android:textSize="18sp" />
+
     </androidx.appcompat.widget.LinearLayoutCompat>
 
 
     <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/startQuizButton"
+        android:id="@+id/histReviewAnswers"
         style="@style/QuestionFormButtonStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/startQuiz" />
+        android:text="@string/viewAnswers" />
 
     <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/quizDateTextView"
+        android:id="@+id/histQuizDate"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_weight="1"
         android:gravity="center"
         android:padding="4dp"
         android:text="@string/quizAuthorText"
-        android:textSize="14sp" />
+        android:textSize="12sp" />
 
 
 </androidx.appcompat.widget.LinearLayoutCompat>

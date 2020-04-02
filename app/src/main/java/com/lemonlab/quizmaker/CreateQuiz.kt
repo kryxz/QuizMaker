@@ -15,6 +15,7 @@ import androidx.appcompat.widget.AppCompatButton
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.fragment.app.Fragment
 import androidx.navigation.Navigation
+import androidx.navigation.findNavController
 import kotlinx.android.synthetic.main.fragment_create_quiz.*
 
 class CreateQuiz : Fragment() {
@@ -28,14 +29,14 @@ class CreateQuiz : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        //createQuizBanner.loadAd(AdRequest.Builder().build())
+        // createQuizBanner.loadAd(AdRequest.Builder().build())
         setUp()
         super.onViewCreated(view, savedInstanceState)
     }
 
     private fun textWatchers() {
-        //Adds on textChanged listeners to all edit texts, and handles errors and assignments.
-        //Adds an adapter to the spinner, too.
+        // Adds on textChanged listeners to all edit texts, and handles errors and assignments.
+        // Adds an adapter to the spinner, too.
 
         quizQuestionsCount.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
@@ -108,7 +109,10 @@ class CreateQuiz : Fragment() {
         }
 
         fun navigateToEditingQuestions() {
-            Navigation.findNavController(view!!).navigate(R.id.viewEditQuestions)
+            val code = CreateQuizArgs.fromBundle(arguments!!).classCode
+            val direction = CreateQuizDirections.reviewQuiz()
+            direction.classCode = code
+            view!!.findNavController().navigate(direction)
         }
         textWatchers()
 

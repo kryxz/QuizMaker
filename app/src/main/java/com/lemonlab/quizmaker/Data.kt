@@ -1,14 +1,15 @@
-@file:Suppress("unused")
 
 package com.lemonlab.quizmaker
 
 import android.content.Context
+import android.util.SparseArray
+import androidx.core.util.forEach
 import com.google.firebase.firestore.FirebaseFirestore
 import java.util.*
+import kotlin.collections.ArrayList
 
-
-enum class QuizType {
-    MultipleChoice, TrueFalse
+enum class QuizType(val id: Int) {
+    MultipleChoice(R.string.mulChoice), TrueFalse(R.string.trueFalse)
 }
 
 enum class NotificationType {
@@ -16,8 +17,23 @@ enum class NotificationType {
 }
 
 enum class ViewType {
-    TakeQuiz, ViewAnswers
+    ViewAnswers, InClass
 }
+
+data class TheClass(
+    val teach: String,
+    val title: String,
+    val date: Long,
+    val members: ArrayList<String>,
+    val id: String
+) {
+    constructor() : this("", "", 0, ArrayList(), "")
+
+    private fun addMember(name: String) =
+        members.add(name)
+
+}
+
 
 data class User(
     var username: String,
@@ -29,16 +45,8 @@ data class User(
 ) {
     constructor() : this("", "", "", "", 0, 0)
 
-    fun joinTimeAsAString(): String {
-        val calendar = Calendar.getInstance()
-        calendar.timeInMillis = joinDate
-        return "${calendar.get(Calendar.DATE)}/${calendar.get(Calendar.MONTH) + 1}/${calendar.get(
-            Calendar.YEAR
-        ).toString().substring(
-            2,
-            4
-        )}"
-    }
+    fun joinTimeAsAString() = joinDate.timeAsAString()
+
 }
 
 class TempData {
@@ -98,20 +106,78 @@ data class TrueFalseQuestion(
     constructor() : this("", false)
 }
 
+abstract class Quizzer {
+
+    abstract fun score(answers: SparseArray<*>): Int
+    abstract fun getQuestion(pos: Int): String
+
+    abstract fun getSize(): Int
+    abstract fun getAuthor(): String
+    abstract fun getTitle(): String
+    abstract fun getID(): String
+
+}
 
 data class MultipleChoiceQuiz(
     val quiz: Quiz?,
     val questions: HashMap<String, MultipleChoiceQuestion>?
-) {
+) : Quizzer() {
     constructor() : this(null, null)
+
+    override fun getAuthor() = quiz!!.quizAuthor
+    override fun getID() = quiz!!.quizUUID
+    override fun getTitle() = quiz!!.quizTitle
+
+    override fun score(answers: SparseArray<*>): Int {
+        var score = 0
+        answers.forEach { key, value ->
+            if (questions!![key.toString()]!!.correctAnswer == value)
+                score = score.inc()
+        }
+        return score
+    }
+
+    override fun getSize() = quiz!!.questionsCount
+
+    override fun getQuestion(pos: Int) =
+        questions!![pos.toString()]!!.question
+
+
+    fun getChoiceOne(pos: Int) = questions!![pos.toString()]!!.first
+    fun getChoiceTwo(pos: Int) = questions!![pos.toString()]!!.second
+    fun getChoiceThree(pos: Int) = questions!![pos.toString()]!!.third
+    fun getChoiceFour(pos: Int) = questions!![pos.toString()]!!.fourth
+
+
 }
 
 data class TrueFalseQuiz(
     val quiz: Quiz?,
     val questions: HashMap<String, TrueFalseQuestion>?
-) {
+) : Quizzer() {
     constructor() : this(null, null)
+
+    override fun getSize() = quiz!!.questionsCount
+
+    override fun getAuthor() = quiz!!.quizAuthor
+    override fun getID() = quiz!!.quizUUID
+    override fun getTitle() = quiz!!.quizTitle
+
+    override fun score(answers: SparseArray<*>): Int {
+        var score = 0
+        answers.forEach { key, value ->
+            if (questions!![key.toString()]!!.answer == value)
+                score = score.inc()
+        }
+        return score
+    }
+
+    override fun getQuestion(pos: Int) =
+        questions!![pos.toString()]!!.question
+
+
 }
+
 
 data class QuizLog(
     val userLog: MutableList<String>

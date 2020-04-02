@@ -4,6 +4,7 @@ import android.os.Build
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
@@ -22,6 +23,9 @@ import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
 
+    val vm: QuizzesVM by viewModels()
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         window.decorView.layoutDirection = View.LAYOUT_DIRECTION_RTL
@@ -35,8 +39,12 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun chooseTheme() {
+
         if (getSharedPreferences("userPrefs", 0).getBoolean("lightMode", false))
-            setThisTheme(R.style.LightTheme, ContextCompat.getColor(this, R.color.lightColorPrimaryDark))
+            setThisTheme(
+                R.style.LightTheme,
+                ContextCompat.getColor(this, R.color.lightColorPrimaryDark)
+            )
         else
             setThisTheme(R.style.AppTheme, ContextCompat.getColor(this, R.color.colorPrimaryDark))
 
@@ -51,11 +59,12 @@ class MainActivity : AppCompatActivity() {
 
     private fun setUpFireBase() {
         FirebaseApp.initializeApp(this)
-        FirebaseFirestore.getInstance().firestoreSettings = with(FirebaseFirestoreSettings.Builder()) {
-            isPersistenceEnabled = true
-            cacheSizeBytes = FirebaseFirestoreSettings.CACHE_SIZE_UNLIMITED
-            build()
-        }
+        FirebaseFirestore.getInstance().firestoreSettings =
+            with(FirebaseFirestoreSettings.Builder()) {
+                isPersistenceEnabled = true
+                cacheSizeBytes = FirebaseFirestoreSettings.CACHE_SIZE_UNLIMITED
+                build()
+            }
         FirebaseMessaging.getInstance().isAutoInitEnabled = true
         if (FirebaseAuth.getInstance().currentUser != null)
             FirebaseMessaging.getInstance()
@@ -70,7 +79,10 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return NavigationUI.onNavDestinationSelected(item, Navigation.findNavController(this, R.id.navigationHost))
+        return NavigationUI.onNavDestinationSelected(
+            item,
+            Navigation.findNavController(this, R.id.navigationHost)
+        )
                 || super.onOptionsItemSelected(item)
     }
 
@@ -79,7 +91,10 @@ class MainActivity : AppCompatActivity() {
         NavigationUI.setupWithNavController(navView, navController)
         setupActionBarWithNavController(navController, drawer_layout)
 
-        setupActionBarWithNavController(navController, AppBarConfiguration.Builder(R.id.loginFragment).build())
+        setupActionBarWithNavController(
+            navController,
+            AppBarConfiguration.Builder(R.id.loginFragment).build()
+        )
         navController.addOnDestinationChangedListener { controller, destination, _ ->
             if (destination.id == controller.graph.startDestination) //Users only use the drawer in main fragment.
                 drawer_layout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED)
@@ -95,6 +110,9 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onSupportNavigateUp() =
-        NavigationUI.navigateUp(Navigation.findNavController(this, R.id.navigationHost), drawer_layout)
+        NavigationUI.navigateUp(
+            Navigation.findNavController(this, R.id.navigationHost),
+            drawer_layout
+        )
 
 }
