@@ -12,7 +12,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.textfield.TextInputEditText
-import com.lemonlab.quizmaker.items.QuizHistory
+import com.lemonlab.quizmaker.items.QuizLog
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.ViewHolder
 import kotlinx.android.synthetic.main.fragment_profile.*
@@ -133,21 +133,28 @@ class ProfileFragment : Fragment() {
             profileLogProgressBar.visibility = View.VISIBLE
             val listOfQuizzes = mutableListOf<Quiz>()
 
+            val adapter = GroupAdapter<ViewHolder>()
+            userLogRecyclerView.layoutManager = LinearLayoutManager(context!!)
+
             vm.getAllQuizzes().observe(viewLifecycleOwner, Observer { list ->
-                if (list == null || list.isEmpty()) return@Observer
+                if (list == null || list.isEmpty()) {
+                    adapter.clear()
+                    return@Observer
+                }
+                adapter.clear()
+                listOfQuizzes.clear()
+
                 for (item in list) {
                     val id = item.quizUUID
                     if (log.contains(id))
                         listOfQuizzes.add(item)
                 }
-                with(userLogRecyclerView) {
-                    val adapter = GroupAdapter<ViewHolder>()
-                    for (item in listOfQuizzes)
-                        adapter.add(QuizHistory(item))
-                    layoutManager = LinearLayoutManager(context!!)
-                    this.adapter = adapter
-                    profileLogProgressBar.visibility = View.GONE
-                }
+                for (item in listOfQuizzes)
+                    adapter.add(QuizLog(item))
+
+                userLogRecyclerView.adapter = adapter
+                profileLogProgressBar.visibility = View.GONE
+
             })
 
         }

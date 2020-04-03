@@ -23,7 +23,16 @@
         style="@style/QuestionFormButtonStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_margin="4dp"
         android:text="@string/seeQuizzes" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/leaveClass"
+        style="@style/QuestionFormButtonStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/leaveClass"
+        android:visibility="gone" />
 
     <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="match_parent"
@@ -49,6 +58,17 @@
             android:padding="8dp"
             android:text="@string/quizAuthorText"
             android:textSize="12sp" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/classCodeText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:padding="8dp"
+            android:text="@string/quizAuthorText"
+            android:textColor="?attr/colorGreen"
+            android:textSize="12sp"
+            android:visibility="gone" />
 
     </androidx.appcompat.widget.LinearLayoutCompat>
 

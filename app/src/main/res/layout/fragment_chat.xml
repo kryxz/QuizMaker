@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="?attr/colorPrimary"
+    android:layoutDirection="rtl"
+    android:orientation="vertical"
+    tools:context=".ChatFragment">
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/chatRV"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="2"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:textDirection="rtl">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/messageText"
+            style="@style/loginEditTextStyle"
+            android:layout_weight="2"
+            android:drawableEnd="@drawable/ic_message"
+            android:hint="@string/chatMessage"
+            android:padding="8dp"
+            android:textColorHint="?attr/textColorHint" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/sendMessageBtn"
+            style="@style/QuestionFormButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center_horizontal"
+            android:text="@string/send" />
+
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+
+</androidx.appcompat.widget.LinearLayoutCompat>

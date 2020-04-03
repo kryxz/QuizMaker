@@ -1,4 +1,3 @@
-
 package com.lemonlab.quizmaker
 
 import android.content.Context
@@ -7,6 +6,7 @@ import androidx.core.util.forEach
 import com.google.firebase.firestore.FirebaseFirestore
 import java.util.*
 import kotlin.collections.ArrayList
+import kotlin.collections.HashMap
 
 enum class QuizType(val id: Int) {
     MultipleChoice(R.string.mulChoice), TrueFalse(R.string.trueFalse)
@@ -16,18 +16,15 @@ enum class NotificationType {
     MESSAGE, QUIZ
 }
 
-enum class ViewType {
-    ViewAnswers, InClass
-}
-
 data class TheClass(
     val teach: String,
     val title: String,
     val date: Long,
     val members: ArrayList<String>,
-    val id: String
+    val id: String,
+    val open: Boolean
 ) {
-    constructor() : this("", "", 0, ArrayList(), "")
+    constructor() : this("", "", 0, ArrayList(), "", false)
 
     private fun addMember(name: String) =
         members.add(name)
@@ -116,17 +113,39 @@ abstract class Quizzer {
     abstract fun getTitle(): String
     abstract fun getID(): String
 
+    abstract fun setTitle(title: String)
+
+    abstract fun deleteQuestion(pos: Int)
 }
 
 data class MultipleChoiceQuiz(
     val quiz: Quiz?,
-    val questions: HashMap<String, MultipleChoiceQuestion>?
+    var questions: HashMap<String, MultipleChoiceQuestion>?
 ) : Quizzer() {
     constructor() : this(null, null)
 
     override fun getAuthor() = quiz!!.quizAuthor
     override fun getID() = quiz!!.quizUUID
     override fun getTitle() = quiz!!.quizTitle
+
+    override fun deleteQuestion(pos: Int) {
+
+        questions!!.remove(pos.toString())
+        quiz!!.questionsCount--
+
+        val copy = HashMap<String, MultipleChoiceQuestion>()
+        copy.putAll(questions!!)
+
+        val iterator = copy.entries.iterator()
+        while (iterator.hasNext()) {
+            val item = iterator.next()
+            if (item.key.toInt() > pos) {
+                questions!![(item.key.toInt() - 1).toString()] = item.value
+                questions!!.remove(item.key)
+            }
+        }
+    }
+
 
     override fun score(answers: SparseArray<*>): Int {
         var score = 0
@@ -135,6 +154,10 @@ data class MultipleChoiceQuiz(
                 score = score.inc()
         }
         return score
+    }
+
+    override fun setTitle(title: String) {
+        quiz!!.quizTitle = title
     }
 
     override fun getSize() = quiz!!.questionsCount
@@ -153,9 +176,32 @@ data class MultipleChoiceQuiz(
 
 data class TrueFalseQuiz(
     val quiz: Quiz?,
-    val questions: HashMap<String, TrueFalseQuestion>?
+    var questions: HashMap<String, TrueFalseQuestion>?
 ) : Quizzer() {
     constructor() : this(null, null)
+
+    override fun deleteQuestion(pos: Int) {
+
+        questions!!.remove(pos.toString())
+        quiz!!.questionsCount--
+
+        val copy = HashMap<String, TrueFalseQuestion>()
+        copy.putAll(questions!!)
+
+        val iterator = copy.entries.iterator()
+        while (iterator.hasNext()) {
+            val item = iterator.next()
+            if (item.key.toInt() > pos) {
+                questions!![(item.key.toInt() - 1).toString()] = item.value
+                questions!!.remove(item.key)
+            }
+        }
+    }
+
+
+    override fun setTitle(title: String) {
+        quiz!!.quizTitle = title
+    }
 
     override fun getSize() = quiz!!.questionsCount
 
@@ -216,9 +262,9 @@ data class QuizLog(
 }
 
 data class Quiz(
-    val quizTitle: String,
+    var quizTitle: String,
     val passwordProtected: Boolean,
-    val questionsCount: Int,
+    var questionsCount: Int,
     val quizPin: String,
     val quizType: QuizType?,
     val quizAuthor: String,

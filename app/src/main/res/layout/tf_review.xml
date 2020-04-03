@@ -7,6 +7,7 @@
     android:orientation="vertical"
     android:padding="8dp">
 
+
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/reviewQuestionText"
         android:layout_width="wrap_content"
@@ -29,32 +30,16 @@
         android:visibility="gone" />
 
 
-    <LinearLayout
-        android:id="@+id/reviewMultipleChoiceLayout"
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/editQuestion"
+        style="@style/QuestionFormButtonStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:layout_gravity="center"
+        android:drawableEnd="@drawable/ic_edit"
+        android:drawablePadding="8dp"
+        android:text="@string/editQuestion"
+        android:visibility="gone" />
 
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/reviewFirstChoice"
-            style="@style/reviewQuestionAnswerStyle"
-            android:text="@string/reviewTemplate" />
-
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/reviewSecondChoice"
-            style="@style/reviewQuestionAnswerStyle"
-            android:text="@string/reviewTemplate" />
-
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/reviewThirdChoice"
-            style="@style/reviewQuestionAnswerStyle"
-            android:text="@string/reviewTemplate" />
-
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/reviewFourthChoice"
-            style="@style/reviewQuestionAnswerStyle"
-            android:text="@string/reviewTemplate" />
-
-    </LinearLayout>
 
 </androidx.appcompat.widget.LinearLayoutCompat>

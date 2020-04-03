@@ -40,28 +40,49 @@ class TeachFragment : Fragment() {
 
         val code = TeachFragmentArgs.fromBundle(arguments!!).classCode
 
-        vm.getClassTitle(code).observe(viewLifecycleOwner, Observer { title ->
-            setTitle(title)
+        vm.getClass(code).observe(viewLifecycleOwner, Observer { that ->
+            setTitle(that.title)
+            val isUserCreated = that.teach == vm.getName()
+            if (that.open || isUserCreated)
+                createQuizButton.visibility = View.VISIBLE
+            else createQuizButton.visibility = View.GONE
+
         })
+
         val adapter = GroupAdapter<ViewHolder>()
         vm.getClassQuizzes(code).observe(viewLifecycleOwner, Observer { list ->
-            if (list.isEmpty()) return@Observer
-            with(classQuizzesRV) {
-                layoutManager = LinearLayoutManager(context!!)
+
+            if (list == null || list.isEmpty()) {
                 classQuizzesProgressBar.visibility = View.GONE
+                noClassQuizzes.visibility = View.VISIBLE
+                classQuizzesRV.visibility = View.GONE
+                return@Observer
+            }
+
+            classQuizzesProgressBar.visibility = View.GONE
+            noClassQuizzes.visibility = View.GONE
+
+            with(classQuizzesRV) {
+                visibility = View.VISIBLE
+                layoutManager = LinearLayoutManager(context!!)
                 removeAllViews()
                 adapter.clear()
                 for (item in list)
-                    adapter.add(ClassQuiz(item, vm, viewLifecycleOwner))
+                    adapter.add(ClassQuiz(item, vm, viewLifecycleOwner, code))
                 this.adapter = adapter
             }
 
         })
 
         createQuizButton.setOnClickListener {
-            it.findNavController().navigate(TeachFragmentDirections.createNewQuiz(code))
+            it.findNavController().navigate(
+                TeachFragmentDirections
+                    .createNewQuiz().setClassCode(code)
+            )
         }
-
+        chatNowButton.setOnClickListener {
+            it.findNavController().navigate(TeachFragmentDirections.chatNow(code))
+        }
 
     }
 

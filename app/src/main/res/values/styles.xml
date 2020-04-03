@@ -71,18 +71,20 @@
         <item name="android:padding">16dp</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:maxLength">144</item>
+        <item name="android:textColorHint">?attr/textColorHint</item>
+        <item name="android:textColor">?attr/textColor</item>
     </style>
 
 
     <style name="reviewQuestionAnswerStyle">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_gravity">center_horizontal</item>
-        <item name="android:textSize">24sp</item>
+        <item name="android:textSize">20sp</item>
         <item name="android:gravity">center_horizontal</item>
-        <item name="android:layout_marginBottom">16dp</item>
+        <item name="android:layout_marginBottom">8dp</item>
         <item name="android:padding">8dp</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:lineSpacingMultiplier">1.2</item>
+        <item name="android:lineSpacingMultiplier">1.1</item>
     </style>
 
 </resources>

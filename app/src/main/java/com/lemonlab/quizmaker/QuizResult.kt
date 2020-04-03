@@ -46,7 +46,6 @@ class QuizResult : Fragment() {
             messageQuizAuthorButton.setOnClickListener {
                 sendMessageToAuthorDialog(args.quizAuthor)
             }
-
         else
             messageQuizAuthorButton.visibility = View.GONE
 
@@ -107,9 +106,13 @@ class QuizResult : Fragment() {
     private fun sendRatingNow() {
         val args = QuizResultArgs.fromBundle(arguments!!)
 
-        vm.rateQuiz(args.quizID, args.isClass, quizFinishedRatingBar.rating)
+        vm.rateQuiz(
+            args.quizID,
+            quizFinishedRatingBar.rating,
+            classCode = args.classCode
+        )
+        shouldRate(args.quizID)
 
-        TempData.currentQuizzes = null
     }
 
     private fun showHideRating(visibility: Int) {
@@ -122,8 +125,9 @@ class QuizResult : Fragment() {
         showHideRating(View.GONE)
         // This decides if a user's rating should be sent to database (users can rate a quiz once).
 
-        vm.canRate(quizID).observe(viewLifecycleOwner, Observer { rated ->
-            if (!rated) {
+
+        vm.canRate(quizID).observe(viewLifecycleOwner, Observer { canRate ->
+            if (canRate) {
                 showHideRating(View.VISIBLE)
                 sendRatingButton.setOnClickListener {
                     sendRatingNow()

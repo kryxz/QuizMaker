@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="?attr/colorPrimary"
+    android:orientation="vertical"
+    tools:context=".JoinFragment">
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/joinClassViaCode"
+        style="@style/QuestionFormButtonStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:background="@drawable/item_borders"
+        android:text="@string/joinViaCode" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/noOpenClasses"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:text="@string/NoPublicClassesFound"
+        android:textColor="?attr/textColor"
+        android:textSize="32sp"
+        android:visibility="visible" />
+
+    <ProgressBar
+        android:id="@+id/allClassesProgressBar"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/allClassesRV"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+
+
+</androidx.appcompat.widget.LinearLayoutCompat>

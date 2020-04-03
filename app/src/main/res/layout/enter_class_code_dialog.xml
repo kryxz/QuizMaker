@@ -1,59 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     android:background="@drawable/item_borders"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:padding="8dp">
 
     <androidx.appcompat.widget.AppCompatTextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
         android:gravity="center_horizontal"
-        android:text="@string/CreateClass"
+        android:text="@string/joinViaCode"
         android:textSize="26sp" />
 
-    <androidx.appcompat.widget.AppCompatTextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
-        android:padding="8dp"
-        android:text="@string/createClassInfo"
-        android:textSize="16sp" />
 
     <com.google.android.material.textfield.TextInputEditText
-        android:id="@+id/classNameText"
+        android:id="@+id/classCodeInput"
         style="@style/loginEditTextStyle"
-        android:drawableEnd="@drawable/ic_info"
-        android:hint="@string/className"
-        android:maxLength="100"
+        android:drawableEnd="@drawable/ic_lock"
+        android:drawableTint="?attr/iconColor"
+        android:hint="@string/classViaCode"
         android:padding="8dp"
         android:textColorHint="?attr/textColorHint" />
-
-
-    <androidx.appcompat.widget.AppCompatCheckBox
-        android:id="@+id/isClassOpen"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:text="@string/publicClass"
-        android:textColor="?attr/textColorHint" />
-
-    <androidx.appcompat.widget.AppCompatTextView
-        style="@style/loginEditTextStyle"
-        android:id="@+id/createClassHelpText"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/createClassClosed"
-        android:textSize="16sp" />
 
 
     <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="8dp">
+        android:layout_margin="8dp"
+        android:layout_marginBottom="16dp">
 
         <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/confirmClass"
+            android:id="@+id/joinViaCodeConfirm"
             style="@style/QuestionFormButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -63,7 +42,7 @@
             android:text="@string/confirm" />
 
         <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/cancelClass"
+            android:id="@+id/joinViaCodeCancel"
             style="@style/QuestionFormButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -73,4 +52,6 @@
             android:text="@string/cancel" />
 
     </androidx.appcompat.widget.LinearLayoutCompat>
+
+
 </androidx.appcompat.widget.LinearLayoutCompat>

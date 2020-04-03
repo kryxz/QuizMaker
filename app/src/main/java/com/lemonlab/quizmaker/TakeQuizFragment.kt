@@ -40,19 +40,19 @@ class TakeQuizFragment : Fragment() {
         val args = TakeQuizFragmentArgs.fromBundle(arguments!!)
         val quizID = args.quizID
 
-        val isClass = args.isClass
+        val classCode = args.classCode
 
         val vm = (activity as MainActivity).vm
 
-        vm.getQuiz(quizID, isClass).observe(viewLifecycleOwner, Observer {
+        vm.getQuiz(classCode, quizID).observe(viewLifecycleOwner, Observer {
             if (it != null)
-                setUp(it, isClass)
+                setUp(it)
         })
 
 
     }
 
-    private fun setUp(quiz: Quizzer, isClass: Boolean) {
+    private fun setUp(quiz: Quizzer) {
         var position = 1
         questionNumberTextView.text = position.toString()
 
@@ -125,6 +125,16 @@ class TakeQuizFragment : Fragment() {
         }
 
         fun finish() {
+
+            if (quiz is MultipleChoiceQuiz) {
+                answers[position] =
+                    quizChoicesGroup.indexOfChild(
+                        view!!.findViewById(quizChoicesGroup.checkedRadioButtonId)
+                    )
+            } else
+                answers[position] = answerCheckBox.isChecked
+
+
             val action = TakeQuizFragmentDirections.viewResult(
                 quiz.getID(),
                 quiz.getSize(),
@@ -132,7 +142,7 @@ class TakeQuizFragment : Fragment() {
                 quiz.getAuthor(),
                 quiz.getTitle()
             )
-            action.isClass = isClass
+            action.classCode = TakeQuizFragmentArgs.fromBundle(arguments!!).classCode
             val navOptions = NavOptions.Builder().setPopUpTo(
                 R.id.takeQuizFragment,
                 true

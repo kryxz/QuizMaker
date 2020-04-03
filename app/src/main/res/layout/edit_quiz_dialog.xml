@@ -16,28 +16,63 @@
 
 
     <com.google.android.material.textfield.TextInputEditText
-        android:id="@+id/dialogPropertiesQuizTitleEditText"
+        android:id="@+id/quizTitle"
         style="@style/loginEditTextStyle"
         android:drawableEnd="@drawable/ic_title"
         android:hint="@string/quizTitleText"
         android:padding="8dp"
         android:textColorHint="?attr/textColorHint" />
 
-    <com.google.android.material.textfield.TextInputLayout
+    <androidx.appcompat.widget.AppCompatTextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="8dp">
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:gravity="center_horizontal"
+        android:text="@string/chooseQuestionToDelete"
+        android:textSize="18sp" />
 
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/dialogPropertiesQuizQuestionsCount"
-            style="@style/loginEditTextStyle"
-            android:drawableEnd="@drawable/ic_numbered"
-            android:hint="@string/quizQuestionsCount"
-            android:inputType="number"
-            android:maxLength="2"
-            android:textColorHint="?attr/textColorHint" />
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
-    </com.google.android.material.textfield.TextInputLayout>
+        <androidx.appcompat.widget.AppCompatSpinner
+            android:id="@+id/questionsSpinner"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_horizontal"
+            android:layout_weight="1"
+            android:popupBackground="?attr/colorPrimaryDark" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/deleteThisQuestion"
+            style="@style/QuestionFormButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="4dp"
+            android:layout_weight="1"
+            android:text="@string/DeleteCurrentQuestion" />
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/questionText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:gravity="center_horizontal"
+        android:text="@string/reviewTemplate"
+        android:textSize="18sp" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/deleteQuiz"
+        style="@style/QuestionFormButtonStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="4dp"
+
+        android:text="@string/deleteQuiz" />
 
     <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="match_parent"
@@ -46,7 +81,7 @@
         android:layout_marginBottom="16dp">
 
         <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/dialogPropertiesConfirmButton"
+            android:id="@+id/dialogConfirmButton"
             style="@style/QuestionFormButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -55,18 +90,9 @@
             android:layout_weight="1"
             android:text="@string/confirm" />
 
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/dialogDeleteCurrentQuestionButton"
-            style="@style/QuestionFormButtonStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="4dp"
-            android:layout_marginEnd="4dp"
-            android:layout_weight="1"
-            android:text="@string/DeleteCurrentQuestion" />
 
         <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/dialogPropertiesCancelButton"
+            android:id="@+id/dialogCancelButton"
             style="@style/QuestionFormButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

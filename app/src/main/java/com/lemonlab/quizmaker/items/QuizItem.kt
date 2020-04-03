@@ -5,6 +5,7 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import androidx.appcompat.widget.AppCompatButton
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
 import androidx.navigation.findNavController
@@ -30,9 +31,11 @@ class QuizItem(
 
 
         vm.canRate(quiz.quizUUID).observe(lifecycleOwner, Observer {
-            if (!it)
-                view.startQuizButton.text = context.getString(R.string.quizAlreadyTaken)
+            setUpQuizButton(context, it, view.startQuizButton)
+
         })
+
+
 
         initView(view, quiz, context)
 
@@ -53,6 +56,25 @@ class QuizItem(
     }
 
     companion object {
+
+        fun setUpQuizButton(context: Context, bool: Boolean, button: AppCompatButton) {
+
+            val title = if (!bool)
+                context.getString(R.string.quizAlreadyTaken)
+            else
+                context.getString(R.string.startQuiz)
+
+            val icon = if (!bool)
+                ContextCompat.getDrawable(context, R.drawable.ic_replay)
+            else
+                ContextCompat.getDrawable(context, R.drawable.ic_quiz)
+            with(button) {
+                text = title
+                setCompoundDrawablesWithIntrinsicBounds(icon, null, null, null)
+            }
+
+        }
+
         fun initView(view: View, quiz: Quiz, context: Context) {
             with(view) {
                 quizTypeTextView.text = context.getString(quiz.quizType!!.id)

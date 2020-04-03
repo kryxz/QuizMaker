@@ -15,7 +15,8 @@ import kotlinx.android.synthetic.main.quiz_item.view.*
 class ClassQuiz(
     private val quiz: Quiz,
     private val vm: QuizzesVM,
-    private val lifecycleOwner: LifecycleOwner
+    private val lifecycleOwner: LifecycleOwner,
+    private val code: String
 ) : Item<ViewHolder>() {
 
     override fun bind(viewHolder: ViewHolder, position: Int) {
@@ -26,23 +27,41 @@ class ClassQuiz(
         QuizItem.initView(view, quiz, context)
 
         vm.canRate(quiz.quizUUID).observe(lifecycleOwner, Observer {
-            if (!it)
-                view.startQuizButton.text = context.getString(R.string.quizAlreadyTaken)
-        })
+            QuizItem.setUpQuizButton(context, it, view.startQuizButton)
 
-        view.startQuizButton.setOnClickListener {
-            if (quiz.passwordProtected)
-                QuizItem.enterPasswordDialog(context, quiz, ::enterQuiz)
-            else
-                enterQuiz(it)
+        })
+        val isCreator = vm.getName() == quiz.quizAuthor
+
+        view.editQuizButton.visibility = if (isCreator)
+            View.VISIBLE
+        else View.GONE
+
+        with(view) {
+            editQuizButton.visibility = if (isCreator)
+                View.VISIBLE
+            else View.GONE
+
+            editQuizButton.setOnClickListener {
+                val action = TeachFragmentDirections.editClassQuiz(quiz.quizUUID).setClassCode(code)
+                it.findNavController().navigate(action)
+            }
+
+            startQuizButton.setOnClickListener {
+                if (quiz.passwordProtected)
+                    QuizItem.enterPasswordDialog(context, quiz, ::enterQuiz)
+                else
+                    enterQuiz(it)
+            }
+
         }
+
 
     }
 
     private fun enterQuiz(view: View) {
         val action =
             TeachFragmentDirections.takeClassQuiz(quiz.quizUUID)
-        action.isClass = true
+        action.classCode = code
         view.findNavController()
             .navigate(action)
     }

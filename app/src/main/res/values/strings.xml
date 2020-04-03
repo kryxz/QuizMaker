@@ -12,6 +12,7 @@
     <string name="messages">الرسائل</string>
     <string name="settingsLabel">الضبط</string>
     <string name="createNewQuiz">اختبار جديد</string>
+    <string name="chat">الدردشة</string>
     <string name="usernameEmailLogin">اسم المستخدم أو البريد الإلكتروني</string>
 
     <string name="categoryAcademic">أكاديمي</string>
@@ -24,15 +25,20 @@
     <string name="cannotBeEmpty">لا يمكن أن يكون فارغًا</string>
     <string name="cannotBeGreaterThan30">أكثر عدد هو 30!</string>
     <string name="quizTitleText">عنوان الاختبار</string>
+    <string name="classViaCode">الرمز الخاص بالقاعة</string>
     <string name="questionsText">نص السؤال</string>
     <string name="questionsTextLabel">%1$s</string>
     <string name="quizProtected">يتطلب هذا الاختبار كلمة مرور</string>
     <string name="wrongPassword">كلمة المرور غير صحيحة!</string>
 
     <string name="trueStatement">عبارة صحيحة</string>
+    <string name="publicClass">قاعة عامة</string>
     <string name="falseStatement">عبارة خاطئة</string>
     <string name="aChoice">اكتب خيارًا</string>
     <string name="edit">تحرير</string>
+
+    <string name="wrongFormat">ترميز خاطئ للإجابة</string>
+
     <string name="publishQuizText">نشر الاختبار</string>
     <string name="noMessages">ليس هناك أي رسالة بعد!</string>
 
@@ -41,6 +47,9 @@
 
     <string name="cancel">إلغاء</string>
     <string name="confirm">تأكيد</string>
+    <string name="updateQuiz">نشر الاختبار/حفظ التغييرات</string>
+    <string name="addQuestion">إضافة سؤال</string>
+    <string name="updateQuizDone">تم تحديث الاختبار</string>
     <string name="thanks">شكرًا لك!</string>
 
     <string name="previousQuestion">السؤال السابق</string>
@@ -51,31 +60,45 @@
     <string name="finishQuiz">انهاء وعرض النتيجة</string>
 
     <string name="startQuiz">بدأ الاختبار</string>
-    <string name="seeQuizzes">عرض الاختبارات</string>
+    <string name="seeQuizzes">الدخول</string>
+
+
+    <string name="joinClassLabel">الانضمام إلى قاعة</string>
 
     <string name="joinClass">الانضمام</string>
     <string name="CreateClass">إنشاء قاعة</string>
-    <string name="createClassInfo">تمكنك القاعة من إنشاء اختبارات خاصة لمجموعة ما، ولا يمكن الدخول إلا عن طريق الرمز أو الرابط المخصص للقاعة.</string>
+    <string name="joinViaCode">الانضمام عن طريق رمز القاعة</string>
+
+    <string name="createClassInfo">تمكنك القاعة من إنشاء اختبارات لمجموعة من المستخدمين. يمكنك جعل القاعة خاصة أو عامة</string>
+
+    <string name="createClassClosed">يمكن الانضمام لقاعتك عن طريق الرمز أو الرابط المخصص، أنت فقط يمكنك إنشاء اختبارات</string>
+    <string name="createClassOpen">يمكن لأي أحد الانضمام إلى هذه القاعة، لن يحتاج المستخدم إلى دعوة للدخول، ويمكن لأي أحد إنشاء اختبارات</string>
 
     <string name="getQuizAsPDF">تنزيل الاختبار</string>
-    <string name="DeleteCurrentQuestion">حذف السؤال الحالي</string>d
-    <string name="thisWillDeleteCurrentQuestion">سيتم حذف السؤال الحالي مع الاجابة.</string>d
+    <string name="DeleteCurrentQuestion">حذف السؤال</string>
+    <string name="deleteQuiz">حذف الاختبار</string>
+    <string name="deleteQuizConfirm">سيتم حذف الاختبار كليًا، لا يمكنك التراجع عن هذه العمليّة.</string>
+    <string name="thisWillDeleteCurrentQuestion">سيتم حذف السؤال الحالي مع الاجابة.</string>
     <string name="questionsCountText">عدد الأسئلة: %1$d</string>
     <string name="quizAuthorText">المؤلف: %1$s</string>
+    <string name="questionText">السؤال: %1$s</string>
     <string name="resizeQuiz">تغيير عدد الأسئلة</string>
     <string name="thisWillDeleteRemainingQuestions">سيتم حذف الأسئلة الإضافية</string>
     <string name="reportQuiz">الإبلاغ عن الاختبار</string>
     <string name="reportQuizConfirm">هل أنت متأكد أن هذا الاختبار غير لائق؟</string>
 
     <string name="editQuiz">تعديل الاختبار</string>
+    <string name="editQuestion">تعديل السؤال</string>
     <string name="existingQuestions">سيتم حذف الأسئلة الموجودة</string>
     <string name="existingQuestionsMessage">اختر تأكيد للحذف، الغاء لاستعادة الأسئلة</string>
     <string name="completeAllQuestions">يجب عليك كتابة جميع الأسئلة.</string>
-
+    <string name="leaveClass">مغادرة القاعة</string>
+    <string name="leaveClassConfirm">لا يمكنك العودة إلى إذا امتلكت رمز القاعة، أو كانت القاعة عامة!</string>
     <string name="scoreTitle">نتيجتك</string>
     <string name="score">الإجابات الصحيحة: %1$d من أصل %2$d</string>
     <string name="sendRating">ارسال التقييم</string>
     <string name="sendMessage">مراسلة المؤلف</string>
+    <string name="chatMessage">إرسال رسالة</string>
     <string name="suggestIdea">اقتراح فكرة</string>
     <string name="ratingSent">تم ارسال التقييم!</string>
     <string name="rateQuiz">قم بتقييم الاختبار</string>
@@ -98,6 +121,9 @@
     <string name="loginFailed">فشل تسجيل الدخول، تحقق من معلومات حسابك</string>
     <string name="noUser">لم يتم العثور على حساب.</string>
     <string name="NoContent">لا يوجد أي اختبار بعد!</string>
+    <string name="noClasses">ليس لديك أي قاعات بعد!</string>
+    <string name="classNotFound">تعذّر العثور على القاعة</string>
+    <string name="NoPublicClassesFound">لا يوجد أي قاعة... يمكنك دائمًا إنشاء قاعة</string>
     <string name="quizScore">
         نتيجتك لـ %1$s
         \n
@@ -107,6 +133,8 @@
         \n
         النسبة المئوية: %4$s
     </string>
+    <string name="joinCode">رمز القاعة: %1$s</string>
+    <string name="copied">تم النسخ!</string>
 
     <string name="profileLabel">الملف الشخصي</string>
     <string name="joinDate">تاريخ الانضمام</string>
@@ -121,11 +149,13 @@
     <string name="instructorName">اسم المدرس</string>
     <string name="editedSuccessfully">تم التعديل</string>
     <string name="cacheDeleted">تم حذف البيانات المؤقتة</string>
+    <string name="chooseQuestionToDelete">اختر سؤالًا لحذفه</string>
     <string name="changeLanguage">تغيير اللغة</string>
     <string name="emptyLog">السجل فارغ</string>
     <string name="userProfileLabel">%1$s الملف الشخصي لـ</string>
     <string name="cannotViewLog">لا يمكنك عرض السجل حاليًا</string>
     <string name="answerQuestions">أجب على جميع الأسئلة</string>
+    <string name="answer">رمز الإجابة( من 1 إلى 4)</string>
     <string name="showPassword">عرض كلمة المرور</string>
     <string name="alreadyRated">سبق وقيّمت هذا الاختبار</string>
     <string name="suggestions">اسم المستخدم غير صالح، بعض الاقتراحات: \n
@@ -180,6 +210,20 @@
         <item>هل سيتم تحديث التطبيق؟</item>
         <item>وصلني رسالة مسيئة، كيف أتصرف؟</item>
         <item>مامعنى أن الاختبار يتطلب كلمة مرور؟</item>
+    </string-array>
+
+    <string-array name="chars">
+        <item>أ</item>
+        <item>ب</item>
+        <item>ج</item>
+        <item>د</item>
+    </string-array>
+
+    <string-array name="enChars">
+        <item>a</item>
+        <item>b</item>
+        <item>c</item>
+        <item>d</item>
     </string-array>
 
     <string-array name="faqsAnswers">
@@ -359,6 +403,5 @@
         \n
         إذا كان لديك أي أسئلة أو اقتراحات أو استفسارات حول سياسة الخصوصية، لا تتردد في مراسلتنا على zaka7024@gmail.com\n
     </string>
-
-
+    
 </resources>

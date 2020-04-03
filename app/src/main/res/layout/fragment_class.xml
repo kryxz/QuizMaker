@@ -13,6 +13,7 @@
         android:layout_height="match_parent"
         android:visibility="gone" />
 
+
     <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -43,7 +44,15 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/classesRV"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="wrap_content" />
 
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/noClasses"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:text="@string/noClasses"
+        android:textColor="?attr/textColor"
+        android:textSize="32sp" />
 
 </androidx.appcompat.widget.LinearLayoutCompat>

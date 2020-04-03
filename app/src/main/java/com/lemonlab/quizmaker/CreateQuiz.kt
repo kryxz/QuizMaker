@@ -9,6 +9,7 @@ import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.appcompat.widget.AppCompatButton
@@ -20,6 +21,9 @@ import kotlinx.android.synthetic.main.fragment_create_quiz.*
 
 class CreateQuiz : Fragment() {
 
+    private lateinit var viewModel: QuestionsVM
+
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -29,9 +33,9 @@ class CreateQuiz : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        // createQuizBanner.loadAd(AdRequest.Builder().build())
-        setUp()
         super.onViewCreated(view, savedInstanceState)
+        viewModel = (activity as MainActivity).questionsVM
+        init()
     }
 
     private fun textWatchers() {
@@ -43,10 +47,12 @@ class CreateQuiz : Fragment() {
                 if (!s.isNullOrEmpty() && s.toString().toInt() > 30)
                     quizQuestionsCount.error = getString(R.string.cannotBeGreaterThan30)
                 else
-                    TempData.questionsCount = if (s.toString().isNotEmpty())
-                        s.toString().toInt()
-                    else
-                        0
+                    viewModel.setSize(
+                        if (s.toString().isNotEmpty())
+                            s.toString().toInt()
+                        else
+                            0
+                    )
             }
 
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
@@ -59,7 +65,7 @@ class CreateQuiz : Fragment() {
                 if (s.isNullOrBlank())
                     quizPasswordEditText.error = getString(R.string.cannotBeEmpty)
                 else
-                    TempData.quizPin = s.toString()
+                    viewModel.setPin(s.toString())
             }
 
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
@@ -72,7 +78,7 @@ class CreateQuiz : Fragment() {
                 if (s.isNullOrBlank())
                     quizTitleEditText.error = getString(R.string.cannotBeEmpty)
                 else
-                    TempData.quizTitle = s.toString()
+                    viewModel.setTitle(s.toString())
             }
 
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
@@ -87,24 +93,46 @@ class CreateQuiz : Fragment() {
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
             questionsTypeSpinner.adapter = adapter
         }
+
+        questionsTypeSpinner.onItemSelectedListener =
+            object : AdapterView.OnItemSelectedListener {
+                override fun onNothingSelected(parent: AdapterView<*>?) {}
+
+                override fun onItemSelected(
+                    parent: AdapterView<*>?,
+                    view: View?,
+                    position: Int,
+                    id: Long
+                ) {
+                    viewModel.setQuizType(
+                        if (questionsTypeSpinner.selectedItemPosition == 0)
+                            QuizType.MultipleChoice
+                        else
+                            QuizType.TrueFalse
+                    )
+
+                }
+            }
     }
 
     private fun getPreviousData() {
-        isPasswordProtected.isChecked = TempData.isPasswordProtected
-        if (TempData.quizTitle.isNotEmpty())
-            quizTitleEditText.setText(TempData.quizTitle)
-        if (TempData.quizPin != "notRequired")
-            quizPasswordEditText.setText(TempData.quizPin)
-        if (TempData.questionsCount != 0)
-            quizQuestionsCount.setText(TempData.questionsCount.toString())
+        isPasswordProtected.isChecked = viewModel.hasPin()
+        quizTitleEditText.setText(viewModel.getTitle())
+        quizPasswordEditText.setText(viewModel.getPin())
+        quizQuestionsCount.setText(viewModel.getSize().toString())
+        val type = viewModel.getQuizType()
+
+        questionsTypeSpinner.setSelection(if (type == QuizType.TrueFalse) 1 else 0)
     }
 
-    private fun setUp() {
-        getPreviousData()
 
-        //toRemove saved questions
+    private fun init() {
+        getPreviousData()
+        textWatchers()
+
+        // to Remove saved questions
         fun deleteCached() {
-            TempData.deleteCached()
+            viewModel.removeAll()
             Navigation.findNavController(view!!).navigate(R.id.viewEditQuestions)
         }
 
@@ -114,7 +142,6 @@ class CreateQuiz : Fragment() {
             direction.classCode = code
             view!!.findNavController().navigate(direction)
         }
-        textWatchers()
 
         isPasswordProtected.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked)
@@ -122,23 +149,28 @@ class CreateQuiz : Fragment() {
             else
                 quizPasswordEditText.visibility = View.GONE
 
-            TempData.isPasswordProtected = isChecked
-            TempData.quizPin = if (isChecked)
-                ""
-            else
-                "notRequired"
+            viewModel.setHasPin(isChecked)
+
+
         }
-        if (TempData.isPasswordProtected)
-            quizPasswordEditText.visibility = View.VISIBLE
 
         writeQuestionsButton.setOnClickListener {
-            TempData.quizType = if (questionsTypeSpinner.selectedItemPosition == 0)
+
+            val quizType = if (questionsTypeSpinner.selectedItemPosition == 0)
                 QuizType.MultipleChoice
             else
                 QuizType.TrueFalse
 
-            if (TempData.multiChoiceCachedQuestions != null && TempData.quizType == QuizType.MultipleChoice ||
-                TempData.trueFalseCachedQuestions != null && TempData.quizType == QuizType.TrueFalse
+            viewModel.setQuizType(quizType)
+            viewModel.setTitle(quizTitleEditText.text.toString())
+            viewModel.setPin(quizPasswordEditText.text.toString())
+            viewModel.setSize(quizQuestionsCount.text.toString().toIntOrNull() ?: 1)
+
+            if (viewModel.getMultiChoice().isNotEmpty()
+                && viewModel.getQuizType() == QuizType.MultipleChoice ||
+                viewModel.getTrueFalse()
+                    .isNotEmpty() && viewModel.getQuizType() == QuizType.TrueFalse
+
             ) {
                 context!!.showYesNoDialog(
                     ::deleteCached,
@@ -146,7 +178,8 @@ class CreateQuiz : Fragment() {
                     getString(R.string.existingQuestions),
                     getString(R.string.existingQuestionsMessage)
                 )
-            } else if (TempData.quizPin != "" && TempData.quizTitle != "" && TempData.questionsCount >= 1)
+
+            } else if (viewModel.getTitle() != "")
                 navigateToEditingQuestions()
 
 
@@ -155,8 +188,8 @@ class CreateQuiz : Fragment() {
     }
 
     override fun onDestroyView() {
-        activity!!.hideKeypad()
         super.onDestroyView()
+        activity!!.hideKeypad()
     }
 
 
@@ -192,8 +225,10 @@ fun Context.showYesNoDialog(
         setView(dialogView)
         show()
     }
+
     if (dialogTitle == getString(R.string.changeTheme))
         dialogBuilder.setOnDismissListener { functionIfCancel() }
+
 }
 
 fun showToast(context: Context, message: String) {

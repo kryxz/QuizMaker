@@ -11,7 +11,7 @@ import kotlinx.android.synthetic.main.quiz_hist.view.*
 
 
 // quiz log as shown in a user profile
-class QuizHistory(private val quiz: Quiz) : Item<ViewHolder>() {
+class QuizLog(private val quiz: Quiz) : Item<ViewHolder>() {
 
     override fun bind(viewHolder: ViewHolder, position: Int) {
         val view = viewHolder.itemView

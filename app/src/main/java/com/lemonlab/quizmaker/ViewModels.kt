@@ -2,15 +2,13 @@ package com.lemonlab.quizmaker
 
 import android.app.Application
 import android.content.Context
+import android.widget.Toast
 import androidx.lifecycle.*
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.messaging.FirebaseMessaging
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
-import kotlinx.coroutines.withContext
 import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
@@ -25,9 +23,8 @@ class FireRepo {
 
     fun getQuizRef(quizID: String) = getQuizzesRef().document(quizID)
 
-    private fun getClassQuizzesRef() = db.collection("classQuizzes")
-
-    fun getClassQuiz(quizID: String) = getClassQuizzesRef().document(quizID)
+    fun getClassQuiz(id: String, quizID: String) =
+        getClassRef(id).collection("Quizzes").document(quizID)
 
     fun getClassRef(id: String) = db.collection("class").document(id)
 
@@ -50,28 +47,131 @@ class FireRepo {
 
 class QuizzesVM(application: Application) : AndroidViewModel(application) {
 
-    private val repo: FireRepo = FireRepo()
+    private val repo = FireRepo()
 
     private val allQuizzes: MutableLiveData<List<Quiz>> = MutableLiveData()
-    private val classQuizzes: MutableLiveData<List<Quiz>> = MutableLiveData()
-    private val allClasses: MutableLiveData<List<TheClass>> = MutableLiveData()
 
-    private val currentQuiz: MutableLiveData<Quizzer> = MutableLiveData()
+    fun delQuiz(classCode: String, id: String) {
 
-    fun getQuiz(id: String, isClass: Boolean): MutableLiveData<Quizzer> {
+        val isClass = id.substring(0, 5) == "class"
+
         val ref = if (isClass)
-            repo.getClassQuiz(id)
+            repo.getClassRef(classCode).collection("Quizzes")
+        else
+            repo.getQuizzesRef()
+
+        // remove from user's data
+        repo.getUsersRef().document(getName())
+            .collection("Quizzes").document(id).delete()
+
+        ref.document(id).delete()
+    }
+
+    fun sendQuiz(id: String, quiz: HashMap<String, Quizzer>, classCode: String) {
+        val isClass = id.substring(0, 5) == "class"
+
+        val ref = if (isClass)
+            repo.getClassRef(classCode).collection("Quizzes")
+        else
+            repo.getQuizzesRef()
+
+        // add to user's data
+        repo.getUsersRef().document(getName())
+            .collection("Quizzes").document(id).set(mapOf(id to "id"))
+
+        ref.document(id).set(quiz)
+
+    }
+
+    fun updateQuiz(classCode: String, id: String, quiz: Quizzer) {
+        val isClass = classCode != "empty"
+
+        val map = HashMap<String, Quizzer>().apply {
+            this["quiz"] = quiz
+        }
+
+        val ref = if (isClass)
+            repo.getClassRef(classCode).collection("Quizzes")
+        else
+            repo.getQuizzesRef()
+
+        ref.document(id).set(map)
+
+
+    }
+
+    fun leaveClass(that: TheClass) {
+        if (!that.members.contains(getName())) return
+
+        that.members.remove(getName())
+        if (that.members.isEmpty())
+            repo.getClassesRef().document(that.id).delete()
+        else
+            repo.getClassesRef().document(that.id).set(that)
+        repo.getUsersRef().document(repo.getUserName())
+            .collection("class").document(that.id).delete()
+    }
+
+    fun joinClassWithCode(context: Context, code: String) {
+
+        fun couldNotJoinMessage() =
+            Toast.makeText(
+                context,
+                context.getString(R.string.classNotFound), Toast.LENGTH_SHORT
+            ).show()
+
+        repo.getClassRef(code).get().addOnSuccessListener {
+
+            if (it == null || it.data == null) {
+                couldNotJoinMessage()
+                return@addOnSuccessListener
+
+            }
+            val that = it.toObject(TheClass::class.java) ?: TheClass()
+            if (that.date == 0L) {
+                couldNotJoinMessage()
+                return@addOnSuccessListener
+            }
+            joinClass(that)
+
+
+        }
+    }
+
+    fun joinClass(that: TheClass) {
+        if (that.members.contains(getName())) return
+
+        that.members.add(getName())
+        repo.getClassesRef().document(that.id).set(that)
+        repo.getUsersRef().document(repo.getUserName())
+            .collection("class").document(that.id).set(mapOf("id" to that.id))
+
+    }
+
+    fun getQuiz(classCode: String, id: String): MutableLiveData<Quizzer> {
+        val currentQuiz = MutableLiveData<Quizzer>()
+
+        val isClass = id.substring(0, 5) == "class"
+
+        val ref = if (isClass)
+            repo.getClassQuiz(classCode, id)
         else
             repo.getQuizRef(id)
 
+
         ref.get().addOnSuccessListener { document ->
-            if (document == null) return@addOnSuccessListener
+            if (document.data == null || document == null) {
+                currentQuiz.value = null
+                return@addOnSuccessListener
+            }
+
             val quiz = document.get("quiz.quiz", Quiz::class.java)!!
 
             if (quiz.quizType == QuizType.MultipleChoice)
                 currentQuiz.value = document.get("quiz", MultipleChoiceQuiz::class.java)!!
             else
                 currentQuiz.value = document.get("quiz", TrueFalseQuiz::class.java)!!
+
         }
 
         return currentQuiz
@@ -83,22 +183,10 @@ class QuizzesVM(application: Application) : AndroidViewModel(application) {
     }
 
 
-    suspend fun getClass(ref: DocumentReference): TheClass {
-        return withContext(Dispatchers.IO) {
-            ref.get().await().toObject(TheClass::class.java)!!
-        }
-    }
-
-    private suspend fun getQuiz(ref: DocumentReference): Quiz {
-        return withContext(Dispatchers.IO) {
-            ref.get().await().get("quiz.quiz", Quiz::class.java)!!
-        }
-    }
-
-
     fun addClass(that: TheClass) {
+        that.members.add(getName())
         repo.getClassesRef().document(that.id).set(that)
-        repo.getUsersRef().document(repo.getUserName())
+        repo.getUsersRef().document(getName())
             .collection("class").add(hashMapOf("id" to that.id))
     }
 
@@ -116,8 +204,8 @@ class QuizzesVM(application: Application) : AndroidViewModel(application) {
     }
 
     private suspend fun shouldRate(id: String): Boolean {
-        return repo.getUserLog(getName()).get().await()
-            .get("log", QuizLog::class.java)!!.userLog.contains(id)
+        return (repo.getUserLog(getName()).get().await()
+            .get("log", QuizLog::class.java)?.userLog?.contains(id))?.not() ?: true
     }
 
     fun canRate(id: String): LiveData<Boolean> {
@@ -128,16 +216,18 @@ class QuizzesVM(application: Application) : AndroidViewModel(application) {
         return bool
     }
 
-    fun rateQuiz(id: String, isClass: Boolean, rating: Float) {
+    fun rateQuiz(id: String, rating: Float, classCode: String) {
+        val isClass = id.substring(0, 5) == "class"
+
         val ref = if (isClass)
-            repo.getClassQuiz(id)
+            repo.getClassQuiz(classCode, id)
         else
             repo.getQuizRef(id)
 
         ref.get().addOnSuccessListener { document ->
-            val theQuiz = document.get("quiz.quiz", Quiz::class.java)!!
-            theQuiz.setNewRating(rating)
-            ref.update("quiz.quiz", theQuiz)
+            val quiz = document.get("quiz.quiz", Quiz::class.java)!!
+            quiz.setNewRating(rating)
+            ref.update("quiz.quiz", quiz)
         }
     }
 
@@ -174,39 +264,40 @@ class QuizzesVM(application: Application) : AndroidViewModel(application) {
     }
 
     fun getClassQuizzes(id: String): MutableLiveData<List<Quiz>> {
+        val classQuizzes: MutableLiveData<List<Quiz>> = MutableLiveData()
         repo.getClassRef(id).collection("Quizzes").get().addOnSuccessListener { data ->
-            if (data.isEmpty) return@addOnSuccessListener
-            val listOfQuizzes = mutableListOf<Quiz>()
-            for (item in data.documents) {
-                val quizCode = item.get("id").toString()
-                viewModelScope.launch {
-                    val quiz =
-                        getQuiz(repo.getClassQuiz(quizCode))
-                    listOfQuizzes.add(quiz)
-
-                    classQuizzes.value = listOfQuizzes
-                }
-                with(listOfQuizzes) {
-                    sortWith(compareBy { it.milliSeconds })
-                    reverse()
-                }
-                classQuizzes.value = listOfQuizzes
+            if (data == null || data.isEmpty) {
+                classQuizzes.value = null
+                return@addOnSuccessListener
             }
+            val listOfQuizzes = mutableListOf<Quiz>()
+            for (item in data.documents)
+                listOfQuizzes.add(item.get("quiz.quiz", Quiz::class.java)!!)
+
+            with(listOfQuizzes) {
+                sortWith(compareBy { it.milliSeconds })
+                reverse()
+            }
+            classQuizzes.value = listOfQuizzes
+
 
         }
 
         return classQuizzes
     }
 
+    suspend fun getTeachName(id: String): String {
+        return repo.getClassRef(id).get().await().get("teach", String::class.java)!!
 
-    fun getClassTitle(id: String): MutableLiveData<String> {
-        val title: MutableLiveData<String> = MutableLiveData()
+    }
+
+    fun getClass(id: String): MutableLiveData<TheClass> {
+        val thatClass: MutableLiveData<TheClass> = MutableLiveData()
         viewModelScope.launch {
-            title.value = repo.getClassRef(id).get().await()
-                .get("title", String::class.java).toString()
+            thatClass.value = repo.getClassRef(id).get().await().toObject(TheClass::class.java)
         }
 
-        return title
+        return thatClass
     }
 
 
@@ -240,21 +331,45 @@ class QuizzesVM(application: Application) : AndroidViewModel(application) {
     fun cancelNotifications() =
         FirebaseMessaging.getInstance().unsubscribeFromTopic(getName())
 
+
+    fun getPublicClasses(): MutableLiveData<List<TheClass>> {
+        val items: MutableLiveData<List<TheClass>> = MutableLiveData()
+        repo.getClassesRef().get().addOnSuccessListener { snapShot ->
+            if (snapShot == null || snapShot.isEmpty) {
+                items.value = null
+                return@addOnSuccessListener
+            }
+            val classes = ArrayList<TheClass>()
+            for (item in snapShot) {
+                val c = item.toObject(TheClass::class.java)
+                if (c.open && getName() !in c.members)
+                    classes.add(c)
+            }
+            classes.sortBy {
+                it.date
+            }
+            items.value = classes
+
+
+        }
+        return items
+    }
+
     fun getClasses(): MutableLiveData<List<TheClass>> {
+        val allClasses: MutableLiveData<List<TheClass>> = MutableLiveData()
+        val classes = ArrayList<TheClass>()
         repo.getUsersRef().document(repo.getUserName()).collection("class")
             .get().addOnSuccessListener { snapShot ->
-                val classes = ArrayList<TheClass>()
+                if (snapShot == null || snapShot.isEmpty) {
+                    allClasses.value = null
+                    return@addOnSuccessListener
+                }
                 for (item in snapShot.documents) {
                     val id = item.get("id").toString()
-                    viewModelScope.launch {
-                        val thatClass =
-                            getClass(repo.getClassRef(id))
-
-                        with(classes) {
-                            sortWith(compareBy { it.date })
-                            reverse()
-                        }
-                        classes.add(thatClass)
+                    repo.getClassRef(id).get().addOnSuccessListener {
+                        val classItem = it.toObject(TheClass::class.java) ?: TheClass()
+                        if (classItem.title != "")
+                            classes.add(classItem)
                         allClasses.value = classes
                     }
                 }
@@ -290,7 +405,6 @@ class QuizzesVM(application: Application) : AndroidViewModel(application) {
 
 class QuestionsVM(state: SavedStateHandle) : ViewModel() {
 
-    // Keep the key as a constant
     companion object {
         private const val QUIZ_TYPE = "QUIZ_TYPE"
 
@@ -300,9 +414,6 @@ class QuestionsVM(state: SavedStateHandle) : ViewModel() {
 
         private const val TITLE = "TITLE"
 
-        private const val MULTIPLE_CHOICE = "MULTIPLE_CHOICE"
-
-        private const val TRUE_FALSE = "TRUE_FALSE"
 
     }
 
@@ -328,28 +439,17 @@ class QuestionsVM(state: SavedStateHandle) : ViewModel() {
         multiChoice[position.toString()] ?: MultipleChoiceQuestion()
 
 
-    fun saveQuizType(quizType: QuizType) =
-        savedStateHandle.set(QUIZ_TYPE, quizType)
-
-
     fun getQuizType(): QuizType =
         savedStateHandle.get(QUIZ_TYPE) ?: QuizType.TrueFalse
 
-
-    fun saveMultiChoice() =
-        savedStateHandle.set(MULTIPLE_CHOICE, multiChoice)
-
-
-    fun saveTrueFalse() =
-        savedStateHandle.set(TRUE_FALSE, trueFalse)
-
+    fun setQuizType(type: QuizType) =
+        savedStateHandle.set(QUIZ_TYPE, type)
 
     fun getMultiChoice(): LinkedHashMap<String, MultipleChoiceQuestion> =
-        savedStateHandle.get(MULTIPLE_CHOICE) ?: LinkedHashMap()
+        multiChoice
 
-
-    fun getTrueFalse(): LinkedHashMap<String, TrueFalseQuiz> =
-        savedStateHandle.get(TRUE_FALSE) ?: LinkedHashMap()
+    fun getTrueFalse(): LinkedHashMap<String, TrueFalseQuestion> =
+        trueFalse
 
 
     fun setPin(pin: String) = savedStateHandle.set(PIN, pin)
@@ -363,6 +463,14 @@ class QuestionsVM(state: SavedStateHandle) : ViewModel() {
 
     fun setSize(size: Int) = savedStateHandle.set(SIZE, size)
     fun getSize() = savedStateHandle.get(SIZE) ?: 1
+
+    fun removeAll() {
+        val keys = savedStateHandle.keys()
+        for (key in keys)
+            savedStateHandle.set(key, null)
+        multiChoice.clear()
+        trueFalse.clear()
+    }
 
 
 }
