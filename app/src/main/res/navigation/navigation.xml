@@ -41,6 +41,9 @@
         <action
             android:id="@+id/viewProfile"
             app:destination="@id/profileFragment" />
+        <action
+            android:id="@+id/goToClasses"
+            app:destination="@id/classFragment" />
     </fragment>
     <fragment
         android:id="@+id/settingsFragment"
@@ -212,6 +215,13 @@
         <action
             android:id="@+id/joinThisClass"
             app:destination="@id/teachFragment" />
+
+        <argument
+            android:name="joinCode"
+            android:defaultValue="empty" />
+
+        <deepLink app:uri="www.lemonLabQuizMaker.com/{joinCode}" />
+
     </fragment>
 
 </navigation>

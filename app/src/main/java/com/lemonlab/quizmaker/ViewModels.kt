@@ -358,6 +358,7 @@ class QuizzesVM(application: Application) : AndroidViewModel(application) {
     fun getClasses(): MutableLiveData<List<TheClass>> {
         val allClasses: MutableLiveData<List<TheClass>> = MutableLiveData()
         val classes = ArrayList<TheClass>()
+
         repo.getUsersRef().document(repo.getUserName()).collection("class")
             .get().addOnSuccessListener { snapShot ->
                 if (snapShot == null || snapShot.isEmpty) {
@@ -413,7 +414,7 @@ class QuestionsVM(state: SavedStateHandle) : ViewModel() {
         private const val PIN = "PIN"
 
         private const val TITLE = "TITLE"
-
+        private const val CLASS_JOIN_CODE = "CLASS_JOIN_CODE"
 
     }
 
@@ -438,6 +439,11 @@ class QuestionsVM(state: SavedStateHandle) : ViewModel() {
     fun getMultiChoiceQuestion(position: Int): MultipleChoiceQuestion =
         multiChoice[position.toString()] ?: MultipleChoiceQuestion()
 
+    fun setClassJoinCode(code: String) =
+        savedStateHandle.set(CLASS_JOIN_CODE, code)
+
+    fun getClassJoinCode(): String =
+        savedStateHandle.get(CLASS_JOIN_CODE) ?: "empty"
 
     fun getQuizType(): QuizType =
         savedStateHandle.get(QUIZ_TYPE) ?: QuizType.TrueFalse

@@ -1,7 +1,9 @@
 package com.lemonlab.quizmaker
 
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.view.Gravity
 import android.view.MenuItem
 import android.view.View
 import androidx.activity.viewModels
@@ -12,7 +14,6 @@ import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.Navigation
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
-import androidx.navigation.ui.setupActionBarWithNavController
 import com.google.android.gms.ads.MobileAds
 import com.google.firebase.FirebaseApp
 import com.google.firebase.auth.FirebaseAuth
@@ -33,9 +34,20 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         setUpNavigation()
         MobileAds.initialize(this)
-        supportActionBar!!.setHomeAsUpIndicator(R.drawable.ic_drawer)
         setUpFireBase()
 
+
+        checkIfURL()
+    }
+
+    private fun checkIfURL() {
+        val data: Uri? = intent?.data
+        if (data != null) {
+            val url = data.toString()
+            val code = url.substring(url.indexOf("com/") + 4, url.length)
+            vm.joinClassWithCode(this, code)
+            questionsVM.setClassJoinCode(code)
+        }
     }
 
     private fun chooseTheme() {
@@ -88,26 +100,45 @@ class MainActivity : AppCompatActivity() {
 
     private fun setUpNavigation() {
         val navController = Navigation.findNavController(this, R.id.navigationHost)
-        NavigationUI.setupWithNavController(navView, navController)
-        setupActionBarWithNavController(navController, drawer_layout)
+        val drawerLayout = drawer_layout
 
-        setupActionBarWithNavController(
-            navController,
-            AppBarConfiguration.Builder(R.id.loginFragment).build()
+        NavigationUI.setupActionBarWithNavController(this, navController, drawerLayout)
+        NavigationUI.setupWithNavController(navView, navController)
+
+        val fragmentsWithNoBackButton = setOf(
+            R.id.mainFragment,
+            R.id.loginFragment
         )
+
+        NavigationUI.setupActionBarWithNavController(
+            this, navController,
+            AppBarConfiguration.Builder(fragmentsWithNoBackButton).build()
+        )
+
+        NavigationUI.setupWithNavController(navView, navController)
+
+        // Users only use the drawer in main fragment.
         navController.addOnDestinationChangedListener { controller, destination, _ ->
-            if (destination.id == controller.graph.startDestination) //Users only use the drawer in main fragment.
+            if (destination.id == controller.graph.startDestination) {
                 drawer_layout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED)
-            else
+                openDrawerFAB.visibility = View.VISIBLE
+            } else {
+                openDrawerFAB.visibility = View.GONE
                 drawer_layout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
 
+            }
+
+        }
+
+
+        openDrawerFAB.setOnClickListener {
+            if (drawerLayout.isDrawerOpen(Gravity.START))
+                drawerLayout.closeDrawer(Gravity.START)
+            else
+                drawerLayout.openDrawer(Gravity.START)
         }
     }
 
-    override fun onPause() {
-        TempData.currentQuizzes = null
-        super.onPause()
-    }
 
     override fun onSupportNavigateUp() =
         NavigationUI.navigateUp(

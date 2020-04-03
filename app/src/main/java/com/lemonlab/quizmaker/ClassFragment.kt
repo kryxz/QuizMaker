@@ -62,21 +62,21 @@ class ClassFragment : Fragment() {
         }
         vm.getClasses().observe(viewLifecycleOwner, androidx.lifecycle.Observer {
             classProgressBar.visibility = View.GONE
-            if (it == null || it.isEmpty()) {
-                return@Observer
+            if (it != null && it.isNotEmpty()) {
+                adapter.clear()
+                val name = vm.getName()
+                it.also { items ->
+                    for (item in items)
+                        adapter.add(ClassItem(item, ::leaveClass, name))
+                }
+                with(classesRV) {
+                    removeAllViews()
+                    visibility = View.VISIBLE
+                    layoutManager = LinearLayoutManager(context!!)
+                    this.adapter = adapter
+                }
             }
-            adapter.clear()
-            val name = vm.getName()
-            it.also { items ->
-                for (item in items)
-                    adapter.add(ClassItem(item, ::leaveClass, name))
-            }
-            with(classesRV) {
-                removeAllViews()
-                visibility = View.VISIBLE
-                layoutManager = LinearLayoutManager(context!!)
-                this.adapter = adapter
-            }
+
             noClasses.visibility = if (adapter.itemCount == 0)
                 View.VISIBLE
             else View.GONE

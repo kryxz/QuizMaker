@@ -48,7 +48,7 @@ class QuizItem(
 
         view.startQuizButton.setOnClickListener {
             if (quiz.passwordProtected)
-                enterPasswordDialog(context, quiz, ::enterQuiz)
+                enterPasswordDialog(view, context, quiz, ::enterQuiz)
             else
                 enterQuiz(it)
         }
@@ -89,6 +89,7 @@ class QuizItem(
         }
 
         fun enterPasswordDialog(
+            view: View,
             context: Context, quiz: Quiz,
             enter: (view: View) -> Unit
         ) {
@@ -108,7 +109,7 @@ class QuizItem(
             confirmButton.setOnClickListener {
 
                 if (passwordField.text.toString() == quiz.quizPin)
-                    enter(it)
+                    enter(view)
                 else
                     showToast(context, context.getString(R.string.wrongPassword))
 

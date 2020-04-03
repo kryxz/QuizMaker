@@ -48,7 +48,7 @@ class ClassQuiz(
 
             startQuizButton.setOnClickListener {
                 if (quiz.passwordProtected)
-                    QuizItem.enterPasswordDialog(context, quiz, ::enterQuiz)
+                    QuizItem.enterPasswordDialog(view, context, quiz, ::enterQuiz)
                 else
                     enterQuiz(it)
             }

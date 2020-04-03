@@ -123,6 +123,7 @@
     <string name="NoContent">لا يوجد أي اختبار بعد!</string>
     <string name="noClasses">ليس لديك أي قاعات بعد!</string>
     <string name="classNotFound">تعذّر العثور على القاعة</string>
+    <string name="classJoined">تم الانضمام إلى القاعة!</string>
     <string name="NoPublicClassesFound">لا يوجد أي قاعة... يمكنك دائمًا إنشاء قاعة</string>
     <string name="quizScore">
         نتيجتك لـ %1$s

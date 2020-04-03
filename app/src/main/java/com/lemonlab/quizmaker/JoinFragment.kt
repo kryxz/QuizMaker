@@ -36,6 +36,10 @@ class JoinFragment : Fragment() {
     }
 
     private fun init() {
+        val code = JoinFragmentArgs.fromBundle(arguments!!).joinCode
+        if (code != "empty")
+            joinClassViaCode(code)
+
         allClassesProgressBar.visibility = View.VISIBLE
         val adapter = GroupAdapter<ViewHolder>()
 
