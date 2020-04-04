@@ -276,8 +276,6 @@ class TextViewAdapter(
                     {
                         viewModel.cancelNotifications()
                         viewModel.signOut()
-                        TempData.deleteCached()
-                        TempData.resetData()
                         Navigation.findNavController(it).navigate(R.id.loginFragment)
                     },
                     {},

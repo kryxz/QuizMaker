@@ -3,7 +3,7 @@
     <string name="login_email">البريد الإلكتروني</string>
     <string name="login_password">كلمة المرور</string>
     <string name="signUp_password">كلمة المرور الجديدة</string>
-    <string name="signUp_displayName">اسم المستخدم(بالانكليزية، بدون فراغات)</string>
+    <string name="signUp_displayName">اسم المستخدم</string>
     <string name="create_account">إنشاء حساب</string>
     <string name="class_label">القاعات</string>
     <string name="login_label">تسجيل الدخول</string>
@@ -12,6 +12,7 @@
     <string name="messages">الرسائل</string>
     <string name="settingsLabel">الضبط</string>
     <string name="createNewQuiz">اختبار جديد</string>
+    <string name="createNewQuizInfo">للمتابعة، يجب اختيار نوع الاختبار الجديد!</string>
     <string name="chat">الدردشة</string>
     <string name="usernameEmailLogin">اسم المستخدم أو البريد الإلكتروني</string>
 
@@ -92,7 +93,9 @@
     <string name="existingQuestions">سيتم حذف الأسئلة الموجودة</string>
     <string name="existingQuestionsMessage">اختر تأكيد للحذف، الغاء لاستعادة الأسئلة</string>
     <string name="completeAllQuestions">يجب عليك كتابة جميع الأسئلة.</string>
+    <string name="oneQuestionAtLeast">اكتب سؤالًا على الأقل!</string>
     <string name="leaveClass">مغادرة القاعة</string>
+    <string name="createLink">رابط القاعة</string>
     <string name="leaveClassConfirm">لا يمكنك العودة إلى إذا امتلكت رمز القاعة، أو كانت القاعة عامة!</string>
     <string name="scoreTitle">نتيجتك</string>
     <string name="score">الإجابات الصحيحة: %1$d من أصل %2$d</string>
@@ -122,6 +125,7 @@
     <string name="noUser">لم يتم العثور على حساب.</string>
     <string name="NoContent">لا يوجد أي اختبار بعد!</string>
     <string name="noClasses">ليس لديك أي قاعات بعد!</string>
+    <string name="noChat">هذه بداية شيء جميل!</string>
     <string name="classNotFound">تعذّر العثور على القاعة</string>
     <string name="classJoined">تم الانضمام إلى القاعة!</string>
     <string name="NoPublicClassesFound">لا يوجد أي قاعة... يمكنك دائمًا إنشاء قاعة</string>

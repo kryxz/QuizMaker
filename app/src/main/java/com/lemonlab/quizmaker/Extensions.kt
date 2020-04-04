@@ -1,8 +1,10 @@
 package com.lemonlab.quizmaker
 
 import android.app.Activity
+import android.content.ClipboardManager
 import android.content.Context
 import android.view.inputmethod.InputMethodManager
+import android.widget.Toast
 import java.util.*
 
 fun Activity.hideKeypad() =
@@ -15,6 +17,16 @@ fun Activity.showKeypad() =
     with(getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager) {
         toggleSoftInput(InputMethodManager.SHOW_FORCED, 0)
     }
+
+
+fun Context.copyText(text: String) {
+
+    val clip = android.content.ClipData.newPlainText("code", text)
+    (getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager)
+        .setPrimaryClip(clip)
+    Toast.makeText(this, getString(R.string.copied), Toast.LENGTH_SHORT).show()
+
+}
 
 fun Long.timeAsAString(): String {
     val calendar = Calendar.getInstance()

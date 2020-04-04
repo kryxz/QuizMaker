@@ -42,7 +42,8 @@ class ClassQuiz(
             else View.GONE
 
             editQuizButton.setOnClickListener {
-                val action = TeachFragmentDirections.editClassQuiz(quiz.quizUUID).setClassCode(code)
+                val action = TeachFragmentDirections.editClassQuiz().setClassCode(code)
+                    .setQuizID(quiz.quizUUID)
                 it.findNavController().navigate(action)
             }
 

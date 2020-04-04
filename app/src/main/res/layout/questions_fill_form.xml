@@ -65,6 +65,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:text="@string/trueStatement"
+            android:buttonTint="?attr/iconColor"
             android:textColor="?attr/textColorHint" />
 
         <androidx.appcompat.widget.LinearLayoutCompat

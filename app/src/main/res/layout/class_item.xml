@@ -18,21 +18,52 @@
         android:textSize="28sp" />
 
 
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/enterClass"
-        style="@style/QuestionFormButtonStyle"
+    <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="4dp"
-        android:text="@string/seeQuizzes" />
+        android:orientation="horizontal">
 
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/leaveClass"
-        style="@style/QuestionFormButtonStyle"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/leaveClass"
-        android:visibility="gone" />
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/createLink"
+            style="@style/QuestionFormButtonStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="2dp"
+            android:layout_weight="1"
+            android:drawableEnd="@drawable/ic_link"
+            android:drawablePadding="2dp"
+            android:drawableTint="?attr/iconColor"
+            android:text="@string/createLink"
+            android:textSize="16sp" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/enterClass"
+            style="@style/QuestionFormButtonStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="2dp"
+            android:layout_weight="1"
+            android:drawableEnd="@drawable/ic_class"
+            android:drawablePadding="2dp"
+            android:drawableTint="?attr/iconColor"
+            android:text="@string/seeQuizzes"
+            android:textSize="16sp" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/leaveClass"
+            style="@style/QuestionFormButtonStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="2dp"
+            android:layout_weight="1"
+            android:drawableEnd="@drawable/ic_exit"
+            android:drawablePadding="2dp"
+            android:drawableTint="?attr/iconColor"
+            android:text="@string/leaveClass"
+            android:textSize="16sp" />
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
 
     <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="match_parent"

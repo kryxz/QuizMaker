@@ -22,6 +22,7 @@
         android:drawableTint="?attr/iconColor"
         android:hint="@string/classViaCode"
         android:padding="8dp"
+        android:drawablePadding="8dp"
         android:textColorHint="?attr/textColorHint" />
 
 

@@ -1,10 +1,7 @@
 package com.lemonlab.quizmaker.items
 
-import android.content.ClipData
-import android.content.ClipboardManager
 import android.content.Context
 import android.view.View
-import android.widget.Toast
 import androidx.navigation.findNavController
 import com.lemonlab.quizmaker.*
 import com.xwray.groupie.Item
@@ -34,6 +31,14 @@ class ClassItem(
                 classCodeText.setOnClickListener {
                     copyID(context)
                 }
+                createLink.visibility = View.VISIBLE
+                createLink.setOnClickListener {
+                    copyLink(context)
+                }
+            } else {
+                classCodeText.visibility = View.GONE
+                createLink.visibility = View.GONE
+
             }
 
             enterClass.setOnClickListener {
@@ -47,13 +52,14 @@ class ClassItem(
 
     }
 
-    private fun copyID(context: Context) {
-        with(context) {
-            val clip = ClipData.newPlainText("code", theClass.id)
-            (getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager).setPrimaryClip(clip)
-            Toast.makeText(this, getString(R.string.copied), Toast.LENGTH_SHORT).show()
-        }
+    private fun copyLink(context: Context) {
+        val url = "www.lemonLabQuizMaker.com/${theClass.id}"
+        context.copyText(url)
+    }
 
+
+    private fun copyID(context: Context) {
+        context.copyText(theClass.id)
     }
 
     override fun getLayout() = R.layout.class_item

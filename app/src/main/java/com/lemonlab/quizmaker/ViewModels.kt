@@ -468,7 +468,7 @@ class QuestionsVM(state: SavedStateHandle) : ViewModel() {
     fun getTitle(): String = savedStateHandle.get(TITLE) ?: ""
 
     fun setSize(size: Int) = savedStateHandle.set(SIZE, size)
-    fun getSize() = savedStateHandle.get(SIZE) ?: 1
+    fun getSize() = savedStateHandle.get(SIZE) ?: 0
 
     fun removeAll() {
         val keys = savedStateHandle.keys()

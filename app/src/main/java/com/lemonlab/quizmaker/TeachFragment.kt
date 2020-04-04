@@ -76,9 +76,10 @@ class TeachFragment : Fragment() {
 
         createQuizButton.setOnClickListener {
             it.findNavController().navigate(
-                TeachFragmentDirections
-                    .createNewQuiz().setClassCode(code)
+                TeachFragmentDirections.editClassQuiz().setClassCode(code)
             )
+            // val action = TeachFragmentDirections.editClassQuiz().setClassCode(code)
+
         }
         chatNowButton.setOnClickListener {
             it.findNavController().navigate(TeachFragmentDirections.chatNow(code))

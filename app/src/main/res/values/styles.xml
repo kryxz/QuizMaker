@@ -13,6 +13,7 @@
         <item name="android:textColor">@color/textColorPrimary</item>
         <item name="android:textSize">19sp</item>
         <item name="textColorHint">@color/textColorSecondary</item>
+        <item name="android:textColorHint">@color/lightTextColorSecondary</item>
         <item name="dividerColor">@color/dividerColor</item>
         <item name="iconColor">@color/colorGold</item>
         <item name="colorGreen">@color/baseColorGreen</item>
@@ -34,6 +35,7 @@
         <item name="android:textSize">19sp</item>
         <item name="titleTextColor">@color/lightTextColorPrimary</item>
         <item name="textColorHint">@color/lightTextColorSecondary</item>
+        <item name="android:textColorHint">@color/lightTextColorSecondary</item>
         <item name="dividerColor">@color/lightDividerColor</item>
         <item name="iconColor">@color/colorGold</item>
         <item name="android:textColor">@color/lightTextColorPrimary</item>

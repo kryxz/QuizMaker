@@ -24,6 +24,7 @@
         android:id="@+id/classNameText"
         style="@style/loginEditTextStyle"
         android:drawableEnd="@drawable/ic_info"
+        android:drawablePadding="8dp"
         android:hint="@string/className"
         android:maxLength="100"
         android:padding="8dp"
@@ -36,11 +37,12 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:text="@string/publicClass"
+        android:buttonTint="?attr/iconColor"
         android:textColor="?attr/textColorHint" />
 
     <androidx.appcompat.widget.AppCompatTextView
-        style="@style/loginEditTextStyle"
         android:id="@+id/createClassHelpText"
+        style="@style/loginEditTextStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/createClassClosed"

@@ -6,7 +6,7 @@
             android:id="@+id/mainFragment"/>
     <item
             android:title="@string/profileLabel"
-            android:icon="@drawable/ic_person"
+        android:icon="@drawable/ic_account_box"
             android:id="@+id/profileFragment"/>
 
     <item
@@ -17,7 +17,7 @@
     <item
             android:title="@string/createNewQuiz"
             android:icon="@drawable/ic_note_add"
-            android:id="@+id/createQuiz"/>
+        android:id="@+id/editQuizFragment" />
 
     <item
             android:title="@string/messages"

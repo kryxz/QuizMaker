@@ -44,6 +44,9 @@
         <action
             android:id="@+id/goToClasses"
             app:destination="@id/classFragment" />
+        <action
+            android:id="@+id/editQuizNow"
+            app:destination="@id/editQuizFragment" />
     </fragment>
     <fragment
         android:id="@+id/settingsFragment"
@@ -97,7 +100,7 @@
             app:popExitAnim="@anim/nav_default_pop_exit_anim" />
         <argument
             android:name="classCode"
-            android:defaultValue='"empty"'
+            android:defaultValue="empty"
             app:argType="string" />
     </fragment>
     <fragment
@@ -146,7 +149,7 @@
             app:argType="string" />
         <argument
             android:name="classCode"
-            android:defaultValue='"empty"'
+            android:defaultValue="empty"
             app:argType="string" />
     </fragment>
     <fragment
@@ -192,11 +195,16 @@
         tools:layout="@layout/fragment_edit_quiz">
         <argument
             android:name="QuizID"
-            app:argType="string" />
+            android:defaultValue=" "
+            app:argType="string"
+            app:nullable="true" />
         <argument
             android:name="classCode"
-            android:defaultValue='"empty"'
+            android:defaultValue="empty"
             app:argType="string" />
+        <action
+            android:id="@+id/returnToClass"
+            app:destination="@id/teachFragment" />
     </fragment>
     <fragment
         android:id="@+id/chatFragment"

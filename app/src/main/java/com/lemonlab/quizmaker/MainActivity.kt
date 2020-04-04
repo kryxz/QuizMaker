@@ -35,8 +35,6 @@ class MainActivity : AppCompatActivity() {
         setUpNavigation()
         MobileAds.initialize(this)
         setUpFireBase()
-
-
         checkIfURL()
     }
 

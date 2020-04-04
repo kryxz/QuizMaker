@@ -4,9 +4,6 @@ import android.content.Context
 import android.util.SparseArray
 import androidx.core.util.forEach
 import com.google.firebase.firestore.FirebaseFirestore
-import java.util.*
-import kotlin.collections.ArrayList
-import kotlin.collections.HashMap
 
 enum class QuizType(val id: Int) {
     MultipleChoice(R.string.mulChoice), TrueFalse(R.string.trueFalse)
@@ -46,52 +43,15 @@ data class User(
 
 }
 
-class TempData {
-    companion object {
-        //Data we pass between fragments
-        var quizTitle = ""
-        var isPasswordProtected = false
-        var questionsCount = 0
-        var quizPin = "notRequired"
-        var quizType: QuizType? = null
 
-        //temporary data to make fragments smoother
-        //This is used in the main fragment
-        var currentQuizzes: List<Quiz>? = null
-
-        //This is used in ViewEditQuestions
-        var multiChoiceCachedQuestions: LinkedHashMap<String, MultipleChoiceQuestion>? = null
-        var trueFalseCachedQuestions: LinkedHashMap<String, TrueFalseQuestion>? = null
-
-        //reassigns all variables to their defaults.
-        fun resetData() {
-            quizTitle = ""
-
-            isPasswordProtected = false
-            questionsCount = 0
-            quizPin = "notRequired"
-            quizType = null
-
-            currentQuizzes = null
-            multiChoiceCachedQuestions = null
-            trueFalseCachedQuestions = null
-        }
-
-        fun deleteCached() {
-            multiChoiceCachedQuestions = null
-            trueFalseCachedQuestions = null
-        }
-
-        var user: User? = null
-    }
-}
+abstract class Question
 
 data class MultipleChoiceQuestion(
     val question: String,
     val first: String, val second: String,
     val third: String, val fourth: String,
     val correctAnswer: Int
-) {
+) : Question() {
     constructor() : this("", "", "", "", "", 0)
 
 }
@@ -99,7 +59,7 @@ data class MultipleChoiceQuestion(
 data class TrueFalseQuestion(
     val question: String,
     val answer: Boolean
-) {
+) : Question() {
     constructor() : this("", false)
 }
 
@@ -116,6 +76,7 @@ abstract class Quizzer {
     abstract fun setTitle(title: String)
 
     abstract fun deleteQuestion(pos: Int)
+
 }
 
 data class MultipleChoiceQuiz(
@@ -127,6 +88,7 @@ data class MultipleChoiceQuiz(
     override fun getAuthor() = quiz!!.quizAuthor
     override fun getID() = quiz!!.quizUUID
     override fun getTitle() = quiz!!.quizTitle
+
 
     override fun deleteQuestion(pos: Int) {
 
@@ -293,27 +255,6 @@ data class Message(
     val id: String
 ) {
     constructor() : this("", "", 0, "")
-}
-
-data class Report(
-    var userIDs: String,
-    var count: Int
-) {
-    constructor() : this("", 0)
-
-    fun report(id: String, quizID: String) {
-        if (!userIDs.contains(id)) {
-            userIDs += " $id"
-            count = count.inc()
-            if (count >= 5) {
-                val dataRef = FirebaseFirestore.getInstance()
-                dataRef.collection("Quizzes").document(quizID).delete()
-                dataRef.collection("userReports").document(quizID).delete()
-                TempData.currentQuizzes = null
-            }
-
-        }
-    }
 }
 
 enum class Option {

@@ -39,19 +39,33 @@ class QuizItem(
 
         initView(view, quiz, context)
 
-        view.quizAuthorText.setOnClickListener {
-            val action = MainFragmentDirections.viewProfile()
-            action.isViewer = true
-            action.username = quiz.quizAuthor
-            it.findNavController().navigate(action)
+        with(view) {
+            quizAuthorText.setOnClickListener {
+                val action = MainFragmentDirections.viewProfile()
+                action.isViewer = true
+                action.username = quiz.quizAuthor
+                it.findNavController().navigate(action)
+            }
+            val isAuthor = quiz.quizAuthor == vm.getName()
+
+            with(editMyQuiz) {
+                visibility = if (isAuthor) View.VISIBLE
+                else View.GONE
+                setOnClickListener {
+                    findNavController()
+                        .navigate(MainFragmentDirections.editQuizNow().setQuizID(quiz.quizUUID))
+                }
+            }
+
+            startQuizButton.setOnClickListener {
+                if (quiz.passwordProtected)
+                    enterPasswordDialog(view, context, quiz, ::enterQuiz)
+                else
+                    enterQuiz(it)
+            }
+
         }
 
-        view.startQuizButton.setOnClickListener {
-            if (quiz.passwordProtected)
-                enterPasswordDialog(view, context, quiz, ::enterQuiz)
-            else
-                enterQuiz(it)
-        }
 
     }
 

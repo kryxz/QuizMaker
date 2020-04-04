@@ -16,6 +16,9 @@ import com.lemonlab.quizmaker.items.ClassItem
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.ViewHolder
 import kotlinx.android.synthetic.main.fragment_class.*
+import java.util.*
+import kotlin.collections.ArrayList
+import kotlin.random.Random
 
 
 class ClassFragment : Fragment() {
@@ -33,13 +36,7 @@ class ClassFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         vm = (activity as MainActivity).vm
         init()
-    }
-
-
-    private fun createClass(thatClass: TheClass) {
-        vm.addClass(thatClass)
-        classProgressBar.visibility = View.GONE
-
+        buttonsListen()
     }
 
 
@@ -84,13 +81,23 @@ class ClassFragment : Fragment() {
 
         })
 
+    }
+
+    private fun buttonsListen() {
         createClassBtn.setOnClickListener {
             showClassDialog()
         }
+
         joinClassBtn.setOnClickListener {
             it.findNavController().navigate(ClassFragmentDirections.goToJoin())
         }
+    }
 
+
+    private fun createClass(thatClass: TheClass) {
+        vm.addClass(thatClass)
+        classProgressBar.visibility = View.GONE
+        init()
     }
 
     private fun showClassDialog() {
@@ -129,9 +136,12 @@ class ClassFragment : Fragment() {
 
             val idGen = StringBuilder()
 
-            for (i in 1..10) {
-                if (i % 4 == 0) idGen.append('-')
-                idGen.append(i.toString())
+            val randomString = UUID.randomUUID().toString().replace("-", "")
+            for (i in 1..8) {
+                if (i == 3 || i == 5 || i == 7) idGen.append('-')
+                val r = Random.nextInt(10)
+                if (r % 2 == 0) idGen.append(r)
+                else idGen.append(randomString[r])
             }
             val id = idGen.toString()
             val teach = vm.getName()

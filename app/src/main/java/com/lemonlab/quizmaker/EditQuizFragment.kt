@@ -9,6 +9,7 @@ import android.widget.Toast
 import androidx.appcompat.widget.*
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
+import androidx.navigation.NavOptions
 import androidx.navigation.findNavController
 import com.google.android.material.textfield.TextInputEditText
 import com.lemonlab.quizmaker.items.MulEdit
@@ -16,6 +17,8 @@ import com.lemonlab.quizmaker.items.TFEdit
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.ViewHolder
 import kotlinx.android.synthetic.main.fragment_edit_quiz.*
+import java.util.*
+import kotlin.collections.HashMap
 
 
 class EditQuizFragment : Fragment() {
@@ -23,6 +26,9 @@ class EditQuizFragment : Fragment() {
     private lateinit var vm: QuizzesVM
 
     private lateinit var theQuiz: Quizzer
+
+    private lateinit var questionsVM: QuestionsVM
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -36,11 +42,14 @@ class EditQuizFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         vm = (activity as MainActivity).vm
+        questionsVM = (activity as MainActivity).questionsVM
         init()
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.view_edit_menu, menu)
+        val id = EditQuizFragmentArgs.fromBundle(arguments!!).quizID
+        if (id != null && id.isNotBlank())
+            inflater.inflate(R.menu.view_edit_menu, menu)
         super.onCreateOptionsMenu(menu, inflater)
     }
 
@@ -51,6 +60,12 @@ class EditQuizFragment : Fragment() {
         return super.onOptionsItemSelected(item)
     }
 
+
+    override fun onDestroyView() {
+        questionsVM.removeAll()
+        super.onDestroyView()
+    }
+
     private fun showEditDialog() {
         val dialogBuilder = AlertDialog.Builder(context).create()
 
@@ -59,7 +74,7 @@ class EditQuizFragment : Fragment() {
         }
 
         val args = EditQuizFragmentArgs.fromBundle(arguments!!)
-        val id = args.quizID
+        val id = args.quizID!!
         val code = args.classCode
 
         with(dialogView) {
@@ -180,12 +195,204 @@ class EditQuizFragment : Fragment() {
         val id = args.quizID
         val code = args.classCode
 
+        if (id == null || id.isBlank())
+            createNewQuiz(code)
+        else
+            loadQuiz(code, id)
+    }
+
+
+    private fun createNewQuiz(code: String) {
+        var pos = 1
+        val adapter = GroupAdapter<ViewHolder>()
+        val rv = editQuestionsRV
+
+        val mlChoice = MultipleChoiceQuiz(Quiz(), HashMap())
+        val tf = TrueFalseQuiz(Quiz(), HashMap())
+        var type: QuizType
+
+        fun mulChoice() {
+            adapter.clear()
+            for (item in mlChoice.questions!!)
+                adapter.add(MulEdit(item.value, item.key, mlChoice.questions!!, ::mulChoice))
+            questionsVM.setMultiChoiceQuestion(pos, mlChoice.questions!![pos.toString()]!!)
+            questionsVM.setSize(pos)
+            pos++
+        }
+
+        fun tf() {
+            adapter.clear()
+            for (item in tf.questions!!)
+                adapter.add(TFEdit(item.value, item.key, tf.questions!!, ::tf))
+            questionsVM.setTFQuestion(pos, tf.questions!![pos.toString()]!!)
+            questionsVM.setSize(pos)
+            pos++
+        }
+
+        fun startWritingQuestions(type: QuizType) {
+            if (type == QuizType.MultipleChoice)
+                listOf(addQuestionTop, addQuestion).forEach {
+                    it.setOnClickListener {
+                        multiChoiceDialog(::mulChoice, mlChoice)
+                    }
+                }
+            else
+                listOf(addQuestionTop, addQuestion).forEach {
+                    it.setOnClickListener {
+                        trueFalseDialog(::tf, tf)
+                    }
+                }
+            rv.adapter = adapter
+        }
+
+        fun sendQuiz() {
+            val isClass = code != "empty"
+
+            val id = StringBuilder()
+            if (isClass)
+                id.append("class")
+
+            id.append(UUID.randomUUID().toString().substring(0, 10))
+            id.append(vm.getName())
+
+            val quizID = id.toString()
+
+            val quizData = Quiz(
+                questionsVM.getTitle(), questionsVM.hasPin(),
+
+                questionsVM.getSize(),
+
+                questionsVM.getPin(), questionsVM.getQuizType(), vm.getName(),
+
+                quizID, 0f, 0, Calendar.getInstance().timeInMillis
+            )
+
+            val quiz = if (quizData.quizType == QuizType.MultipleChoice)
+                MultipleChoiceQuiz(quizData, questionsVM.getMultiChoice())
+            else
+                TrueFalseQuiz(quizData, questionsVM.getTrueFalse())
+
+            HashMap<String, Quizzer>().apply {
+                this["quiz"] = quiz
+                vm.sendQuiz(quizID, this, code)
+                questionsVM.removeAll()
+                activity!!.hideKeypad()
+
+                val navController = view!!.findNavController()
+                val action = EditQuizFragmentDirections.returnToClass(code)
+                val navOptions =
+                    NavOptions.Builder().setPopUpTo(R.id.teachFragment, false).build()
+
+                if (isClass)
+                    navController.navigate(action, navOptions)
+                else
+                    navController.popBackStack(R.id.mainFragment, false)
+            }
+
+        }
+
+        fun showSendDialog() {
+            val dialogBuilder = AlertDialog.Builder(context).create()
+
+            val dialogView = with(LayoutInflater.from(context)) {
+                inflate(R.layout.edit_quiz_properties_dialog, null)
+            }
+
+
+            with(dialogView) {
+                val quizTitle =
+                    findViewById<TextInputEditText>(R.id.dialogPropertiesQuizTitleEditText)
+
+                // hide unused views
+                findViewById<View>(R.id.dialogDeleteCurrentQuestionButton).visibility = View.GONE
+                findViewById<View>(R.id.dialogPropertiesQuizQuestionsCount).visibility = View.GONE
+
+                val confirm = findViewById<AppCompatButton>(R.id.dialogPropertiesConfirmButton)
+                val cancel = findViewById<AppCompatButton>(R.id.dialogPropertiesCancelButton)
+
+                cancel.setOnClickListener {
+                    dialogBuilder.dismiss()
+                }
+                val t = questionsVM.getTitle()
+                if (t.isNotEmpty())
+                    quizTitle.setText(t)
+
+                confirm.setOnClickListener {
+                    val title = quizTitle.text.toString()
+                    if (title.isEmpty()) return@setOnClickListener
+
+                    if (questionsVM.getSize() == 0) {
+                        Toast.makeText(
+                            context,
+                            getString(R.string.oneQuestionAtLeast), Toast.LENGTH_SHORT
+                        ).show()
+                        questionsVM.setTitle(title)
+                        dialogBuilder.dismiss()
+                        return@setOnClickListener
+                    }
+
+                    questionsVM.setTitle(title)
+                    sendQuiz()
+                    dialogBuilder.dismiss()
+                }
+            }
+
+            with(dialogBuilder) {
+                setView(dialogView)
+                show()
+            }
+        }
+        updateQuiz.setOnClickListener {
+
+            showSendDialog()
+
+        }
+
+        // show new quiz dialog
+
+        val dialogBuilder = AlertDialog.Builder(context).create()
+
+        val dialogView = with(LayoutInflater.from(context)) {
+            inflate(R.layout.create_new_quiz_dialog, null)
+        }
+
+        with(dialogView) {
+
+            val tfRad = findViewById<AppCompatRadioButton>(R.id.tfRad)
+            val mulRad = findViewById<AppCompatRadioButton>(R.id.mulRad)
+
+            val confirm = findViewById<AppCompatButton>(R.id.confirmNewQuiz)
+            val cancel = findViewById<AppCompatButton>(R.id.cancelNewQuiz)
+            cancel.setOnClickListener {
+                view!!.findNavController().popBackStack()
+                dialogBuilder.dismiss()
+            }
+            confirm.setOnClickListener {
+                if (!tfRad.isChecked && !mulRad.isChecked) return@setOnClickListener
+
+                type = if (tfRad.isChecked)
+                    QuizType.TrueFalse
+                else
+                    QuizType.MultipleChoice
+
+                startWritingQuestions(type)
+                dialogBuilder.dismiss()
+                questionsVM.setQuizType(type)
+            }
+
+        }
+        with(dialogBuilder) {
+            setView(dialogView)
+            show()
+        }
+    }
+
+    private fun loadQuiz(code: String, id: String) {
         editQuestionsProgressBar.visibility = View.VISIBLE
         vm.getQuiz(code, id).observe(viewLifecycleOwner, Observer {
             if (it != null)
                 setUp(it, code)
         })
-
     }
 
     private fun setUp(quiz: Quizzer, code: String) {
