@@ -210,26 +210,37 @@ class EditQuizFragment : Fragment() {
         val mlChoice = MultipleChoiceQuiz(Quiz(), HashMap())
         val tf = TrueFalseQuiz(Quiz(), HashMap())
         var type: QuizType
+        updateQuiz.text = getString(R.string.sendQuiz)
 
-        fun mulChoice() {
+
+        fun updateMul() {
             adapter.clear()
             for (item in mlChoice.questions!!)
-                adapter.add(MulEdit(item.value, item.key, mlChoice.questions!!, ::mulChoice))
+                adapter.add(MulEdit(item.value, item.key, mlChoice.questions!!, ::updateMul))
+        }
+
+        fun updateTF() {
+            adapter.clear()
+            for (item in tf.questions!!)
+                adapter.add(TFEdit(item.value, item.key, tf.questions!!, ::updateTF))
+        }
+
+        fun mulChoice() {
+            updateMul()
             questionsVM.setMultiChoiceQuestion(pos, mlChoice.questions!![pos.toString()]!!)
             questionsVM.setSize(pos)
             pos++
         }
 
         fun tf() {
-            adapter.clear()
-            for (item in tf.questions!!)
-                adapter.add(TFEdit(item.value, item.key, tf.questions!!, ::tf))
+            updateTF()
             questionsVM.setTFQuestion(pos, tf.questions!![pos.toString()]!!)
             questionsVM.setSize(pos)
             pos++
         }
 
         fun startWritingQuestions(type: QuizType) {
+            rv.adapter = adapter
             if (type == QuizType.MultipleChoice)
                 listOf(addQuestionTop, addQuestion).forEach {
                     it.setOnClickListener {
@@ -242,7 +253,6 @@ class EditQuizFragment : Fragment() {
                         trueFalseDialog(::tf, tf)
                     }
                 }
-            rv.adapter = adapter
         }
 
         fun sendQuiz() {
@@ -303,12 +313,27 @@ class EditQuizFragment : Fragment() {
                 val quizTitle =
                     findViewById<TextInputEditText>(R.id.dialogPropertiesQuizTitleEditText)
 
-                // hide unused views
-                findViewById<View>(R.id.dialogDeleteCurrentQuestionButton).visibility = View.GONE
-                findViewById<View>(R.id.dialogPropertiesQuizQuestionsCount).visibility = View.GONE
+                val passwordInput =
+                    findViewById<TextInputEditText>(R.id.quizPassword)
+
 
                 val confirm = findViewById<AppCompatButton>(R.id.dialogPropertiesConfirmButton)
+                val hasPinBox = findViewById<AppCompatCheckBox>(R.id.hasPinBox)
                 val cancel = findViewById<AppCompatButton>(R.id.dialogPropertiesCancelButton)
+                hasPinBox.isChecked = questionsVM.hasPin()
+                passwordInput.setText(questionsVM.getPin())
+
+
+                if (questionsVM.hasPin())
+                    passwordInput.visibility = View.VISIBLE
+
+                hasPinBox.setOnCheckedChangeListener { _, isChecked ->
+                    passwordInput.visibility = if (isChecked)
+                        View.VISIBLE
+                    else View.GONE
+                    questionsVM.setHasPin(isChecked)
+
+                }
 
                 cancel.setOnClickListener {
                     dialogBuilder.dismiss()
@@ -319,7 +344,12 @@ class EditQuizFragment : Fragment() {
 
                 confirm.setOnClickListener {
                     val title = quizTitle.text.toString()
+                    val pin = passwordInput.text.toString()
                     if (title.isEmpty()) return@setOnClickListener
+                    if (hasPinBox.isChecked && pin.isEmpty()) {
+                        passwordInput.error = getString(R.string.required)
+                        return@setOnClickListener
+                    }
 
                     if (questionsVM.getSize() == 0) {
                         Toast.makeText(
@@ -327,11 +357,13 @@ class EditQuizFragment : Fragment() {
                             getString(R.string.oneQuestionAtLeast), Toast.LENGTH_SHORT
                         ).show()
                         questionsVM.setTitle(title)
+                        questionsVM.setPin(pin)
                         dialogBuilder.dismiss()
                         return@setOnClickListener
                     }
 
                     questionsVM.setTitle(title)
+                    questionsVM.setPin(pin)
                     sendQuiz()
                     dialogBuilder.dismiss()
                 }
@@ -376,6 +408,7 @@ class EditQuizFragment : Fragment() {
                     QuizType.MultipleChoice
 
                 startWritingQuestions(type)
+
                 dialogBuilder.dismiss()
                 questionsVM.setQuizType(type)
             }
@@ -385,6 +418,12 @@ class EditQuizFragment : Fragment() {
             setView(dialogView)
             show()
         }
+        dialogBuilder.setOnDismissListener {
+            // user dismissed dialog without pressing either button!
+            if (view != null && rv.adapter == null)
+                view!!.findNavController().popBackStack()
+        }
+
     }
 
     private fun loadQuiz(code: String, id: String) {
@@ -401,6 +440,7 @@ class EditQuizFragment : Fragment() {
         val adapter = GroupAdapter<ViewHolder>()
 
 
+        updateQuiz.text = getString(R.string.updateQuiz)
         if (quiz is MultipleChoiceQuiz) {
             val questions = quiz.questions!!
             fun update() {
@@ -481,11 +521,10 @@ class EditQuizFragment : Fragment() {
             }
 
             confirm.setOnClickListener {
-                if (qText.text.isNullOrEmpty()) return@setOnClickListener
+                val text = qText.text.toString().removedWhitespace()
+                if (text.isEmpty()) return@setOnClickListener
                 val answer = answerBox.isChecked
-                val text = qText.text.toString()
                 val question = TrueFalseQuestion(text, answer)
-
                 val key = (quiz.questions?.size?.inc() ?: 0).toString()
                 quiz.questions!![key] = question
                 quiz.quiz!!.questionsCount++
@@ -527,6 +566,7 @@ class EditQuizFragment : Fragment() {
             }
 
             confirm.setOnClickListener {
+
                 if (qText.text.isNullOrEmpty()
                     || choiceA.text.isNullOrEmpty()
                     || choiceB.text.isNullOrEmpty()
@@ -538,12 +578,14 @@ class EditQuizFragment : Fragment() {
                     return@setOnClickListener
 
                 val answersAlphabet = context.resources.getStringArray(R.array.chars)
+                val arDigits = context.resources.getStringArray(R.array.digits)
                 val enAnswers = context.resources.getStringArray(R.array.enChars)
 
                 val answer = when (val t = answerText.text.toString().toLowerCase()) {
                     in answersAlphabet -> answersAlphabet.indexOf(t) // Alef, Baa...
+                    in arDigits -> arDigits.indexOf(t) // Hindi numerals
                     in enAnswers -> enAnswers.indexOf(t) // a, b, c, d
-                    else -> (t.toIntOrNull()?.dec()) ?: -1
+                    else -> (t.toIntOrNull()?.dec()) ?: -1 // 1, 2, 3, 4
                 }
 
 

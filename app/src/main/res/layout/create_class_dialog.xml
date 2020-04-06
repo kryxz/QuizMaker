@@ -10,7 +10,7 @@
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
         android:text="@string/CreateClass"
-        android:textSize="26sp" />
+        android:textSize="23sp" />
 
     <androidx.appcompat.widget.AppCompatTextView
         android:layout_width="match_parent"

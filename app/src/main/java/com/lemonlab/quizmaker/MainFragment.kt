@@ -50,6 +50,7 @@ class MainFragment : Fragment() {
 
     private fun init() {
         checkURL()
+
         val vm = (activity as MainActivity).vm
 
         if (!vm.isLoggedIn())
@@ -74,6 +75,18 @@ class MainFragment : Fragment() {
             }
 
         })
+        val sharedPrefs = context!!.getSharedPreferences("userPrefs", 0)
+        val canShowUpdateLog = sharedPrefs.getBoolean("showUpdateLog", true)
+
+        if (canShowUpdateLog) {
+            closeMainTip.visibility = View.VISIBLE
+            mainTipText.visibility = View.VISIBLE
+        }
+        closeMainTip.setOnClickListener {
+            closeMainTip.visibility = View.GONE
+            mainTipText.visibility = View.GONE
+            sharedPrefs.edit().putBoolean("showUpdateLog", false).apply()
+        }
     }
 
 

@@ -18,6 +18,7 @@ import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.app.TaskStackBuilder
 import androidx.fragment.app.Fragment
 import androidx.navigation.Navigation
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.textfield.TextInputEditText
@@ -25,6 +26,7 @@ import kotlinx.android.synthetic.main.fragment_settings.*
 
 
 class SettingsFragment : Fragment() {
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -35,6 +37,11 @@ class SettingsFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        init()
+    }
+
+    private fun init() {
         with(settingsRecyclerView) {
             layoutManager = LinearLayoutManager(context!!)
             val listOfSettings = listOf(
@@ -81,41 +88,25 @@ class SettingsFragment : Fragment() {
 
             )
             adapter = TextViewAdapter(
-                activity!!, listOfSettings, null,
-                (activity as MainActivity).vm
+                activity!!, listOfSettings, (activity as MainActivity).vm
             )
         }
-        super.onViewCreated(view, savedInstanceState)
-    }
 
+    }
 }
 
 
 class TextViewAdapter(
     private val activity: Activity,
-    private val listOfSettings: List<OptionsItem>?,
-    private val listOfFaqs: List<String>?,
+    private val listOfSettings: List<OptionsItem>,
     private val viewModel: QuizzesVM
 ) :
     RecyclerView.Adapter<SettingsRV>() {
 
     override fun onBindViewHolder(holder: SettingsRV, position: Int) {
 
-        if (listOfFaqs == null)
             setUp(holder.settingsItemText, position)
-        else
-            setUpFaq(holder.settingsItemText, position)
-    }
 
-    private fun setUpFaq(settingsItemText: AppCompatTextView, position: Int) {
-        with(settingsItemText) {
-            text = listOfFaqs!![position]
-            val listOfAnswers = resources.getStringArray(R.array.faqsAnswers)
-            setOnClickListener {
-                showInfoDialog(listOfFaqs[position], listOfAnswers[position])
-
-            }
-        }
     }
 
     private fun showInfoDialog(dialogTitle: String, dialogMessage: String) {
@@ -141,7 +132,7 @@ class TextViewAdapter(
     }
 
     private fun setUp(textView: AppCompatTextView, position: Int) {
-        when (listOfSettings!![position].type) {
+        when (listOfSettings[position].type) {
             Option.CACHE -> deleteCache(textView, position)
             Option.THEME -> changeTheme(textView, position)
             Option.APPS -> moreApps(textView, position)
@@ -166,7 +157,7 @@ class TextViewAdapter(
             if (feedbackText.text!!.isEmpty())
                 return@setOnClickListener
             viewModel.sendFeedback(feedbackText.text.toString().removedWhitespace())
-            showToast(activity, activity.getString(R.string.thanks))
+            activity.applicationContext.showToast(activity.getString(R.string.thanks))
             dialogBuilder.dismiss()
         }
 
@@ -175,7 +166,7 @@ class TextViewAdapter(
         }
         dialogBuilder.setView(dialogView)
         with(textView) {
-            setCompoundDrawablesWithIntrinsicBounds(listOfSettings!![position].icon, 0, 0, 0)
+            setCompoundDrawablesWithIntrinsicBounds(listOfSettings[position].icon, 0, 0, 0)
             text = listOfSettings[position].text
             setOnClickListener {
                 dialogBuilder.show()
@@ -213,7 +204,7 @@ class TextViewAdapter(
                 context.setTheme(R.style.LightTheme)
         }
         with(textView) {
-            setCompoundDrawablesWithIntrinsicBounds(listOfSettings!![position].icon, 0, 0, 0)
+            setCompoundDrawablesWithIntrinsicBounds(listOfSettings[position].icon, 0, 0, 0)
             text = listOfSettings[position].text
             setOnClickListener {
                 invertMode(it.context, isLightModeOn)
@@ -234,47 +225,22 @@ class TextViewAdapter(
 
     private fun fAQ(textView: AppCompatTextView, position: Int) {
         with(textView) {
-            setCompoundDrawablesWithIntrinsicBounds(listOfSettings!![position].icon, 0, 0, 0)
+            setCompoundDrawablesWithIntrinsicBounds(listOfSettings[position].icon, 0, 0, 0)
             text = listOfSettings[position].text
             setOnClickListener {
-
-                val dialogBuilder = AlertDialog.Builder(context).create()
-                val dialogView = with(LayoutInflater.from(context)) {
-                    inflate(
-                        R.layout.faq_dialog,
-                        null
-                    )
-                }
-                with(dialogView.findViewById<RecyclerView>(R.id.faqRecyclerView)) {
-                    layoutManager = LinearLayoutManager(activity)
-                    adapter = TextViewAdapter(
-                        activity,
-                        null,
-                        resources.getStringArray(R.array.faqs).toList(), viewModel
-                    )
-                }
-
-                dialogView.findViewById<AppCompatButton>(R.id.faqOKButton).setOnClickListener {
-                    dialogBuilder.dismiss()
-                }
-
-                with(dialogBuilder) {
-                    setView(dialogView)
-                    show()
-                }
-
+                it.findNavController().navigate(R.id.faqFragment)
             }
         }
     }
 
     private fun logout(textView: AppCompatTextView, position: Int) {
         with(textView) {
-            setCompoundDrawablesWithIntrinsicBounds(listOfSettings!![position].icon, 0, 0, 0)
+            setCompoundDrawablesWithIntrinsicBounds(listOfSettings[position].icon, 0, 0, 0)
             text = listOfSettings[position].text
             setOnClickListener {
                 context.showYesNoDialog(
                     {
-                        viewModel.cancelNotifications()
+                        viewModel.unsubscribeNotifications()
                         viewModel.signOut()
                         Navigation.findNavController(it).navigate(R.id.loginFragment)
                     },
@@ -290,13 +256,13 @@ class TextViewAdapter(
 
     private fun deleteCache(textView: AppCompatTextView, position: Int) {
         with(textView) {
-            setCompoundDrawablesWithIntrinsicBounds(listOfSettings!![position].icon, 0, 0, 0)
+            setCompoundDrawablesWithIntrinsicBounds(listOfSettings[position].icon, 0, 0, 0)
             text = listOfSettings[position].text
             setOnClickListener {
                 animate().scaleX(0f).scaleY(0f).setDuration(100)
                     .withEndAction { animate().scaleX(1f).scaleY(1f).duration = 100 }
                 context.cacheDir.delete()
-                showToast(context, context.getString(R.string.cacheDeleted))
+                context.showToast(context.getString(R.string.cacheDeleted))
             }
         }
 
@@ -304,7 +270,7 @@ class TextViewAdapter(
 
     private fun moreApps(textView: AppCompatTextView, position: Int) {
         with(textView) {
-            setCompoundDrawablesWithIntrinsicBounds(listOfSettings!![position].icon, 0, 0, 0)
+            setCompoundDrawablesWithIntrinsicBounds(listOfSettings[position].icon, 0, 0, 0)
             text = listOfSettings[position].text
             setOnClickListener {
                 context.startActivity(
@@ -321,7 +287,7 @@ class TextViewAdapter(
     private fun aboutUs(textView: AppCompatTextView, position: Int) {
 
         with(textView) {
-            setCompoundDrawablesWithIntrinsicBounds(listOfSettings!![position].icon, 0, 0, 0)
+            setCompoundDrawablesWithIntrinsicBounds(listOfSettings[position].icon, 0, 0, 0)
             text = listOfSettings[position].text
             setOnClickListener {
                 showInfoDialog(
@@ -369,7 +335,7 @@ class TextViewAdapter(
             setMessage(changeColorToWhite(privacyPolicyText))
         }
         with(textView) {
-            setCompoundDrawablesWithIntrinsicBounds(listOfSettings!![position].icon, 0, 0, 0)
+            setCompoundDrawablesWithIntrinsicBounds(listOfSettings[position].icon, 0, 0, 0)
             text = listOfSettings[position].text
             setOnClickListener {
                 dialog.show()
@@ -390,7 +356,7 @@ class TextViewAdapter(
         )
     }
 
-    override fun getItemCount() = listOfFaqs?.size ?: listOfSettings!!.size
+    override fun getItemCount() = listOfSettings.size
 
 }
 

@@ -24,6 +24,7 @@ import kotlin.random.Random
 class ClassFragment : Fragment() {
 
     private lateinit var vm: QuizzesVM
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?

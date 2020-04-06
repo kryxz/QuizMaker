@@ -18,6 +18,7 @@ import kotlin.collections.LinkedHashMap
 class FireRepo {
     private val db = FirebaseFirestore.getInstance()
     private val auth = FirebaseAuth.getInstance()
+    private val msg = FirebaseMessaging.getInstance()
 
     fun getQuizzesRef() = db.collection("Quizzes")
 
@@ -42,6 +43,7 @@ class FireRepo {
     fun getUserName() = auth.currentUser?.displayName ?: ""
 
     fun getAuth() = auth
+    fun getMsg() = msg
 
 }
 
@@ -100,16 +102,27 @@ class QuizzesVM(application: Application) : AndroidViewModel(application) {
 
     }
 
-    fun leaveClass(that: TheClass) {
-        if (!that.members.contains(getName())) return
+    fun deleteMember(who: String, that: TheClass) {
+        if (!that.members.contains(who)) return
 
-        that.members.remove(getName())
-        if (that.members.isEmpty())
-            repo.getClassesRef().document(that.id).delete()
-        else
-            repo.getClassesRef().document(that.id).set(that)
-        repo.getUsersRef().document(repo.getUserName())
-            .collection("class").document(that.id).delete()
+        val id = that.id
+        viewModelScope.launch {
+            val c = getClassNow(id)
+            c.members.remove(who)
+            if (c.members.isEmpty())
+                repo.getClassesRef().document(id).delete()
+            else
+                repo.getClassesRef().document(id).set(c)
+
+            repo.getUsersRef().document(who)
+                .collection("class").document(id).delete()
+        }
+
+
+    }
+
+    fun leaveClass(that: TheClass) {
+        deleteMember(getName(), that)
     }
 
     fun joinClassWithCode(context: Context, code: String) {
@@ -140,11 +153,15 @@ class QuizzesVM(application: Application) : AndroidViewModel(application) {
 
     fun joinClass(that: TheClass) {
         if (that.members.contains(getName())) return
+        val id = that.id
+        viewModelScope.launch {
+            val c = getClassNow(id)
+            c.members.add(getName())
+            repo.getClassesRef().document(id).set(c)
+            repo.getUsersRef().document(repo.getUserName())
+                .collection("class").document(c.id).set(mapOf("id" to id))
+        }
 
-        that.members.add(getName())
-        repo.getClassesRef().document(that.id).set(that)
-        repo.getUsersRef().document(repo.getUserName())
-            .collection("class").document(that.id).set(mapOf("id" to that.id))
 
     }
 
@@ -187,7 +204,7 @@ class QuizzesVM(application: Application) : AndroidViewModel(application) {
         that.members.add(getName())
         repo.getClassesRef().document(that.id).set(that)
         repo.getUsersRef().document(getName())
-            .collection("class").add(hashMapOf("id" to that.id))
+            .collection("class").document(that.id).set(hashMapOf("id" to that.id))
     }
 
     fun sendMessage(context: Context, to: String, what: String) {
@@ -291,6 +308,10 @@ class QuizzesVM(application: Application) : AndroidViewModel(application) {
 
     }
 
+    private suspend fun getClassNow(id: String): TheClass {
+        return repo.getClassRef(id).get().await().toObject(TheClass::class.java)!!
+    }
+
     fun getClass(id: String): MutableLiveData<TheClass> {
         val thatClass: MutableLiveData<TheClass> = MutableLiveData()
         viewModelScope.launch {
@@ -328,10 +349,6 @@ class QuizzesVM(application: Application) : AndroidViewModel(application) {
         return log
     }
 
-    fun cancelNotifications() =
-        FirebaseMessaging.getInstance().unsubscribeFromTopic(getName())
-
-
     fun getPublicClasses(): MutableLiveData<List<TheClass>> {
         val items: MutableLiveData<List<TheClass>> = MutableLiveData()
         repo.getClassesRef().get().addOnSuccessListener { snapShot ->
@@ -349,8 +366,6 @@ class QuizzesVM(application: Application) : AndroidViewModel(application) {
                 it.date
             }
             items.value = classes
-
-
         }
         return items
     }
@@ -400,7 +415,18 @@ class QuizzesVM(application: Application) : AndroidViewModel(application) {
         return allQuizzes
     }
 
+    fun subscribeNotifications() {
+        repo.getMsg().isAutoInitEnabled = true
+        if (isLoggedIn())
+            repo.getMsg().subscribeToTopic(getUniqueID())
+    }
 
+    private fun getUniqueID(): String = repo.getAuth().currentUser?.uid ?: "no_topic"
+
+
+    fun unsubscribeNotifications() {
+        repo.getMsg().unsubscribeFromTopic(getUniqueID())
+    }
 }
 
 
@@ -427,17 +453,11 @@ class QuestionsVM(state: SavedStateHandle) : ViewModel() {
         trueFalse[position.toString()] = q
     }
 
-    fun getTFQuestion(position: Int): TrueFalseQuestion =
-        trueFalse[position.toString()] ?: TrueFalseQuestion()
-
 
     fun setMultiChoiceQuestion(position: Int, q: MultipleChoiceQuestion) {
         multiChoice[position.toString()] = q
     }
 
-
-    fun getMultiChoiceQuestion(position: Int): MultipleChoiceQuestion =
-        multiChoice[position.toString()] ?: MultipleChoiceQuestion()
 
     fun setClassJoinCode(code: String) =
         savedStateHandle.set(CLASS_JOIN_CODE, code)

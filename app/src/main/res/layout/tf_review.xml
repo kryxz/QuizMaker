@@ -2,10 +2,10 @@
 <androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="8dp"
+    android:layout_marginBottom="4dp"
     android:background="@drawable/item_borders"
     android:orientation="vertical"
-    android:padding="8dp">
+    android:padding="4dp">
 
 
     <androidx.appcompat.widget.AppCompatTextView
@@ -15,9 +15,9 @@
         android:layout_gravity="center_horizontal"
         android:layout_marginBottom="16dp"
         android:gravity="center_horizontal"
-        android:padding="8dp"
+        android:padding="4dp"
         android:text="@string/reviewTemplate"
-        android:textSize="28sp" />
+        android:textSize="21sp" />
 
     <androidx.appcompat.widget.AppCompatCheckBox
         android:id="@+id/reviewIsTrueCheckBox"
@@ -27,6 +27,7 @@
         android:enabled="false"
         android:text="@string/trueStatement"
         android:textColor="?attr/textColor"
+        android:textStyle="bold"
         android:visibility="gone" />
 
 
@@ -37,7 +38,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:drawableEnd="@drawable/ic_edit"
-        android:drawablePadding="8dp"
+        android:drawablePadding="4dp"
         android:text="@string/editQuestion"
         android:visibility="gone" />
 

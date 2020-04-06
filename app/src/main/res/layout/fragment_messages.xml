@@ -1,25 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
-                                              xmlns:tools="http://schemas.android.com/tools"
-                                              android:layout_width="match_parent"
-                                              android:layout_height="match_parent"
-                                              android:background="?attr/colorPrimary"
-                                              tools:context=".MessagesFragment">
-    <ProgressBar android:layout_width="match_parent" android:layout_height="match_parent"
-                 android:visibility="gone"
-                 android:id="@+id/MessagesProgressBar"
-    />
-    <androidx.appcompat.widget.AppCompatTextView android:layout_width="match_parent"
-                                                 android:text="@string/noMessages"
-                                                 android:gravity="center"
-                                                 android:textSize="34sp"
-                                                 android:id="@+id/noMessagesTextView"
-                                                 android:visibility="gone"
-                                                 android:layout_height="match_parent"/>
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="?attr/colorPrimary"
+    tools:context=".MessagesFragment">
 
-    <androidx.recyclerview.widget.RecyclerView android:layout_width="match_parent"
-                                               android:id="@+id/MessagesRecyclerView"
-                                               android:layout_height="match_parent">
+    <ProgressBar
+        android:id="@+id/MessagesProgressBar"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/noMessagesTextView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:text="@string/noMessages"
+        android:textSize="32sp"
+        android:visibility="gone" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/MessagesRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
     </androidx.recyclerview.widget.RecyclerView>
 

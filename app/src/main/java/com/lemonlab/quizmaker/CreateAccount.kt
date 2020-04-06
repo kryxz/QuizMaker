@@ -39,18 +39,11 @@ class CreateAccount : Fragment() {
         super.onDestroyView()
     }
 
-    private fun fieldsOK(userEmail: CharSequence, userPassword: String, username: String): Boolean {
-        val arabicChars = "ضشئءسصثيؤربقفلأىاغةتعهنوزظمخجدطكح"
-        var allEnglish = true
-        for (char in arabicChars)
-            if (char in username) {
-                allEnglish = false
-                break
-            }
+    private fun fieldsOK(userEmail: CharSequence, userPassword: String): Boolean {
 
-        //returns true if userEmail is an Email, and password is 6+ chars.
+        // returns true if input is an email, and password is 6+ chars.
         return (Patterns.EMAIL_ADDRESS.matcher(userEmail)
-            .matches() && allEnglish && userPassword.length >= 6)
+            .matches() && userPassword.length >= 6)
     }
 
     private fun createAccountAndSignIn(username: String, userEmail: String, userPassword: String) {
@@ -96,23 +89,11 @@ class CreateAccount : Fragment() {
     }
 
     private fun removeSpecialChars(input: String): String {
-        return removeWhitespace(input).replace(Regex("[^a-zA-Z0-9_ ]"), "").replace(" ", "")
+        return input.removedWhitespace().toCharArray()
+            .filter { it.isLetterOrDigit() }
+            .joinToString(separator = "")
     }
 
-    private fun removeWhitespace(string: String): String {
-        var isFirstSpace = false
-        var result = ""
-        for (char in string) {
-            if (char != ' ' && char != '\n') {
-                isFirstSpace = true
-                result += char
-            } else if (isFirstSpace) {
-                result += " "
-                isFirstSpace = false
-            }
-        }
-        return result
-    }
 
     private fun showHidePassword() {
         showPasswordCheckBox.setOnCheckedChangeListener { _, isChecked ->
@@ -130,10 +111,10 @@ class CreateAccount : Fragment() {
         val fireStoreDatabaseUsers = FirebaseFirestore.getInstance().collection("users")
         signUpButton.setOnClickListener {
             signUpButton.isEnabled = false
-            val username = removeSpecialChars(signUpDisplayName.text.toString())
-            val userEmail = signUpEmailEditText.text.toString()
-            val userPassword = signUpPasswordEditText.text.toString()
-            if (fieldsOK(userEmail, userPassword, signUpDisplayName.text.toString())) {
+            val username = removeSpecialChars(signUpDisplayName.text.toString()).removedWhitespace()
+            val userEmail = signUpEmailEditText.text.toString().removedWhitespace()
+            val userPassword = signUpPasswordEditText.text.toString().removedWhitespace()
+            if (fieldsOK(userEmail, userPassword)) {
                 var isUserNameOK = true
                 var isEmailOK = true
                 fireStoreDatabaseUsers.get().addOnSuccessListener {
@@ -195,17 +176,7 @@ class CreateAccount : Fragment() {
 
     private fun showErrors() {
         signUpButton.isEnabled = true
-        val arabicChars = "ضشئءسصثيؤربقفلأىاغةتعهنوزظمخجدطكح"
-        var allEnglish = true
-        for (char in arabicChars)
-            if (char in signUpDisplayName.text.toString()) {
-                allEnglish = false
-                break
-            }
-        if (!allEnglish) {
-            signUpDisplayName.error = getString(R.string.containsArChars)
-            showSuggestions()
-        } else if (!Patterns.EMAIL_ADDRESS.matcher(signUpEmailEditText.text.toString()).matches())
+        if (!Patterns.EMAIL_ADDRESS.matcher(signUpEmailEditText.text.toString()).matches())
             signUpEmailEditText.error = getString(R.string.invalidEmail)
         else if (signUpPasswordEditText.text!!.length < 6)
             signUpPasswordEditText.error = getString(R.string.passwordTooShort)

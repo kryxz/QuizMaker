@@ -6,9 +6,10 @@ import android.util.SparseArray
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.RadioButton
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.AppCompatRadioButton
 import androidx.core.util.set
+import androidx.core.view.forEachIndexed
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.navigation.NavOptions
@@ -37,6 +38,8 @@ class TakeQuizFragment : Fragment() {
     }
 
     private fun init() {
+        takeQuizProgressBar.visibility = View.VISIBLE
+        answersLayout.visibility = View.GONE
         val args = TakeQuizFragmentArgs.fromBundle(arguments!!)
         val quizID = args.quizID
 
@@ -53,6 +56,9 @@ class TakeQuizFragment : Fragment() {
     }
 
     private fun setUp(quiz: Quizzer) {
+        takeQuizProgressBar.visibility = View.GONE
+        answersLayout.visibility = View.VISIBLE
+
         var position = 1
         questionNumberTextView.text = position.toString()
 
@@ -63,55 +69,109 @@ class TakeQuizFragment : Fragment() {
             quizChoicesGroup.visibility = View.GONE
             answerCheckBox.visibility = View.VISIBLE
         }
-        val answers = SparseArray<Any>()
-        fun updateTextMulti() {
-            quizQuestionText.text = (quiz as MultipleChoiceQuiz).getQuestion(position)
-            firstAnswer.text = quiz.getChoiceOne(position)
-            secondAnswer.text = quiz.getChoiceTwo(position)
-            thirdAnswer.text = quiz.getChoiceThree(position)
-            fourthAnswer.text = quiz.getChoiceFour(position)
+        val answers = SparseArray<Any>().also {
+            it.clear()
+        }
 
-            if (answers[position] != null) {
-                val choice = quizChoicesGroup.getChildAt(
-                    answers[position].toString().toInt()
-                ) as RadioButton
-                choice.isChecked = true
+        fun fadeViewInOut(v: View, end: () -> Unit) {
+            val duration = if (position == 1)
+                0L
+            else
+                250L
+            v.apply {
+                animate().alpha(0f).setDuration(duration).withEndAction {
+                    alpha = 1f
+                    end()
+                }.start()
+            }
+        }
+
+        fun updateTextMulti() {
+            fadeViewInOut(quizChoicesGroup) { }
+
+            fadeViewInOut(quizQuestionText) {
+                quizQuestionText.text = (quiz as MultipleChoiceQuiz).getQuestion(position)
+                firstAnswer.text = quiz.getChoiceOne(position)
+                secondAnswer.text = quiz.getChoiceTwo(position)
+                thirdAnswer.text = quiz.getChoiceThree(position)
+                fourthAnswer.text = quiz.getChoiceFour(position)
+            }
+            quizChoicesGroup.clearCheck()
+            if (answers[position] != -1 && answers[position] != null) {
+                val pos = answers[position] as Int
+                quizChoicesGroup.forEachIndexed { index, view ->
+                    val item = view as AppCompatRadioButton
+                    if (index == pos) {
+                        item.isChecked = true
+                    }
+                }
+
             }
 
         }
 
 
+        fun getAnswerFromGroup(): Int {
+            var answer: Int = -1
+            quizChoicesGroup.forEachIndexed { index, view ->
+                val item = view as AppCompatRadioButton
+                if (item.isChecked)
+                    answer = index
+            }
+            return if (answers[position] == -1 || answers[position] == null)
+                answer
+            else
+                answers[position] as Int
+
+        }
+
+        fun getAnswerCheckBox(): Boolean {
+
+            return if (answers[position] == null)
+                answerCheckBox.isChecked
+            else
+                answers[position] as Boolean
+        }
+
         fun updateTextTF() {
-            quizQuestionText.text = quiz.getQuestion(position)
-            if (answers[position] != null)
-                answerCheckBox.isChecked = answers[position] as Boolean
+            fadeViewInOut(quizQuestionText) {
+                quizQuestionText.text = quiz.getQuestion(position)
+
+            }
+
+            with(answerCheckBox) {
+                fadeViewInOut(this) {
+                    answerCheckBox.isChecked = getAnswerCheckBox()
+                }
+            }
+
         }
 
         fun next() {
             if (position == quiz.getSize()) return
-
             if (quiz is MultipleChoiceQuiz) {
-                answers[position] =
-                    quizChoicesGroup.indexOfChild(
-                        view!!.findViewById(quizChoicesGroup.checkedRadioButtonId)
-                    )
+                answers[position] = getAnswerFromGroup()
                 position++
                 updateTextMulti()
             } else {
-                answers[position] = answerCheckBox.isChecked
+
+                answers[position] = getAnswerCheckBox()
                 position++
                 updateTextTF()
             }
-            questionNumberTextView.text =
-                getString(R.string.questionNumber, position, quiz.getSize())
+
+            with(questionNumberTextView) {
+                fadeViewInOut(this) {
+                    text = getString(R.string.questionNumber, position, quiz.getSize())
+                }
+            }
 
         }
 
         fun prev() {
             if (position == 1) return
             if (quiz is MultipleChoiceQuiz) {
-                answers[position] =
-                    quizChoicesGroup.indexOfChild(view!!.findViewById(quizChoicesGroup.checkedRadioButtonId))
+                answers[position] = getAnswerFromGroup()
                 position--
                 updateTextMulti()
 
@@ -120,20 +180,19 @@ class TakeQuizFragment : Fragment() {
                 position--
                 updateTextTF()
             }
-            questionNumberTextView.text =
-                getString(R.string.questionNumber, position, quiz.getSize())
+            with(questionNumberTextView) {
+                fadeViewInOut(this) {
+                    text = getString(R.string.questionNumber, position, quiz.getSize())
+                }
+            }
         }
 
         fun finish() {
 
-            if (quiz is MultipleChoiceQuiz) {
-                answers[position] =
-                    quizChoicesGroup.indexOfChild(
-                        view!!.findViewById(quizChoicesGroup.checkedRadioButtonId)
-                    )
-            } else
+            if (quiz is MultipleChoiceQuiz)
+                answers[position] = getAnswerFromGroup()
+            else
                 answers[position] = answerCheckBox.isChecked
-
 
             val action = TakeQuizFragmentDirections.viewResult(
                 quiz.getID(),
@@ -142,6 +201,7 @@ class TakeQuizFragment : Fragment() {
                 quiz.getAuthor(),
                 quiz.getTitle()
             )
+
             action.classCode = TakeQuizFragmentArgs.fromBundle(arguments!!).classCode
             val navOptions = NavOptions.Builder().setPopUpTo(
                 R.id.takeQuizFragment,
@@ -151,14 +211,14 @@ class TakeQuizFragment : Fragment() {
         }
 
         if (quiz is MultipleChoiceQuiz) {
+            quizChoicesGroup.setOnCheckedChangeListener { _, _ ->
+                answers[position] = getAnswerFromGroup()
 
-            quizChoicesGroup.setOnCheckedChangeListener { group, _ ->
-                if (group.indexOfChild(view!!.findViewById(group.checkedRadioButtonId)) != -1)
-                    answers[position] =
-                        group.indexOfChild(view!!.findViewById(group.checkedRadioButtonId))
             }
+
             updateTextMulti()
         } else {
+
             answerCheckBox.setOnCheckedChangeListener { _, isChecked ->
                 answers[position] = isChecked
             }
@@ -172,7 +232,7 @@ class TakeQuizFragment : Fragment() {
             when {
                 answers.size() == quiz.getSize() ||
                         position == quiz.getSize() -> finish()
-                else -> showToast(context!!, getString(R.string.answerQuestions))
+                else -> context!!.showToast(getString(R.string.answerQuestions))
             }
         }
 

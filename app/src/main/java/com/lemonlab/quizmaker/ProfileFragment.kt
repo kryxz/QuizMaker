@@ -97,14 +97,14 @@ class ProfileFragment : Fragment() {
         fun saveBio() {
             val newBio = bioEditText.text.toString()
             vm.updateBio(newBio)
-            showToast(context!!, getString(R.string.editedSuccessfully))
+            context!!.showToast(getString(R.string.editedSuccessfully))
             userBioTextView.text = newBio
         }
 
         bioEditText.hint = userBioTextView.text
         confirmButton.setOnClickListener {
             if (bioEditText.text.toString().isEmpty())
-                showToast(context!!, getString(R.string.cannotBeEmpty))
+                context!!.showToast(getString(R.string.cannotBeEmpty))
             else
                 saveBio()
             dialogBuilder.dismiss()

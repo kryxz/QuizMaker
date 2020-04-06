@@ -1,6 +1,7 @@
 package com.lemonlab.quizmaker.items
 
 import android.view.View
+import androidx.appcompat.widget.AppCompatButton
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
 import androidx.navigation.findNavController
@@ -29,12 +30,10 @@ class ClassQuiz(
         vm.canRate(quiz.quizUUID).observe(lifecycleOwner, Observer {
             QuizItem.setUpQuizButton(context, it, view.startQuizButton)
 
+            canViewAnswers(!it, view.viewAnswersButton)
+
         })
         val isCreator = vm.getName() == quiz.quizAuthor
-
-        view.editQuizButton.visibility = if (isCreator)
-            View.VISIBLE
-        else View.GONE
 
         with(view) {
             editQuizButton.visibility = if (isCreator)
@@ -59,6 +58,22 @@ class ClassQuiz(
 
     }
 
+    private fun canViewAnswers(can: Boolean, button: AppCompatButton) {
+        if (can) {
+            with(button) {
+                visibility = View.VISIBLE
+
+                setOnClickListener {
+                    val action = TeachFragmentDirections.viewQuizAnswers()
+                        .setQuizID(quiz.quizUUID).setClassCode(code)
+                    findNavController().navigate(action)
+                }
+            }
+
+        } else
+            button.visibility = View.GONE
+    }
+
     private fun enterQuiz(view: View) {
         val action =
             TeachFragmentDirections.takeClassQuiz(quiz.quizUUID)
@@ -72,41 +87,3 @@ class ClassQuiz(
 
 }
 
-
-/*
-    private fun downloadQuiz(){
-    val printAttrs =
-        PrintAttributes.Builder().setColorMode(PrintAttributes.COLOR_MODE_COLOR)
-            .setMediaSize(PrintAttributes.MediaSize.NA_LETTER).setResolution(
-                Resolution(
-                    "zooey",
-                    PRINT_SERVICE,
-                    300,
-                    300))
-            .setMinMargins(PrintAttributes.Margins.NO_MARGINS).build()
-
-    val document: PdfDocument = PrintedPdfDocument(context, printAttrs)
-    val pageInfo = PageInfo.Builder(300, 300, 1).create()
-    val page = document.startPage(pageInfo)
-    val content: View = holder.itemView.findViewById(R.id.questionsCountText)
-    content.draw(page.canvas)
-    // do final processing of the page
-    document.finishPage(page)
-
-    try {
-        val f = File(
-            context.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS)!!.absolutePath
-                .toString() + "/sample.pdf"
-        )
-        Log.i("SavingPDF", f.absolutePath)
-        Log.i("SavingPDF", f.path)
-        val fos = FileOutputStream(f)
-        document.writeTo(fos)
-        document.close()
-        fos.close()
-    } catch (e: IOException) {
-        throw RuntimeException("Error generating file", e)
-    }
-}
-
- */

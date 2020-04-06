@@ -1,8 +1,12 @@
 package com.lemonlab.quizmaker
 
 import android.app.AlertDialog
+import android.content.ClipboardManager
+import android.content.Context.CLIPBOARD_SERVICE
 import android.os.Bundle
 import android.os.Handler
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -82,6 +86,35 @@ class JoinFragment : Fragment() {
         }
         with(dialogView) {
             val input = findViewById<TextInputEditText>(R.id.classCodeInput)
+
+            val clipboard: ClipboardManager =
+                context!!.getSystemService(CLIPBOARD_SERVICE) as ClipboardManager
+            val copied = clipboard.primaryClip?.getItemAt(0)?.coerceToText(context!!)
+                .toString()
+
+            if (copied.contains('-') && copied.length == 11) {
+                input.setText(copied)
+                context.showToast(getString(R.string.contentPasted))
+            }
+
+            input.addTextChangedListener(object : TextWatcher {
+                override fun afterTextChanged(s: Editable?) {
+
+                }
+
+                override fun beforeTextChanged(
+                    s: CharSequence?,
+                    start: Int,
+                    count: Int,
+                    after: Int
+                ) {
+                }
+
+                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                    if (s != null && s.length in listOf(2, 5, 8))
+                        input.text!!.append('-')
+                }
+            })
             val confirm = findViewById<AppCompatButton>(R.id.joinViaCodeConfirm)
             val cancel = findViewById<AppCompatButton>(R.id.joinViaCodeCancel)
 
@@ -90,7 +123,7 @@ class JoinFragment : Fragment() {
             }
 
             confirm.setOnClickListener {
-                val text = input.text.toString().trim()
+                val text = input.text.toString().trim().replace(".", "")
                 if (text.isEmpty()) return@setOnClickListener
                 joinClassViaCode(text)
                 dialogBuilder.dismiss()

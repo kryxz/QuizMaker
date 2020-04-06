@@ -4,6 +4,7 @@ import android.graphics.Color
 import android.text.format.DateUtils
 import com.lemonlab.quizmaker.ChatMessage
 import com.lemonlab.quizmaker.R
+import com.lemonlab.quizmaker.copyText
 import com.xwray.groupie.Item
 import com.xwray.groupie.ViewHolder
 import kotlinx.android.synthetic.main.chat_item.view.*
@@ -24,6 +25,10 @@ class ChatItem(private val msg: ChatMessage, private val teach: String) : Item<V
                 usernameTV.setTextColor(Color.GREEN)
             else
                 usernameTV.setTextColor(Color.LTGRAY)
+        }
+
+        view.setOnClickListener {
+            view.context.copyText(msg.text)
         }
 
 

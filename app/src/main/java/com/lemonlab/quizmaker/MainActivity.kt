@@ -16,10 +16,8 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
 import com.google.android.gms.ads.MobileAds
 import com.google.firebase.FirebaseApp
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreSettings
-import com.google.firebase.messaging.FirebaseMessaging
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
@@ -27,12 +25,18 @@ class MainActivity : AppCompatActivity() {
     val vm: QuizzesVM by viewModels()
     val questionsVM: QuestionsVM by viewModels()
 
+    companion object {
+        var instance: MainActivity? = null
+    }
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         window.decorView.layoutDirection = View.LAYOUT_DIRECTION_RTL
         chooseTheme()
         setContentView(R.layout.activity_main)
         setUpNavigation()
+        instance = this
         MobileAds.initialize(this)
         setUpFireBase()
         checkIfURL()
@@ -75,10 +79,8 @@ class MainActivity : AppCompatActivity() {
                 cacheSizeBytes = FirebaseFirestoreSettings.CACHE_SIZE_UNLIMITED
                 build()
             }
-        FirebaseMessaging.getInstance().isAutoInitEnabled = true
-        if (FirebaseAuth.getInstance().currentUser != null)
-            FirebaseMessaging.getInstance()
-                .subscribeToTopic(FirebaseAuth.getInstance().currentUser!!.displayName!!)
+        vm.subscribeNotifications()
+
     }
 
     override fun onBackPressed() {

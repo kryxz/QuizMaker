@@ -9,139 +9,158 @@
         android:id="@+id/takeQuizProgressBar"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:visibility="gone" />
 
-        />
-
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <androidx.appcompat.widget.LinearLayoutCompat
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/answersLayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            android:visibility="visible">
 
             <androidx.appcompat.widget.LinearLayoutCompat
-                android:id="@+id/takeQuizLayout"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <androidx.appcompat.widget.AppCompatTextView
-                    android:id="@+id/quizQuestionText"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:lineSpacingMultiplier="1.2"
-                    android:text="@string/reviewTemplate"
-                    android:textAlignment="center"
-                    android:textSize="28sp" />
-
-                <RadioGroup
-                    android:id="@+id/quizChoicesGroup"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
-
-                    <androidx.appcompat.widget.AppCompatRadioButton
-                        android:id="@+id/firstAnswer"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:layout_marginBottom="8dp"
-                        android:padding="8dp"
-                        android:text="@string/cannotBeEmpty" />
-
-                    <androidx.appcompat.widget.AppCompatRadioButton
-                        android:id="@+id/secondAnswer"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:layout_marginBottom="8dp"
-                        android:padding="8dp"
-                        android:text="@string/cannotBeEmpty" />
-
-                    <androidx.appcompat.widget.AppCompatRadioButton
-                        android:id="@+id/thirdAnswer"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:layout_marginBottom="8dp"
-                        android:padding="8dp"
-                        android:text="@string/cannotBeEmpty" />
-
-                    <androidx.appcompat.widget.AppCompatRadioButton
-                        android:id="@+id/fourthAnswer"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:layout_marginBottom="8dp"
-                        android:padding="8dp"
-                        android:text="@string/cannotBeEmpty" />
-                </RadioGroup>
-
-                <androidx.appcompat.widget.AppCompatCheckBox
-                    android:id="@+id/answerCheckBox"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:text="@string/trueStatement"
-                    android:textColor="?attr/textColor" />
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
 
                 <androidx.appcompat.widget.LinearLayoutCompat
+                    android:id="@+id/takeQuizLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:layout_marginBottom="8dp">
+                    android:orientation="vertical">
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/quizQuestionText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:lineSpacingMultiplier="1.2"
+                        android:text="@string/reviewTemplate"
+                        android:textAlignment="center"
+                        android:textSize="24sp" />
+
+                    <RadioGroup
+                        android:id="@+id/quizChoicesGroup"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <androidx.appcompat.widget.AppCompatRadioButton
+                            android:id="@+id/firstAnswer"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:layout_marginBottom="8dp"
+                            android:buttonTint="?attr/iconColor"
+                            android:padding="8dp"
+                            android:text="@string/cannotBeEmpty"
+                            android:textColor="?attr/textColor" />
+
+                        <androidx.appcompat.widget.AppCompatRadioButton
+                            android:id="@+id/secondAnswer"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp"
+                            android:layout_marginBottom="8dp"
+                            android:buttonTint="?attr/iconColor"
+                            android:padding="4dp"
+                            android:text="@string/cannotBeEmpty"
+                            android:textColor="?attr/textColor" />
+
+                        <androidx.appcompat.widget.AppCompatRadioButton
+                            android:id="@+id/thirdAnswer"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp"
+                            android:layout_marginBottom="8dp"
+                            android:buttonTint="?attr/iconColor"
+                            android:padding="4dp"
+                            android:text="@string/cannotBeEmpty"
+                            android:textColor="?attr/textColor" />
+
+                        <androidx.appcompat.widget.AppCompatRadioButton
+                            android:id="@+id/fourthAnswer"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp"
+                            android:layout_marginBottom="8dp"
+                            android:buttonTint="?attr/iconColor"
+                            android:padding="4dp"
+                            android:text="@string/cannotBeEmpty"
+                            android:textColor="?attr/textColor" />
+                    </RadioGroup>
+
+                    <androidx.appcompat.widget.AppCompatCheckBox
+                        android:id="@+id/answerCheckBox"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:buttonTint="?attr/iconColor"
+                        android:text="@string/trueStatement"
+                        android:textColor="?attr/textColor" />
+
+                    <androidx.appcompat.widget.LinearLayoutCompat
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:layout_marginBottom="8dp">
+
+                        <androidx.appcompat.widget.AppCompatButton
+                            android:id="@+id/quizPreviousQuestionButton"
+                            style="@style/QuestionFormButtonStyle"
+                            android:layout_weight="1"
+                            android:drawableStart="@drawable/ic_arrow_right"
+                            android:text="@string/previousQuestion" />
+
+                        <androidx.appcompat.widget.AppCompatButton
+                            android:id="@+id/quizNextQuestionButton"
+                            style="@style/QuestionFormButtonStyle"
+                            android:layout_weight="1"
+                            android:drawableEnd="@drawable/ic_arrow_left"
+                            android:text="@string/nextQuestion" />
+
+
+                    </androidx.appcompat.widget.LinearLayoutCompat>
 
                     <androidx.appcompat.widget.AppCompatButton
-                        android:id="@+id/quizPreviousQuestionButton"
+                        android:id="@+id/submitAnswers"
                         style="@style/QuestionFormButtonStyle"
-                        android:layout_weight="1"
-                        android:text="@string/previousQuestion" />
-
-                    <androidx.appcompat.widget.AppCompatButton
-                        android:id="@+id/quizNextQuestionButton"
-                        style="@style/QuestionFormButtonStyle"
-                        android:layout_weight="1"
-                        android:text="@string/nextQuestion" />
-
+                        android:layout_width="match_parent"
+                        android:text="@string/finishQuiz" />
 
                 </androidx.appcompat.widget.LinearLayoutCompat>
 
-                <androidx.appcompat.widget.AppCompatButton
-                    android:id="@+id/submitAnswers"
-                    style="@style/QuestionFormButtonStyle"
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/questionNumberTextView"
                     android:layout_width="match_parent"
-                    android:text="@string/finishQuiz" />
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:text="@string/placeHolderZero"
+                    android:textAlignment="center"
+                    android:textSize="28sp" />
+
 
             </androidx.appcompat.widget.LinearLayoutCompat>
 
-            <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/questionNumberTextView"
-                android:layout_width="match_parent"
+            <com.google.android.gms.ads.AdView xmlns:ads="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/takeQuizAdBanner"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:text="@string/placeHolderZero"
-                android:textAlignment="center"
-                android:textSize="28sp" />
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                ads:adSize="BANNER"
+                ads:adUnitId="ca-app-pub-9769401692194876/7591633187"
+                ads:layout_constraintBottom_toBottomOf="parent"
+                ads:layout_constraintEnd_toEndOf="parent"
+                ads:layout_constraintStart_toStartOf="parent" />
 
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
-        </androidx.appcompat.widget.LinearLayoutCompat>
-
-        <com.google.android.gms.ads.AdView xmlns:ads="http://schemas.android.com/apk/res-auto"
-            android:id="@+id/takeQuizAdBanner"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginEnd="8dp"
-            ads:adSize="BANNER"
-            ads:adUnitId="ca-app-pub-9769401692194876/7591633187"
-            ads:layout_constraintBottom_toBottomOf="parent"
-            ads:layout_constraintEnd_toEndOf="parent"
-            ads:layout_constraintStart_toStartOf="parent" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.core.widget.NestedScrollView>
 
 
 </androidx.appcompat.widget.LinearLayoutCompat>

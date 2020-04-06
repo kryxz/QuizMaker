@@ -74,15 +74,22 @@ class PublicClassItem(private val theClass: TheClass, private val join: (that: T
     override fun bind(viewHolder: ViewHolder, position: Int) {
         val view = viewHolder.itemView
 
-        view.classTitleText.text = theClass.title
-        view.classInstructorText.text = theClass.teach
-        view.classCreationDateText.text = theClass.date.timeAsAString()
+        with(view) {
+            classTitleText.text = theClass.title
+            classInstructorText.text = theClass.teach
+            classCreationDateText.text = theClass.date.timeAsAString()
 
-        view.enterClass.setOnClickListener {
-            join(theClass)
-            it.findNavController().navigate(JoinFragmentDirections.joinThisClass(theClass.id))
+            with(view.enterClass) {
+                textSize = 19.0f
+                setOnClickListener {
+                    join(theClass)
+                    it.findNavController()
+                        .navigate(JoinFragmentDirections.joinThisClass(theClass.id))
 
+                }
+            }
         }
+
     }
 
     override fun getLayout() = R.layout.class_item

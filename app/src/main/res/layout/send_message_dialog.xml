@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
         android:text="@string/sendMessage"
-        android:textSize="26sp" />
+        android:textSize="23sp" />
 
 
     <com.google.android.material.textfield.TextInputEditText

@@ -125,7 +125,7 @@ class QuizItem(
                 if (passwordField.text.toString() == quiz.quizPin)
                     enter(view)
                 else
-                    showToast(context, context.getString(R.string.wrongPassword))
+                    context.showToast(context.getString(R.string.wrongPassword))
 
                 dialogBuilder.dismiss()
             }

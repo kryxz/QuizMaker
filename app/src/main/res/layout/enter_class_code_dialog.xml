@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:background="@drawable/item_borders"
     android:orientation="vertical"
-    android:padding="8dp">
+    android:padding="4dp">
 
     <androidx.appcompat.widget.AppCompatTextView
         android:layout_width="match_parent"
@@ -12,7 +12,7 @@
         android:layout_marginTop="16dp"
         android:gravity="center_horizontal"
         android:text="@string/joinViaCode"
-        android:textSize="26sp" />
+        android:textSize="23sp" />
 
 
     <com.google.android.material.textfield.TextInputEditText

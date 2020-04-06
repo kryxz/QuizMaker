@@ -26,7 +26,7 @@
     <string name="cannotBeEmpty">لا يمكن أن يكون فارغًا</string>
     <string name="cannotBeGreaterThan30">أكثر عدد هو 30!</string>
     <string name="quizTitleText">عنوان الاختبار</string>
-    <string name="classViaCode">الرمز الخاص بالقاعة</string>
+    <string name="classViaCode">رمز الانضمام للقاعة(مثال 4c-33-28-fc)</string>
     <string name="questionsText">نص السؤال</string>
     <string name="questionsTextLabel">%1$s</string>
     <string name="quizProtected">يتطلب هذا الاختبار كلمة مرور</string>
@@ -48,7 +48,7 @@
 
     <string name="cancel">إلغاء</string>
     <string name="confirm">تأكيد</string>
-    <string name="updateQuiz">نشر الاختبار/حفظ التغييرات</string>
+    <string name="updateQuiz">تحديث الاختبار/حفظ التغييرات</string>
     <string name="addQuestion">إضافة سؤال</string>
     <string name="updateQuizDone">تم تحديث الاختبار</string>
     <string name="thanks">شكرًا لك!</string>
@@ -68,6 +68,7 @@
 
     <string name="joinClass">الانضمام</string>
     <string name="CreateClass">إنشاء قاعة</string>
+    <string name="sendQuiz">نشر الاختبار</string>
     <string name="joinViaCode">الانضمام عن طريق رمز القاعة</string>
 
     <string name="createClassInfo">تمكنك القاعة من إنشاء اختبارات لمجموعة من المستخدمين. يمكنك جعل القاعة خاصة أو عامة</string>
@@ -86,6 +87,7 @@
     <string name="resizeQuiz">تغيير عدد الأسئلة</string>
     <string name="thisWillDeleteRemainingQuestions">سيتم حذف الأسئلة الإضافية</string>
     <string name="reportQuiz">الإبلاغ عن الاختبار</string>
+    <string name="required">مطلوب</string>
     <string name="reportQuizConfirm">هل أنت متأكد أن هذا الاختبار غير لائق؟</string>
 
     <string name="editQuiz">تعديل الاختبار</string>
@@ -94,7 +96,7 @@
     <string name="existingQuestionsMessage">اختر تأكيد للحذف، الغاء لاستعادة الأسئلة</string>
     <string name="completeAllQuestions">يجب عليك كتابة جميع الأسئلة.</string>
     <string name="oneQuestionAtLeast">اكتب سؤالًا على الأقل!</string>
-    <string name="leaveClass">مغادرة القاعة</string>
+    <string name="leaveClass">المغادرة</string>
     <string name="createLink">رابط القاعة</string>
     <string name="leaveClassConfirm">لا يمكنك العودة إلى إذا امتلكت رمز القاعة، أو كانت القاعة عامة!</string>
     <string name="scoreTitle">نتيجتك</string>
@@ -107,7 +109,7 @@
     <string name="rateQuiz">قم بتقييم الاختبار</string>
     <string name="questionNumber">%1$d/%2$d</string>
     <string name="ok">حسنًا</string>
-    <string name="okEn">حسنًا</string>
+    <string name="okEn">Okay</string>
     <string name="placeHolderZero">0</string>
     <string name="quizAlreadyTaken">إعادة الاختبار</string>
     <string name="send">ارسال</string>
@@ -128,6 +130,8 @@
     <string name="noChat">هذه بداية شيء جميل!</string>
     <string name="classNotFound">تعذّر العثور على القاعة</string>
     <string name="classJoined">تم الانضمام إلى القاعة!</string>
+    <string name="answersSaved">تم حفظ الإجابات كصورة</string>
+
     <string name="NoPublicClassesFound">لا يوجد أي قاعة... يمكنك دائمًا إنشاء قاعة</string>
     <string name="quizScore">
         نتيجتك لـ %1$s
@@ -140,12 +144,18 @@
     </string>
     <string name="joinCode">رمز القاعة: %1$s</string>
     <string name="copied">تم النسخ!</string>
+    <string name="contentPasted">تم جلب الرمز</string>
+
+    <string name="saveQuiz">حفظ الاختبار</string>
+    <string name="withAnswers">مع الإجابة</string>
+    <string name="withoutAnswers">من دون الإجابة</string>
+    <string name="quizWillBeSavedImage">سيتم حفظ الإختبار كـ صورة تحوي جميع الأسئلة</string>
 
     <string name="profileLabel">الملف الشخصي</string>
     <string name="joinDate">تاريخ الانضمام</string>
     <string name="quizzesTaken">سجل الاختبارات</string>
     <string name="currentPoints">النقاط</string>
-    <string name="checkQuizzes">أدخل الاختبارات لترى الإجابات الصحيحة</string>
+    <string name="checkQuizzes">ادخل الاختبارات لترى الإجابات الصحيحة</string>
     <string name="noRecentQuizzes">لم تقم بأي اختبار بعد!</string>
     <string name="viewAnswers">عرض الإجابات</string>
     <string name="userNameText">\@%1$s</string>
@@ -160,12 +170,18 @@
     <string name="userProfileLabel">%1$s الملف الشخصي لـ</string>
     <string name="cannotViewLog">لا يمكنك عرض السجل حاليًا</string>
     <string name="answerQuestions">أجب على جميع الأسئلة</string>
-    <string name="answer">رمز الإجابة( من 1 إلى 4)</string>
+    <string name="answer">رمز الإجابة( من 1 إلى 4، أو أ، ب، ج، د، أو A, B, C, D)</string>
     <string name="showPassword">عرض كلمة المرور</string>
+    <string name="showMembers">عرض المشاركين</string>
+    <string name="membersCount">عدد المشاركين: %1$d</string>
     <string name="alreadyRated">سبق وقيّمت هذا الاختبار</string>
     <string name="suggestions">اسم المستخدم غير صالح، بعض الاقتراحات: \n
         %1$s
     </string>
+
+    <string name="deleteMember">حذف المشارك</string>
+    <string name="deleteMemberConfirm">سيتم حذف المشارك فورًا، ولن يتم تنبيهه بذلك</string>
+
 
     <string name="privacyPolicyAr">سياسة الخصوصية والاستخدام</string>
     <string name="privacyPolicyEn">Privacy Policy and Terms of Service</string>
@@ -198,7 +214,7 @@
         <item>جاهز!</item>
         <item>أهلًَا، فلنختبر سويًا!</item>
         <item>فقط من مات فاته التعلم!</item>
-        <item>يمكنك السؤال بشكل عام أو خاص، لكنك ستحصل على نفس الإجابة</item>
+        <item>يمكنك السؤال بشكل عام أو خاص، ستحصل على نفس الإجابة</item>
         <item>إذا كنت تعرف، فأنت تعرف</item>
         <item>إذا كان عليك أن تسأل، لن تعرف</item>
         <item>سأكمل هذا لاحقًا!</item>
@@ -206,15 +222,34 @@
         <item>هذا هو الجزء الذي تختبر فيه!</item>
         <item>مرحبًا بالعالم!</item>
         <item>مرحبًا بالاختبار!</item>
+        <item>المستقبل يبدأ هنا!</item>
+        <item>فلنختبر يا صديق</item>
+        <item>الاختبارات لا تتغير أبدًا!</item>
+        <item>أهلا، هذا أنا!</item>
+        <item>أنا لست الهدف</item>
+        <item>تخيّل عبارة جميلة هنا</item>
     </string-array>
 
     <string-array name="faqs">
-        <item>ما هي أهمّية النقاط؟</item>
         <item>كيف تحسب النقاط التي أحصل عليها؟</item>
         <item>من يمكنه رؤية الاختبار الذي أنشره؟</item>
         <item>هل سيتم تحديث التطبيق؟</item>
         <item>وصلني رسالة مسيئة، كيف أتصرف؟</item>
         <item>مامعنى أن الاختبار يتطلب كلمة مرور؟</item>
+        <item>ما هي القاعة؟</item>
+        <item>هل يمكنني تنزيل اختبار ما؟</item>
+        <item>هل يمكنني تعديل اختبار نشرته؟</item>
+    </string-array>
+
+    <string-array name="faqsAnswers">
+        <item>تحسب النقاط حسب عدد الإجابات الصحيحة.</item>
+        <item>يمكن ﻷي مستخدم في التطبيق رؤية الاختبار. قد نقوم بوضع خيار للخصوصيّة في المستقبل.</item>
+        <item>فريقنا لديه مشاغل أخرى دائمًا، مع ذلك، إذا رأينا أن التطبيق قد حقق نجاحًا، فسنعمل على ذلك.</item>
+        <item>نعتذر عن ذلك. في الوقت الراهن يمكنك حذفها بسحبها من اليمين إلى اليسار.</item>
+        <item>يمكن لمن يضع اختبارًا أن يحدد كلمة المرور عند إنشاء الاختبار.</item>
+        <item>القاعة هي مكان يجتمع في مجموعة من الناس يمكنهم الدردشة، وإرسال اختبارات خاصة بهم. قد تحتاج إلى رمز للدخول إذا كانت القاعة خاصة.</item>
+        <item>لتنزيل اختبار، يجب عليك أن تقوم بذلك الاختبار أولًا، هناك خيار لعرض الإجابات عند إنهاء أي اختبار(في ملفك الشخصي إذا كان اختبار عام، غير ذلك تجده في القاعة).</item>
+        <item>نعم، يمكنك حذف وإضافة أسئلة، ويمكنك تغيير عنوان الاختبار. لا يمكنك تغيير الرمز السري للاختبار أو نوعه، يجب عليك نشره مرة أخرى!</item>
     </string-array>
 
     <string-array name="chars">
@@ -224,6 +259,13 @@
         <item>د</item>
     </string-array>
 
+    <string-array name="digits">
+        <item>١</item>
+        <item>٢</item>
+        <item>٣</item>
+        <item>٤</item>
+    </string-array>
+
     <string-array name="enChars">
         <item>a</item>
         <item>b</item>
@@ -231,14 +273,6 @@
         <item>d</item>
     </string-array>
 
-    <string-array name="faqsAnswers">
-        <item>سيكون هناك ميزات يمكنك استخدام النقاط للحصول عليها.</item>
-        <item>تحسب النقاط حسب عدد الإجابات الصحيحة.</item>
-        <item>يمكن ﻷي مستخدم في التطبيق رؤية الاختبار. قد نقوم بوضع خيار للخصوصيّة في المستقبل.</item>
-        <item>فريقنا لديه مشاغل أخرى دائمًا، مع ذلك، إذا رأينا أن التطبيق قد حقق نجاحًا، فسنعمل على ذلك.</item>
-        <item>نعتذر عن ذلك. في الوقت الراهن يمكنك حذفها بسحبها من اليمين إلى اليسار.</item>
-        <item>يمكن لمن يضع اختبارًا أن يحدد كلمة المرور عند إنشاء الاختبار.</item>
-    </string-array>
 
     <string-array name="multipleChoices">
         <item>1</item>
@@ -246,6 +280,19 @@
         <item>3</item>
         <item>4</item>
     </string-array>
+
+    <string name="updateLog">
+        مرحبًا بك في صانع الاختبارات،
+        هذا التحديث يشمل عدة تغييرات، أهمها\n
+        أولًا:\n
+        أضفنا نظام غرف لمشاركة الاختبارات والدردشة السريعة.\n
+        ثانيًا:\n
+        يمكنك الآن حفظ الاختبار، مع أو بدون الإجابات، وبذلك يمكنك مشاركة الاختبار في مواقع التواصل بسهولة.
+        لحفظ اختبار، ادخل الاختبار المطلوب، أجب على أسئلة ذلك الاختبار، وعند النتيجة سترى خيار عرض النتيجة.\n
+        أخيرًا، يمكنك الآن تعديل أي اختبار تنشره.\n\n
+        نراكم لاحقًا!
+    </string>
+
 
     <string name="aboutLemonLabAr">"مختبر الليمون فريق يسعى لنشر تطبيقات تساعد الناس وتسهل حياتهم. \n"
         "نحاول أن نستخدم أحدث الخدمات وأفضل الطرق لإيصال تطبيقاتنا إلى مستوىً منافس. "
@@ -408,5 +455,6 @@
         \n
         إذا كان لديك أي أسئلة أو اقتراحات أو استفسارات حول سياسة الخصوصية، لا تتردد في مراسلتنا على zaka7024@gmail.com\n
     </string>
-    
+
+
 </resources>

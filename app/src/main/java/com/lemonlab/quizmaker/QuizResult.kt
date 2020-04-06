@@ -9,6 +9,8 @@ import android.view.ViewGroup
 import androidx.appcompat.widget.AppCompatButton
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
+import androidx.navigation.NavOptions
+import androidx.navigation.findNavController
 import com.google.android.material.textfield.TextInputEditText
 import kotlinx.android.synthetic.main.fragment_quiz_result.*
 
@@ -49,6 +51,15 @@ class QuizResult : Fragment() {
         else
             messageQuizAuthorButton.visibility = View.GONE
 
+        resultViewAnswersButton.setOnClickListener {
+            val navOptions = NavOptions.Builder().setPopUpTo(R.id.mainFragment, false).build()
+
+            it.findNavController().navigate(
+                QuizResultDirections.viewQuizAnswers().setClassCode(args.classCode)
+                    .setQuizID(args.quizID), navOptions
+            )
+
+        }
     }
 
 
@@ -75,7 +86,7 @@ class QuizResult : Fragment() {
                     .removedWhitespace()
             )
 
-            showToast(context!!, getString(R.string.messageSent))
+            context!!.showToast(getString(R.string.messageSent))
 
             dialogBuilder.dismiss()
 

@@ -86,9 +86,9 @@ class LoginFragment : Fragment() {
                 loginButton.isEnabled = true
                 loggingInBar.visibility = View.GONE
                 if (it.localizedMessage!!.contains("no user"))
-                    showToast(context!!, getString(R.string.noUser))
+                    context!!.showToast(getString(R.string.noUser))
                 else
-                    showToast(context!!, getString(R.string.loginFailed))
+                    context!!.showToast(getString(R.string.loginFailed))
             }
         }
 
@@ -101,7 +101,7 @@ class LoginFragment : Fragment() {
                     } else {
                         loginButton.isEnabled = true
                         loggingInBar.visibility = View.GONE
-                        showToast(context!!, getString(R.string.noUser))
+                        context!!.showToast(getString(R.string.noUser))
                     }
                 }
         }

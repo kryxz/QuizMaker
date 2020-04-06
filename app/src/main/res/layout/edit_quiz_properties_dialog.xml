@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:background="@drawable/item_borders"
     android:orientation="vertical"
-    android:padding="8dp">
+    android:padding="4dp">
 
     <androidx.appcompat.widget.AppCompatTextView
         android:layout_width="match_parent"
@@ -12,7 +12,7 @@
         android:layout_marginTop="16dp"
         android:gravity="center_horizontal"
         android:text="@string/editQuiz"
-        android:textSize="26sp" />
+        android:textSize="23sp" />
 
 
     <com.google.android.material.textfield.TextInputEditText
@@ -20,24 +20,31 @@
         style="@style/loginEditTextStyle"
         android:drawableEnd="@drawable/ic_title"
         android:hint="@string/quizTitleText"
+        android:drawablePadding="4dp"
         android:padding="8dp"
         android:textColorHint="?attr/textColorHint" />
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:layout_width="match_parent"
+    <androidx.appcompat.widget.AppCompatCheckBox
+        android:id="@+id/hasPinBox"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="8dp">
+        android:layout_gravity="center_horizontal"
+        android:buttonTint="?attr/iconColor"
+        android:text="@string/isQuizPasswordProtected"
+        android:textColor="?attr/textColorHint" />
 
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/dialogPropertiesQuizQuestionsCount"
-            style="@style/loginEditTextStyle"
-            android:drawableEnd="@drawable/ic_numbered"
-            android:hint="@string/quizQuestionsCount"
-            android:inputType="number"
-            android:maxLength="2"
-            android:textColorHint="?attr/textColorHint" />
-
-    </com.google.android.material.textfield.TextInputLayout>
+    <com.google.android.material.textfield.TextInputEditText
+        android:id="@+id/quizPassword"
+        style="@style/loginEditTextStyle"
+        android:drawableEnd="@drawable/ic_lock"
+        android:drawablePadding="4dp"
+        android:drawableTint="?attr/iconColor"
+        android:hint="@string/quizPassword"
+        android:inputType="number"
+        android:maxLength="6"
+        android:padding="8dp"
+        android:textColorHint="?attr/textColorHint"
+        android:visibility="gone" />
 
     <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="match_parent"
@@ -54,16 +61,6 @@
             android:layout_marginEnd="4dp"
             android:layout_weight="1"
             android:text="@string/confirm" />
-
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/dialogDeleteCurrentQuestionButton"
-            style="@style/QuestionFormButtonStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="4dp"
-            android:layout_marginEnd="4dp"
-            android:layout_weight="1"
-            android:text="@string/DeleteCurrentQuestion" />
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/dialogPropertiesCancelButton"

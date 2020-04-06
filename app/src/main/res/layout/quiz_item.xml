@@ -5,17 +5,17 @@
     android:layout_marginBottom="8dp"
     android:background="@drawable/item_borders"
     android:orientation="vertical"
-    android:padding="8dp">
+    android:padding="4dp">
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/quizTitleText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
+        android:layout_marginBottom="4dp"
         android:padding="8dp"
         android:text="@string/reviewTemplate"
         android:textAlignment="center"
-        android:textSize="28sp" />
+        android:textSize="22sp" />
 
     <androidx.appcompat.widget.AppCompatRatingBar
         android:id="@+id/quizRatingBar"
@@ -38,7 +38,7 @@
             android:gravity="center"
             android:padding="8dp"
             android:text="@string/reviewQuestions"
-            android:textSize="20sp" />
+            android:textSize="16sp" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/quizTypeTextView"
@@ -48,7 +48,7 @@
             android:gravity="center"
             android:padding="8dp"
             android:text="@string/reviewThenPost"
-            android:textSize="20sp" />
+            android:textSize="16sp" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/questionsCountText"
@@ -58,7 +58,7 @@
             android:gravity="center"
             android:padding="8dp"
             android:text="@string/reviewThenPost"
-            android:textSize="20sp" />
+            android:textSize="16sp" />
     </androidx.appcompat.widget.LinearLayoutCompat>
 
 
@@ -68,11 +68,24 @@
         android:orientation="horizontal">
 
         <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/viewAnswersButton"
+            style="@style/QuestionFormButtonStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:drawableEnd="@drawable/ic_list"
+            android:drawableTint="?attr/iconColor"
+            android:text="@string/viewAnswers"
+            android:textSize="16sp"
+            android:visibility="gone" />
+
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/startQuizButton"
             style="@style/QuestionFormButtonStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:textSize="17sp"
             android:drawableEnd="@drawable/ic_quiz"
             android:text="@string/startQuiz" />
 
@@ -82,6 +95,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:textSize="16sp"
             android:drawableEnd="@drawable/ic_edit"
             android:text="@string/editQuiz"
             android:visibility="gone" />

@@ -53,6 +53,6 @@
         android:gravity="center_horizontal"
         android:text="@string/noClasses"
         android:textColor="?attr/textColor"
-        android:textSize="32sp" />
+        android:textSize="30sp" />
 
 </androidx.appcompat.widget.LinearLayoutCompat>

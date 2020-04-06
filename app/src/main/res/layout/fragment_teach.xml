@@ -56,7 +56,7 @@
         android:layout_height="match_parent"
         android:gravity="center"
         android:text="@string/NoContent"
-        android:textSize="32sp"
+        android:textSize="30sp"
         android:visibility="gone" />
 
 </androidx.appcompat.widget.LinearLayoutCompat>

@@ -9,17 +9,16 @@
 
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:textColor="?attr/textColor"
+        android:textColorHint="?attr/textColorHint">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/questionText"
             style="@style/loginEditTextStyle"
             android:hint="@string/questionsText"
-            android:maxLength="200"
-            android:padding="8dp"
-            android:textColor="?attr/textColor"
-            android:textColorHint="?attr/textColorHint"
-            android:textSize="22sp" />
+            android:padding="4dp"
+            android:textSize="20sp" />
 
     </com.google.android.material.textfield.TextInputLayout>
 

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/item_borders"
+    android:layoutDirection="rtl"
+    android:padding="4dp">
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/memberDelete"
+        android:layout_width="64dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:src="@drawable/ic_delete"
+        android:tint="?attr/colorError"
+        android:visibility="gone" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/memberName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="2dp"
+        android:layout_weight="4"
+        android:drawableTint="?attr/iconColor"
+        android:padding="4dp"
+        android:text="@string/app_name"
+        android:textColor="?attr/textColor"
+        android:textSize="18sp" />
+
+
+</androidx.appcompat.widget.LinearLayoutCompat>

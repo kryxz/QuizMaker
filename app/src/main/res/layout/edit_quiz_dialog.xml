@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:background="@drawable/item_borders"
     android:orientation="vertical"
-    android:padding="8dp">
+    android:padding="4dp">
 
     <androidx.appcompat.widget.AppCompatTextView
         android:layout_width="match_parent"
@@ -12,7 +12,7 @@
         android:layout_marginTop="16dp"
         android:gravity="center_horizontal"
         android:text="@string/editQuiz"
-        android:textSize="26sp" />
+        android:textSize="23sp" />
 
 
     <com.google.android.material.textfield.TextInputEditText
@@ -20,7 +20,7 @@
         style="@style/loginEditTextStyle"
         android:drawableEnd="@drawable/ic_title"
         android:hint="@string/quizTitleText"
-        android:padding="8dp"
+        android:padding="4dp"
         android:textColorHint="?attr/textColorHint" />
 
     <androidx.appcompat.widget.AppCompatTextView
@@ -30,7 +30,7 @@
         android:layout_marginBottom="8dp"
         android:gravity="center_horizontal"
         android:text="@string/chooseQuestionToDelete"
-        android:textSize="18sp" />
+        android:textSize="16sp" />
 
     <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="match_parent"
@@ -63,7 +63,7 @@
         android:layout_marginBottom="8dp"
         android:gravity="center_horizontal"
         android:text="@string/reviewTemplate"
-        android:textSize="18sp" />
+        android:textSize="16sp" />
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/deleteQuiz"

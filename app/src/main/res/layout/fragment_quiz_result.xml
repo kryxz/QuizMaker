@@ -81,6 +81,15 @@
                     android:padding="8dp"
                     android:text="@string/sendMessage" />
 
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/resultViewAnswersButton"
+                    style="@style/QuestionFormButtonStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="8dp"
+                    android:padding="8dp"
+                    android:text="@string/viewAnswers" />
+
             </androidx.appcompat.widget.LinearLayoutCompat>
 
         </androidx.core.widget.NestedScrollView>

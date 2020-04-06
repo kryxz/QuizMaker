@@ -74,7 +74,7 @@ class MessagesAdapter(
                         messageAuthor,
                         NotificationType.MESSAGE
                     )
-                    showToast(context, context.getString(R.string.messageSent))
+                    context.showToast(context.getString(R.string.messageSent))
                 }
             dialogBuilder.dismiss()
 

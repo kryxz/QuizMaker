@@ -1,6 +1,7 @@
 package com.lemonlab.quizmaker
 
 import android.content.Context
+import android.util.Log
 import android.util.SparseArray
 import androidx.core.util.forEach
 import com.google.firebase.firestore.FirebaseFirestore
@@ -112,8 +113,9 @@ data class MultipleChoiceQuiz(
     override fun score(answers: SparseArray<*>): Int {
         var score = 0
         answers.forEach { key, value ->
-            if (questions!![key.toString()]!!.correctAnswer == value)
-                score = score.inc()
+            val actual = questions!![key.toString()]!!.correctAnswer
+            if (actual == value)
+                score++
         }
         return score
     }
@@ -173,9 +175,12 @@ data class TrueFalseQuiz(
 
     override fun score(answers: SparseArray<*>): Int {
         var score = 0
+
         answers.forEach { key, value ->
-            if (questions!![key.toString()]!!.answer == value)
-                score = score.inc()
+            val actual = questions!![key.toString()]!!.answer
+            Log.i("TFQUIZ", "I am $key, you said $value, I know it's $actual")
+            if (actual == value)
+                score++
         }
         return score
     }

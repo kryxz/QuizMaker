@@ -54,23 +54,10 @@
         android:label="@string/settingsLabel"
         tools:layout="@layout/fragment_settings" />
     <fragment
-        android:id="@+id/createQuiz"
-        android:name="com.lemonlab.quizmaker.CreateQuiz"
+        android:id="@+id/answersFragment"
+        android:name="com.lemonlab.quizmaker.AnswersFragment"
         android:label="@string/createNewQuiz"
-        tools:layout="@layout/fragment_create_quiz">
-        <argument
-            android:name="classCode"
-            android:defaultValue="empty"
-            app:argType="string" />
-        <action
-            android:id="@+id/reviewQuiz"
-            app:destination="@id/viewEditQuestions" />
-    </fragment>
-    <fragment
-        android:id="@+id/viewEditQuestions"
-        android:name="com.lemonlab.quizmaker.ViewEditQuestions"
-        android:label="@string/createNewQuiz"
-        tools:layout="@layout/questions_fill_form">
+        tools:layout="@layout/fragment_answers">
         <argument
             android:name="quizID"
             android:defaultValue="empty"
@@ -79,9 +66,6 @@
             android:name="classCode"
             android:defaultValue="empty"
             app:argType="string" />
-        <action
-            android:id="@+id/goToClass"
-            app:destination="@id/teachFragment" />
     </fragment>
     <fragment
         android:id="@+id/takeQuizFragment"
@@ -115,7 +99,7 @@
         tools:layout="@layout/fragment_profile">
         <action
             android:id="@+id/viewAnswers"
-            app:destination="@id/viewEditQuestions"
+            app:destination="@id/answersFragment"
             app:launchSingleTop="true"
             app:popUpToInclusive="false" />
         <argument
@@ -151,6 +135,9 @@
             android:name="classCode"
             android:defaultValue="empty"
             app:argType="string" />
+        <action
+            android:id="@+id/viewQuizAnswers"
+            app:destination="@id/answersFragment" />
     </fragment>
     <fragment
         android:id="@+id/classFragment"
@@ -176,9 +163,6 @@
             android:name="classCode"
             app:argType="string" />
         <action
-            android:id="@+id/createNewQuiz"
-            app:destination="@id/createQuiz" />
-        <action
             android:id="@+id/takeClassQuiz"
             app:destination="@id/takeQuizFragment" />
         <action
@@ -187,6 +171,9 @@
         <action
             android:id="@+id/chatNow"
             app:destination="@id/chatFragment" />
+        <action
+            android:id="@+id/viewQuizAnswers"
+            app:destination="@id/answersFragment" />
     </fragment>
     <fragment
         android:id="@+id/editQuizFragment"
@@ -231,5 +218,10 @@
         <deepLink app:uri="www.lemonLabQuizMaker.com/{joinCode}" />
 
     </fragment>
+    <fragment
+        android:id="@+id/faqFragment"
+        android:name="com.lemonlab.quizmaker.FaqFragment"
+        android:label="@string/FAQTitle"
+        tools:layout="@layout/fragment_faq" />
 
 </navigation>
