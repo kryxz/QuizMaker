@@ -18,6 +18,8 @@ import android.widget.Toast
 import androidx.appcompat.widget.AppCompatButton
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.AdView
 import com.karumi.dexter.Dexter
 import com.karumi.dexter.PermissionToken
 import com.karumi.dexter.listener.PermissionDeniedResponse
@@ -183,4 +185,8 @@ fun View.downloadAsBitMap() {
     }, 300)
 
 
+}
+
+fun AdView.loadAd() {
+    loadAd(AdRequest.Builder().build())
 }

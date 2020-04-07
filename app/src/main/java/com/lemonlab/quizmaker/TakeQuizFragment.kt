@@ -38,6 +38,7 @@ class TakeQuizFragment : Fragment() {
     }
 
     private fun init() {
+        takeQuizAdBanner.loadAd()
         takeQuizProgressBar.visibility = View.VISIBLE
         answersLayout.visibility = View.GONE
         val args = TakeQuizFragmentArgs.fromBundle(arguments!!)

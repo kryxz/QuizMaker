@@ -29,6 +29,7 @@ class FaqFragment : Fragment() {
     }
 
     private fun init() {
+        faqAdBanner.loadAd()
         val adapter = GroupAdapter<ViewHolder>()
         val arrayOfFAQs = resources.getStringArray(R.array.faqs)
         val arrayOfAnswers = resources.getStringArray(R.array.faqsAnswers)

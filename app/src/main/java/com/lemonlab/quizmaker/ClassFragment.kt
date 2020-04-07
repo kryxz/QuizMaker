@@ -42,6 +42,7 @@ class ClassFragment : Fragment() {
 
 
     private fun init() {
+        classesAdBanner.loadAd()
         classProgressBar.visibility = View.VISIBLE
 
         val adapter = GroupAdapter<ViewHolder>()

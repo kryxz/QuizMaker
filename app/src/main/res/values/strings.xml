@@ -19,7 +19,7 @@
     <string name="categoryAcademic">أكاديمي</string>
     <string name="categoryFun">للترفيه فقط!</string>
     <string name="isOneTimeQuiz">اختبار بفرصة واحدة</string>
-    <string name="isQuizPasswordProtected">يتطلب كلمة مرور</string>
+    <string name="isQuizPasswordProtected">الدخول بكلمة مرور فقط</string>
     <string name="quizPassword">رمز الدخول للاختبار</string>
     <string name="quizQuestionsCount">عدد أسئلة الاختبار</string>
     <string name="writeQuestionsButton">ابدأ بكتابة الأسئلة</string>
@@ -167,7 +167,6 @@
     <string name="chooseQuestionToDelete">اختر سؤالًا لحذفه</string>
     <string name="changeLanguage">تغيير اللغة</string>
     <string name="emptyLog">السجل فارغ</string>
-    <string name="userProfileLabel">%1$s الملف الشخصي لـ</string>
     <string name="cannotViewLog">لا يمكنك عرض السجل حاليًا</string>
     <string name="answerQuestions">أجب على جميع الأسئلة</string>
     <string name="answer">رمز الإجابة( من 1 إلى 4، أو أ، ب، ج، د، أو A, B, C, D)</string>

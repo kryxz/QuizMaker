@@ -37,10 +37,18 @@ class QuizResult : Fragment() {
 
         val args = QuizResultArgs.fromBundle(arguments!!)
 
-        val avg = (args.score.toDouble() / args.totalQuestions.toDouble() * 100.0).toString()
+        val avg = (args.score.toDouble() / args.totalQuestions.toDouble() * 100.0)
+
+        val avgString = "%.3f".format(avg)
 
         quizScoreText.text =
-            getString(R.string.quizScore, args.quizTitle, args.totalQuestions, args.score, avg)
+            getString(
+                R.string.quizScore,
+                args.quizTitle,
+                args.totalQuestions,
+                args.score,
+                avgString
+            )
 
         shouldRate(args.quizID)
 

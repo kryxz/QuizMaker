@@ -191,6 +191,7 @@ class EditQuizFragment : Fragment() {
     }
 
     private fun init() {
+        makeQuizBanner.loadAd()
         val args = EditQuizFragmentArgs.fromBundle(arguments!!)
         val id = args.quizID
         val code = args.classCode

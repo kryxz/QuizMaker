@@ -68,7 +68,7 @@ class ProfileFragment : Fragment() {
             userNameTextView.text = getString(R.string.userNameText, username)
 
             (activity as AppCompatActivity).supportActionBar!!.title =
-                getString(R.string.userProfileLabel, username)
+                username
 
             with(logEmptyTextView) {
                 visibility = View.VISIBLE

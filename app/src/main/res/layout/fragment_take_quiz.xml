@@ -42,7 +42,7 @@
                         android:lineSpacingMultiplier="1.2"
                         android:text="@string/reviewTemplate"
                         android:textAlignment="center"
-                        android:textSize="24sp" />
+                        android:textSize="22sp" />
 
                     <RadioGroup
                         android:id="@+id/quizChoicesGroup"
@@ -51,47 +51,25 @@
 
                         <androidx.appcompat.widget.AppCompatRadioButton
                             android:id="@+id/firstAnswer"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="8dp"
-                            android:layout_marginBottom="8dp"
-                            android:buttonTint="?attr/iconColor"
-                            android:padding="8dp"
-                            android:text="@string/cannotBeEmpty"
-                            android:textColor="?attr/textColor" />
+                            style="@style/takeQuizChoiceStyle"
+                            android:text="@string/cannotBeEmpty" />
 
                         <androidx.appcompat.widget.AppCompatRadioButton
                             android:id="@+id/secondAnswer"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="4dp"
-                            android:layout_marginBottom="8dp"
-                            android:buttonTint="?attr/iconColor"
-                            android:padding="4dp"
-                            android:text="@string/cannotBeEmpty"
-                            android:textColor="?attr/textColor" />
+                            style="@style/takeQuizChoiceStyle"
+                            android:text="@string/cannotBeEmpty" />
 
                         <androidx.appcompat.widget.AppCompatRadioButton
                             android:id="@+id/thirdAnswer"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="4dp"
-                            android:layout_marginBottom="8dp"
-                            android:buttonTint="?attr/iconColor"
-                            android:padding="4dp"
-                            android:text="@string/cannotBeEmpty"
-                            android:textColor="?attr/textColor" />
+                            style="@style/takeQuizChoiceStyle"
+                            android:text="@string/cannotBeEmpty" />
 
                         <androidx.appcompat.widget.AppCompatRadioButton
                             android:id="@+id/fourthAnswer"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="4dp"
-                            android:layout_marginBottom="8dp"
-                            android:buttonTint="?attr/iconColor"
-                            android:padding="4dp"
-                            android:text="@string/cannotBeEmpty"
-                            android:textColor="?attr/textColor" />
+                            style="@style/takeQuizChoiceStyle"
+                            android:text="@string/cannotBeEmpty" />
+
+
                     </RadioGroup>
 
                     <androidx.appcompat.widget.AppCompatCheckBox

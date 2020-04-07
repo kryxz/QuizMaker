@@ -40,6 +40,7 @@ class JoinFragment : Fragment() {
     }
 
     private fun init() {
+        joinAdView.loadAd()
         val code = JoinFragmentArgs.fromBundle(arguments!!).joinCode
         if (code != "empty")
             joinClassViaCode(code)
