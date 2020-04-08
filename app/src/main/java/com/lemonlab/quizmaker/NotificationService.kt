@@ -2,6 +2,7 @@ package com.lemonlab.quizmaker
 
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
+import com.lemonlab.quizmaker.data.NotificationType
 
 
 class NotificationService : FirebaseMessagingService() {

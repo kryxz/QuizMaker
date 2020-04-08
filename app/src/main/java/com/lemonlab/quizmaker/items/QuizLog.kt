@@ -2,8 +2,8 @@ package com.lemonlab.quizmaker.items
 
 import androidx.navigation.findNavController
 import com.lemonlab.quizmaker.ProfileFragmentDirections
-import com.lemonlab.quizmaker.Quiz
 import com.lemonlab.quizmaker.R
+import com.lemonlab.quizmaker.data.Quiz
 import com.lemonlab.quizmaker.timeAsAString
 import com.xwray.groupie.Item
 import com.xwray.groupie.ViewHolder

@@ -13,6 +13,7 @@ import androidx.navigation.NavOptions
 import androidx.navigation.Navigation
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.lemonlab.quizmaker.data.NotificationType
 import com.lemonlab.quizmaker.items.QuizItem
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.ViewHolder
@@ -78,15 +79,20 @@ class MainFragment : Fragment() {
         val sharedPrefs = context!!.getSharedPreferences("userPrefs", 0)
         val canShowUpdateLog = sharedPrefs.getBoolean("showUpdateLog", true)
 
+        val tip = listOf(closeMainTip, mainTipText)
+
         if (canShowUpdateLog) {
-            closeMainTip.visibility = View.VISIBLE
-            mainTipText.visibility = View.VISIBLE
+            tip.forEach {
+                (it as View).show()
+            }
+            closeMainTip.setOnClickListener {
+                tip.forEach {
+                    (it as View).hide()
+                }
+                sharedPrefs.edit().putBoolean("showUpdateLog", false).apply()
+            }
         }
-        closeMainTip.setOnClickListener {
-            closeMainTip.visibility = View.GONE
-            mainTipText.visibility = View.GONE
-            sharedPrefs.edit().putBoolean("showUpdateLog", false).apply()
-        }
+
     }
 
 

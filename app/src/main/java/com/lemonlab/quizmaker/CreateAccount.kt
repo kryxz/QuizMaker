@@ -8,18 +8,18 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavOptions
 import androidx.navigation.Navigation
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.UserProfileChangeRequest
-import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.android.synthetic.main.fragment_create_account.*
-import java.util.*
-import kotlin.collections.HashMap
+import kotlinx.coroutines.launch
 import kotlin.random.Random
 
 
 class CreateAccount : Fragment() {
+
+    private val vm: SignInViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -30,72 +30,62 @@ class CreateAccount : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        setUpUI()
         super.onViewCreated(view, savedInstanceState)
+        init()
     }
 
-    override fun onDestroyView() {
-        activity!!.hideKeypad()
-        super.onDestroyView()
-    }
 
-    private fun fieldsOK(userEmail: CharSequence, userPassword: String): Boolean {
+    private fun init() {
+        showHidePassword()
 
-        // returns true if input is an email, and password is 6+ chars.
-        return (Patterns.EMAIL_ADDRESS.matcher(userEmail)
-            .matches() && userPassword.length >= 6)
-    }
+        fun failed() {
+            signUpButton.isEnabled = true
+            creatingAccountBar.visibility = View.GONE
+        }
 
-    private fun createAccountAndSignIn(username: String, userEmail: String, userPassword: String) {
-        creatingAccountBar.visibility = View.VISIBLE
-        val fireStoreDatabase = FirebaseFirestore.getInstance()
-        val fireBaseAuth = FirebaseAuth.getInstance()
+        fun success() {
+            Navigation.findNavController(view!!).navigate(
+                CreateAccountDirections.createToMain(),
+                NavOptions.Builder().setPopUpTo(R.id.loginFragment, true)
+                    .build()
+            )
 
-        val newUser = HashMap<String, User>()
+        }
+        signUpButton.setOnClickListener {
+            val username = signUpDisplayName.text.toString().removeSpecialChars()
+            val userEmail = signUpEmailEditText.text.toString().removedWhitespace()
+            val userPassword = signUpPasswordEditText.text.toString().removedWhitespace()
 
-        fireBaseAuth.createUserWithEmailAndPassword(userEmail, userPassword).addOnSuccessListener {
-            creatingAccountBar.alpha = 0.5f
-            fireBaseAuth.currentUser!!.updateProfile(
-                UserProfileChangeRequest.Builder()
-                    .setDisplayName(username).build()
-            ).addOnSuccessListener {
-                fireBaseAuth.signInWithEmailAndPassword(userEmail, userPassword)
-                    .addOnSuccessListener {
-                        creatingAccountBar.alpha = 0.7f
-                        val randomBios = resources.getStringArray(R.array.randomBios)
-                        newUser["user"] =
-                            User(
-                                username,
-                                userEmail,
-                                FirebaseAuth.getInstance().currentUser!!.uid,
-                                randomBios[Random.nextInt(0, randomBios.size)],
-                                0,
-                                Calendar.getInstance().timeInMillis
-                            )
+            if (fieldsOK(userEmail, userPassword)) {
+                signUpButton.isEnabled = false
+                creatingAccountBar.visibility = View.VISIBLE
+                vm.viewModelScope.launch {
+                    val isNameUsed = vm.isSignedUp(username)
+                    if (isNameUsed) {
+                        userNameExists()
+                        return@launch
+                    } else {
+                        vm.createUser(
+                            context!!,
+                            username,
+                            userEmail,
+                            userPassword,
+                            ::success,
+                            ::failed
+                        )
 
-                        fireStoreDatabase.collection("users").document(username).set(newUser)
-                            .addOnSuccessListener {
-                                Navigation.findNavController(view!!).navigate(
-                                    CreateAccountDirections.createToMain(),
-                                    NavOptions.Builder().setPopUpTo(R.id.loginFragment, true)
-                                        .build()
-                                )
-                            }
                     }
-            }
 
+
+                }
+            }
 
         }
     }
 
-    private fun removeSpecialChars(input: String): String {
-        return input.removedWhitespace().toCharArray()
-            .filter { it.isLetterOrDigit() }
-            .joinToString(separator = "")
-    }
-
 
     private fun showHidePassword() {
+        signUpPasswordEditText.transformationMethod = PasswordTransformationMethod()
         showPasswordCheckBox.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked)
                 signUpPasswordEditText.transformationMethod = null
@@ -105,56 +95,8 @@ class CreateAccount : Fragment() {
         }
     }
 
-    private fun setUpUI() {
-        showHidePassword()
-        signUpPasswordEditText.transformationMethod = PasswordTransformationMethod()
-        val fireStoreDatabaseUsers = FirebaseFirestore.getInstance().collection("users")
-        signUpButton.setOnClickListener {
-            signUpButton.isEnabled = false
-            val username = removeSpecialChars(signUpDisplayName.text.toString()).removedWhitespace()
-            val userEmail = signUpEmailEditText.text.toString().removedWhitespace()
-            val userPassword = signUpPasswordEditText.text.toString().removedWhitespace()
-            if (fieldsOK(userEmail, userPassword)) {
-                var isUserNameOK = true
-                var isEmailOK = true
-                fireStoreDatabaseUsers.get().addOnSuccessListener {
-
-                    for (doc in it) {
-                        isEmailOK = !doc.get("user.email", String::class.java).toString().equals(
-                            userEmail,
-                            ignoreCase = true
-                        )
-                        isUserNameOK =
-                            !doc.get("user.username", String::class.java).toString().equals(
-                                username,
-                                ignoreCase = false
-                            )
-                        if (!isEmailOK || !isUserNameOK)
-                            break
-
-                    }
-                    when {
-                        isUserNameOK && isEmailOK -> createAccountAndSignIn(
-                            username,
-                            userEmail,
-                            userPassword
-                        )
-                        !isEmailOK -> emailExists()
-                        else -> userNameExists()
-                    }
-                }
-            } else
-                showErrors()
-        }
-    }
-
-    private fun emailExists() {
-        signUpButton.isEnabled = true
-        signUpEmailEditText.error = getString(R.string.accountExists)
-
-    }
-
     private fun userNameExists() {
+        creatingAccountBar.visibility = View.GONE
         signUpButton.isEnabled = true
         signUpDisplayName.error = getString(R.string.userNameExists)
         showSuggestions()
@@ -174,11 +116,25 @@ class CreateAccount : Fragment() {
         }
     }
 
-    private fun showErrors() {
-        signUpButton.isEnabled = true
-        if (!Patterns.EMAIL_ADDRESS.matcher(signUpEmailEditText.text.toString()).matches())
+    private fun fieldsOK(userEmail: CharSequence, userPassword: String): Boolean {
+        // returns true if input is an email, and password is 6+ chars.
+
+        val emailOK = Patterns.EMAIL_ADDRESS.matcher(userEmail).matches()
+
+        val passwordOK = userPassword.length >= 6
+        if (!emailOK)
             signUpEmailEditText.error = getString(R.string.invalidEmail)
-        else if (signUpPasswordEditText.text!!.length < 6)
+        if (!passwordOK)
             signUpPasswordEditText.error = getString(R.string.passwordTooShort)
+
+
+        return emailOK && passwordOK
+
     }
+
+    override fun onDestroyView() {
+        activity!!.hideKeypad()
+        super.onDestroyView()
+    }
+
 }

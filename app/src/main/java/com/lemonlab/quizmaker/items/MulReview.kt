@@ -4,8 +4,8 @@ import android.graphics.Color
 import android.graphics.Typeface
 import android.view.View
 import com.lemonlab.quizmaker.AnswersFragment
-import com.lemonlab.quizmaker.MultipleChoiceQuestion
 import com.lemonlab.quizmaker.R
+import com.lemonlab.quizmaker.data.MultipleChoiceQuestion
 import com.xwray.groupie.Item
 import com.xwray.groupie.ViewHolder
 import kotlinx.android.synthetic.main.mul_review.view.*

@@ -7,6 +7,7 @@ import androidx.lifecycle.*
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.messaging.FirebaseMessaging
+import com.lemonlab.quizmaker.data.*
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import java.util.*
@@ -221,6 +222,7 @@ class QuizzesVM(application: Application) : AndroidViewModel(application) {
     }
 
     private suspend fun shouldRate(id: String): Boolean {
+
         return (repo.getUserLog(getName()).get().await()
             .get("log", QuizLog::class.java)?.userLog?.contains(id))?.not() ?: true
     }
@@ -229,6 +231,7 @@ class QuizzesVM(application: Application) : AndroidViewModel(application) {
         val bool: MutableLiveData<Boolean> = MutableLiveData()
         viewModelScope.launch {
             bool.value = shouldRate(id)
+
         }
         return bool
     }
@@ -282,7 +285,7 @@ class QuizzesVM(application: Application) : AndroidViewModel(application) {
 
     fun getClassQuizzes(id: String): MutableLiveData<List<Quiz>> {
         val classQuizzes: MutableLiveData<List<Quiz>> = MutableLiveData()
-        repo.getClassRef(id).collection("Quizzes").get().addOnSuccessListener { data ->
+        repo.getClassRef(id).collection("Quizzes").limit(10).get().addOnSuccessListener { data ->
             if (data == null || data.isEmpty) {
                 classQuizzes.value = null
                 return@addOnSuccessListener
@@ -395,7 +398,7 @@ class QuizzesVM(application: Application) : AndroidViewModel(application) {
 
     fun getAllQuizzes(): MutableLiveData<List<Quiz>> {
 
-        repo.getQuizzesRef().addSnapshotListener { snapshot, e ->
+        repo.getQuizzesRef().limit(15).addSnapshotListener { snapshot, e ->
             if (e != null) return@addSnapshotListener
             if (snapshot == null) return@addSnapshotListener
             if (snapshot.isEmpty) return@addSnapshotListener

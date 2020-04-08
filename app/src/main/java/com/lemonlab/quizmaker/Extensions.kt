@@ -190,3 +190,18 @@ fun View.downloadAsBitMap() {
 fun AdView.loadAd() {
     loadAd(AdRequest.Builder().build())
 }
+
+fun View.hide() {
+    visibility = View.GONE
+}
+
+fun View.show() {
+    visibility = View.VISIBLE
+}
+
+fun String.removeSpecialChars(): String {
+    return removedWhitespace().toCharArray()
+        .filter { it.isLetterOrDigit() }
+        .joinToString(separator = "")
+
+}

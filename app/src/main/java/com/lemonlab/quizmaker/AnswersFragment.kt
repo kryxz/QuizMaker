@@ -9,6 +9,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatButton
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.fragment.app.Fragment
+import com.lemonlab.quizmaker.data.MultipleChoiceQuiz
+import com.lemonlab.quizmaker.data.Quizzer
+import com.lemonlab.quizmaker.data.TrueFalseQuiz
 import com.lemonlab.quizmaker.items.MulReview
 import com.lemonlab.quizmaker.items.TFReview
 import com.xwray.groupie.GroupAdapter
@@ -137,7 +140,7 @@ class AnswersFragment : Fragment() {
 
 
         vm.getQuiz(code, quizID).observe(viewLifecycleOwner,
-            androidx.lifecycle.Observer { quiz ->
+            androidx.lifecycle.Observer { quiz: Quizzer ->
 
                 if (quiz is MultipleChoiceQuiz) mulChoice(quiz)
                 else if (quiz is TrueFalseQuiz) tf(quiz)

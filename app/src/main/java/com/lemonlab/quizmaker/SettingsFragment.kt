@@ -22,6 +22,8 @@ import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.textfield.TextInputEditText
+import com.lemonlab.quizmaker.data.Option
+import com.lemonlab.quizmaker.data.OptionsItem
 import kotlinx.android.synthetic.main.fragment_settings.*
 
 

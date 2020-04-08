@@ -11,6 +11,7 @@ import androidx.lifecycle.Observer
 import androidx.navigation.findNavController
 import com.google.android.material.textfield.TextInputEditText
 import com.lemonlab.quizmaker.*
+import com.lemonlab.quizmaker.data.Quiz
 import com.xwray.groupie.Item
 import com.xwray.groupie.ViewHolder
 import kotlinx.android.synthetic.main.quiz_item.view.*

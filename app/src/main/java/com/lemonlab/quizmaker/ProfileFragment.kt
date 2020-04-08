@@ -12,6 +12,8 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.textfield.TextInputEditText
+import com.lemonlab.quizmaker.data.Quiz
+import com.lemonlab.quizmaker.data.User
 import com.lemonlab.quizmaker.items.QuizLog
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.ViewHolder
@@ -56,8 +58,7 @@ class ProfileFragment : Fragment() {
 
 
     private fun viewProfile(username: String) {
-        vm.getUser(name = username).observe(viewLifecycleOwner, Observer { user ->
-            if (user == null) return@Observer
+        vm.getUser(name = username).observe(viewLifecycleOwner, Observer { user: User ->
             joinDateTextView.text = user.joinTimeAsAString()
             currentPointsTextView.text = user.points.toString()
             userBioTextView.text = user.userBio
@@ -76,7 +77,8 @@ class ProfileFragment : Fragment() {
             }
         })
         //
-        vm.getLog(username).observe(viewLifecycleOwner, Observer { log ->
+        vm.getLog(username)
+            .observe(viewLifecycleOwner, Observer { log: com.lemonlab.quizmaker.data.QuizLog ->
             quizzesTakenTextView.text = log.userLog.size.toString()
         })
 
@@ -119,8 +121,7 @@ class ProfileFragment : Fragment() {
         val userName = vm.getName()
         getLog(userName)
 
-        vm.getUser(userName).observe(viewLifecycleOwner, Observer { user ->
-            if (user == null) return@Observer
+        vm.getUser(userName).observe(viewLifecycleOwner, Observer { user: User ->
             setUpProfileUI(user)
         })
 
@@ -158,11 +159,9 @@ class ProfileFragment : Fragment() {
             })
 
         }
-        vm.getLog(username).observe(viewLifecycleOwner, Observer { log ->
-            if (log == null) {
-                quizzesTakenTextView.text = getString(R.string.placeHolderZero)
-                return@Observer
-            }
+        vm.getLog(username)
+            .observe(viewLifecycleOwner, Observer { log: com.lemonlab.quizmaker.data.QuizLog ->
+
             quizzesTakenTextView.text = log.userLog.size.toString()
             loadLog(log.userLog)
         })

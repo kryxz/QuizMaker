@@ -3,7 +3,7 @@ package com.lemonlab.quizmaker.items
 import android.view.View
 import com.lemonlab.quizmaker.QuizzesVM
 import com.lemonlab.quizmaker.R
-import com.lemonlab.quizmaker.TheClass
+import com.lemonlab.quizmaker.data.TheClass
 import com.lemonlab.quizmaker.showYesNoDialog
 import com.xwray.groupie.Item
 import com.xwray.groupie.ViewHolder

@@ -11,6 +11,7 @@ import androidx.lifecycle.Observer
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.lemonlab.quizmaker.data.TheClass
 import com.lemonlab.quizmaker.items.ClassQuiz
 import com.lemonlab.quizmaker.items.MemberItem
 import com.xwray.groupie.GroupAdapter
@@ -63,8 +64,8 @@ class TeachFragment : Fragment() {
 
             val adapter = GroupAdapter<ViewHolder>()
             fun initRV() {
-                vm.getClass(code).observe(viewLifecycleOwner, Observer { that ->
-                    if (that == null) {
+                vm.getClass(code).observe(viewLifecycleOwner, Observer { that: TheClass ->
+                    if (that.members.isEmpty()) {
                         dialogBuilder.dismiss()
                         view!!.findNavController().popBackStack()
                         return@Observer
@@ -101,7 +102,7 @@ class TeachFragment : Fragment() {
     private fun init() {
         classQuizzesProgressBar.visibility = View.VISIBLE
 
-        vm.getClass(code).observe(viewLifecycleOwner, Observer { that ->
+        vm.getClass(code).observe(viewLifecycleOwner, Observer { that: TheClass ->
             setTitle(that.title)
             val isUserCreated = that.teach == vm.getName()
             if (that.open || isUserCreated)

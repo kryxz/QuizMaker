@@ -4,6 +4,7 @@ import android.content.Context
 import android.view.View
 import androidx.navigation.findNavController
 import com.lemonlab.quizmaker.*
+import com.lemonlab.quizmaker.data.TheClass
 import com.xwray.groupie.Item
 import com.xwray.groupie.ViewHolder
 import kotlinx.android.synthetic.main.class_item.view.*

@@ -8,14 +8,15 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.navigation.NavOptions
 import androidx.navigation.Navigation
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.android.synthetic.main.fragment_login.*
 
 
 class LoginFragment : Fragment() {
+
+    private val vm: SignInViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -31,12 +32,51 @@ class LoginFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        setUpUI()
         super.onViewCreated(view, savedInstanceState)
+        init()
     }
 
+
+    private fun init() {
+        showHidePassword()
+
+        newAcctButton.setOnClickListener {
+            Navigation.findNavController(it).navigate(R.id.createAccount)
+        }
+
+        fun failed() {
+            loginButton.isEnabled = true
+            loggingInBar.visibility = View.GONE
+        }
+
+        fun success() {
+            Navigation.findNavController(view!!).navigate(
+                LoginFragmentDirections.loginToMain(),
+                NavOptions.Builder().setPopUpTo(R.id.loginFragment, true).build()
+            )
+
+        }
+        loginButton.setOnClickListener {
+            val userLogin = loginEmailEditText.text.toString()
+            val userPassword = loginPasswordEditText.text.toString()
+            if (fieldsOK(userLogin, userPassword)) {
+                loginButton.isEnabled = false
+                loggingInBar.visibility = View.VISIBLE
+
+                if (userLogin.contains('@'))
+                    vm.loginEmail(context!!, userLogin, userPassword, ::success, ::failed)
+                else
+                    vm.loginUsername(context!!, userLogin, userPassword, ::success, ::failed)
+
+            }
+        }
+
+
+    }
+
+
     private fun fieldsOK(userEmail: CharSequence, userPassword: String): Boolean {
-        //returns true if userEmail is an Email, and password is 6+ chars.
+        // returns true if userEmail is an Email, and password is 6+ chars.
 
         val emailOK = if (userEmail.contains('@'))
             Patterns.EMAIL_ADDRESS.matcher(userEmail).matches()
@@ -53,70 +93,13 @@ class LoginFragment : Fragment() {
     }
 
     private fun showHidePassword() {
+        loginPasswordEditText.transformationMethod = PasswordTransformationMethod()
         showLoginPasswordCheckBox.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked)
                 loginPasswordEditText.transformationMethod = null
             else
                 loginPasswordEditText.transformationMethod = PasswordTransformationMethod()
 
-        }
-    }
-
-    private fun setUpUI() {
-        val fireBaseAuth = FirebaseAuth.getInstance()
-        loginPasswordEditText.transformationMethod = PasswordTransformationMethod()
-        showHidePassword()
-        fun loginNow() {
-            Navigation.findNavController(view!!).navigate(
-                LoginFragmentDirections.loginToMain(),
-                NavOptions.Builder().setPopUpTo(R.id.loginFragment, true).build()
-            )
-        }
-        if (fireBaseAuth.currentUser != null) {
-            loginNow()
-        }
-        newAcctButton.setOnClickListener {
-            Navigation.findNavController(it).navigate(R.id.createAccount)
-        }
-
-        fun emailLogin(userEmail: String, userPassword: String) {
-            fireBaseAuth.signInWithEmailAndPassword(userEmail, userPassword).addOnSuccessListener {
-                loginNow()
-            }.addOnFailureListener {
-                loginButton.isEnabled = true
-                loggingInBar.visibility = View.GONE
-                if (it.localizedMessage!!.contains("no user"))
-                    context!!.showToast(getString(R.string.noUser))
-                else
-                    context!!.showToast(getString(R.string.loginFailed))
-            }
-        }
-
-        fun userNameLogin(userLogin: String, userPassword: String) {
-            FirebaseFirestore.getInstance().collection("users").document(userLogin).get()
-                .addOnSuccessListener {
-                    if (it.get("user.email", String::class.java) != null) {
-                        val email = it.get("user.email", String::class.java)!!
-                        emailLogin(email, userPassword)
-                    } else {
-                        loginButton.isEnabled = true
-                        loggingInBar.visibility = View.GONE
-                        context!!.showToast(getString(R.string.noUser))
-                    }
-                }
-        }
-        loginButton.setOnClickListener {
-            val userLogin = loginEmailEditText.text.toString()
-            val userPassword = loginPasswordEditText.text.toString()
-            if (fieldsOK(userLogin, userPassword)) {
-                loginButton.isEnabled = false
-                loggingInBar.visibility = View.VISIBLE
-                if (userLogin.contains('@'))
-                    emailLogin(userLogin, userPassword)
-                else
-                    userNameLogin(userLogin, userPassword)
-
-            }
         }
     }
 }

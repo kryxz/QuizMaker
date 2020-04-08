@@ -8,7 +8,7 @@ import androidx.appcompat.widget.AppCompatButton
 import androidx.appcompat.widget.AppCompatCheckBox
 import com.google.android.material.textfield.TextInputEditText
 import com.lemonlab.quizmaker.R
-import com.lemonlab.quizmaker.TrueFalseQuestion
+import com.lemonlab.quizmaker.data.TrueFalseQuestion
 import com.xwray.groupie.Item
 import com.xwray.groupie.ViewHolder
 import kotlinx.android.synthetic.main.tf_review.view.*

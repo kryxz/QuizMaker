@@ -12,6 +12,7 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.textfield.TextInputEditText
+import com.lemonlab.quizmaker.data.TheClass
 import com.lemonlab.quizmaker.items.ClassItem
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.ViewHolder

@@ -4,7 +4,7 @@ import android.graphics.Color
 import android.view.View
 import com.lemonlab.quizmaker.AnswersFragment
 import com.lemonlab.quizmaker.R
-import com.lemonlab.quizmaker.TrueFalseQuestion
+import com.lemonlab.quizmaker.data.TrueFalseQuestion
 import com.xwray.groupie.Item
 import com.xwray.groupie.ViewHolder
 import kotlinx.android.synthetic.main.tf_review.view.*

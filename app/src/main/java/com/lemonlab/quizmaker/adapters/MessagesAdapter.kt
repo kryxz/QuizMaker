@@ -16,7 +16,11 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
-import com.lemonlab.quizmaker.*
+import com.lemonlab.quizmaker.NotificationSender
+import com.lemonlab.quizmaker.R
+import com.lemonlab.quizmaker.data.Message
+import com.lemonlab.quizmaker.data.NotificationType
+import com.lemonlab.quizmaker.showToast
 import java.util.*
 import kotlin.collections.HashMap
 

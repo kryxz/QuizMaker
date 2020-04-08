@@ -124,6 +124,8 @@
     <string name="passwordTooShort">كلمة المرور قصيرة جدًا</string>
     <string name="accountExists">الحساب موجود</string>
     <string name="loginFailed">فشل تسجيل الدخول، تحقق من معلومات حسابك</string>
+    <string name="invalidLoginInfo">فشل الدخول، تحقق من معلومات حسابك</string>
+    <string name="cannotLogin">تعذّر الدخول، حاول مجددًا في وقت لاحق!</string>
     <string name="noUser">لم يتم العثور على حساب.</string>
     <string name="NoContent">لا يوجد أي اختبار بعد!</string>
     <string name="noClasses">ليس لديك أي قاعات بعد!</string>

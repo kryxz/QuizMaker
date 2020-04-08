@@ -15,6 +15,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.navigation.findNavController
 import com.google.android.material.textfield.TextInputEditText
+import com.lemonlab.quizmaker.data.TheClass
 import com.lemonlab.quizmaker.items.PublicClassItem
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.ViewHolder

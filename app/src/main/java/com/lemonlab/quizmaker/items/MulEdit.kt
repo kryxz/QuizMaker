@@ -7,8 +7,8 @@ import android.view.View
 import androidx.appcompat.widget.AppCompatButton
 import androidx.appcompat.widget.AppCompatEditText
 import com.google.android.material.textfield.TextInputEditText
-import com.lemonlab.quizmaker.MultipleChoiceQuestion
 import com.lemonlab.quizmaker.R
+import com.lemonlab.quizmaker.data.MultipleChoiceQuestion
 import com.xwray.groupie.Item
 import com.xwray.groupie.ViewHolder
 import kotlinx.android.synthetic.main.mul_review.view.*

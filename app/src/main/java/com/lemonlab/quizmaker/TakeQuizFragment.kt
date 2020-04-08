@@ -14,6 +14,8 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.navigation.NavOptions
 import androidx.navigation.findNavController
+import com.lemonlab.quizmaker.data.MultipleChoiceQuiz
+import com.lemonlab.quizmaker.data.Quizzer
 import kotlinx.android.synthetic.main.fragment_take_quiz.*
 
 

@@ -5,10 +5,10 @@ import androidx.appcompat.widget.AppCompatButton
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
 import androidx.navigation.findNavController
-import com.lemonlab.quizmaker.Quiz
 import com.lemonlab.quizmaker.QuizzesVM
 import com.lemonlab.quizmaker.R
 import com.lemonlab.quizmaker.TeachFragmentDirections
+import com.lemonlab.quizmaker.data.Quiz
 import com.xwray.groupie.Item
 import com.xwray.groupie.ViewHolder
 import kotlinx.android.synthetic.main.quiz_item.view.*

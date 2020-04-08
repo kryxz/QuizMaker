@@ -14,6 +14,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.lemonlab.quizmaker.adapters.MessagesAdapter
 import com.lemonlab.quizmaker.adapters.SwipeToDeleteCallback
+import com.lemonlab.quizmaker.data.Message
 import kotlinx.android.synthetic.main.fragment_messages.*
 
 
